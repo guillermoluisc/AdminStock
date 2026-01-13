@@ -1,0 +1,3798 @@
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\detener.bat
+Contenido:
+----------------------------------------
+@echo off
+
+echo ========================================
+echo   Sistema de Gestión - DETENIENDO
+echo ========================================
+echo.
+
+:: Leer el puerto guardado
+if exist "servidor\puerto.txt" (
+    set /p PORT=<servidor\puerto.txt
+) else (
+    set PORT=8080
+)
+
+echo [*] Buscando proceso PHP en puerto %PORT%...
+
+:: Encontrar y matar el proceso PHP
+for /f "tokens=5" %%a in ('netstat -ano ^| findstr ":%PORT%"') do (
+    echo [*] Deteniendo proceso %%a...
+    taskkill /F /PID %%a >nul 2>&1
+)
+
+:: Buscar todos los procesos php.exe y detenerlos
+tasklist | findstr "php.exe" >nul
+if %errorlevel% equ 0 (
+    echo [*] Deteniendo todos los procesos PHP...
+    taskkill /F /IM php.exe >nul 2>&1
+)
+
+echo [OK] Sistema detenido
+echo.
+pause
+========================================
+
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\empaquetar.bat
+Contenido:
+----------------------------------------
+@echo off
+
+echo ========================================
+echo   Empaquetar Sistema para Distribución
+echo ========================================
+echo.
+
+set NOMBRE_PAQUETE=sistema-gestion-v1.0
+
+echo [*] Creando directorio temporal...
+if exist "dist" rmdir /s /q "dist"
+mkdir "dist\%NOMBRE_PAQUETE%"
+
+echo [*] Copiando archivos del sistema...
+xcopy "app" "dist\%NOMBRE_PAQUETE%\app\" /E /I /Y >nul
+xcopy "servidor" "dist\%NOMBRE_PAQUETE%\servidor\" /E /I /Y >nul
+
+echo [*] Copiando scripts de ejecución...
+copy "instalador.bat" "dist\%NOMBRE_PAQUETE%\" >nul
+copy "iniciar.bat" "dist\%NOMBRE_PAQUETE%\" >nul
+copy "detener.bat" "dist\%NOMBRE_PAQUETE%\" >nul
+copy "migrar.bat" "dist\%NOMBRE_PAQUETE%\" >nul
+copy "README.md" "dist\%NOMBRE_PAQUETE%\" >nul
+
+echo [*] Limpiando base de datos de desarrollo...
+if exist "dist\%NOMBRE_PAQUETE%\app\database\database.db" (
+    del "dist\%NOMBRE_PAQUETE%\app\database\database.db"
+)
+
+echo [*] Creando estructura de carpetas...
+if not exist "dist\%NOMBRE_PAQUETE%\datos\backup" mkdir "dist\%NOMBRE_PAQUETE%\datos\backup"
+
+echo [*] Creando archivo ZIP...
+powershell Compress-Archive -Path "dist\%NOMBRE_PAQUETE%\*" -DestinationPath "dist\%NOMBRE_PAQUETE%.zip" -Force
+
+if exist "dist\%NOMBRE_PAQUETE%.zip" (
+    echo [OK] Paquete creado: dist\%NOMBRE_PAQUETE%.zip
+    echo.
+    echo Tamaño:
+    dir "dist\%NOMBRE_PAQUETE%.zip" | findstr "%NOMBRE_PAQUETE%"
+) else (
+    echo [ERROR] No se pudo crear el ZIP
+)
+
+echo.
+echo Archivos incluidos:
+dir /s /b "dist\%NOMBRE_PAQUETE%" | find /c /v ""
+echo archivos en total
+
+echo.
+echo ========================================
+echo   Listo para distribuir
+echo ========================================
+echo.
+echo El paquete incluye:
+echo - Todo el código fuente
+echo - PHP portable configurado
+echo - Scripts de instalación
+echo - Documentación completa
+echo.
+echo NO incluye:
+echo - Base de datos (se crea en instalación)
+echo - Datos del desarrollador
+echo.
+pause
+========================================
+
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\exportar.bat
+Contenido:
+----------------------------------------
+@echo off
+setlocal enabledelayedexpansion
+
+REM Archivo de salida
+set OUTPUT=contenido_total.txt
+
+REM Limpiar archivo si ya existe
+if exist "%OUTPUT%" del "%OUTPUT%"
+
+REM Directorio actual
+set BASEDIR=%CD%
+
+echo Procesando archivos en: %BASEDIR%
+echo.
+
+REM Buscar archivos .bat y .php recursivamente
+for /r "%BASEDIR%" %%F in (*.bat *.php) do (
+    echo Ruta del archivo: %%F>>"%OUTPUT%"
+    echo Contenido:>>"%OUTPUT%"
+    echo ---------------------------------------->>"%OUTPUT%"
+
+    REM Copiar contenido del archivo
+    type "%%F">>"%OUTPUT%"
+
+    echo.>>"%OUTPUT%"
+    echo ========================================>>"%OUTPUT%"
+    echo.>>"%OUTPUT%"
+)
+
+echo.
+echo Proceso finalizado.
+echo Archivo generado: %OUTPUT%
+pause
+
+========================================
+
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\iniciar.bat
+Contenido:
+----------------------------------------
+@echo off
+
+cls
+echo ========================================
+echo   Sistema de Gestión - INICIANDO
+echo ========================================
+echo.
+
+:: Verificar si PHP existe
+if not exist "servidor\php\php.exe" (
+    echo [ERROR] PHP no encontrado. Ejecute primero instalador.bat
+    pause
+    exit /b
+)
+
+:: Buscar un puerto disponible
+set PORT=8080
+:check_port
+netstat -ano | findstr ":%PORT%" >nul
+if %errorlevel% equ 0 (
+    set /a PORT=%PORT%+1
+    goto check_port
+)
+
+echo [*] Puerto disponible: %PORT%
+echo [*] Iniciando servidor PHP...
+echo.
+
+:: Iniciar servidor PHP
+start /min cmd /c "servidor\php\php.exe -S localhost:%PORT% -t app > servidor\servidor.log 2>&1"
+
+:: Esperar a que el servidor inicie
+timeout /t 2 >nul
+
+:: Verificar que el servidor está corriendo
+netstat -ano | findstr ":%PORT%" >nul
+if %errorlevel% equ 0 (
+    echo [OK] Servidor iniciado correctamente
+    echo.
+    echo ========================================
+    echo   SISTEMA EN FUNCIONAMIENTO
+    echo ========================================
+    echo.
+    echo   URL: http://localhost:%PORT%
+    echo.
+    echo   Presione cualquier tecla para abrir
+    echo   el navegador...
+    echo.
+    echo   Para detener el sistema ejecute:
+    echo   detener.bat
+    echo ========================================
+    echo.
+    
+    :: Guardar el puerto para el script detener.bat
+    echo %PORT% > servidor\puerto.txt
+    
+    pause
+    
+    :: Abrir navegador
+    start http://localhost:%PORT%
+    
+    echo.
+    echo El sistema está funcionando.
+    echo NO CIERRE ESTA VENTANA.
+    echo.
+    echo Para detener el sistema:
+    echo - Presione CTRL+C en esta ventana
+    echo - O ejecute detener.bat
+    echo.
+    
+    :: Mantener la ventana abierta
+    pause >nul
+) else (
+    echo [ERROR] No se pudo iniciar el servidor
+    pause
+)
+
+exit /b
+========================================
+
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\instalador.bat
+Contenido:
+----------------------------------------
+@echo off
+
+echo ========================================
+echo   INSTALADOR - Sistema de Gestión
+echo ========================================
+echo.
+
+:: Verificar si ya existe la instalación
+if exist "servidor\php\php.exe" (
+    echo [OK] PHP ya está instalado
+) else (
+    echo [*] Descargando PHP portable...
+    echo.
+    echo NOTA: Este script requiere que descargues PHP manualmente.
+    echo.
+    echo Pasos:
+    echo 1. Ve a: https://windows.php.net/download/
+    echo 2. Descarga: PHP 8.2 Thread Safe x64 ZIP
+    echo 3. Extrae el contenido en la carpeta: servidor\php\
+    echo 4. Vuelve a ejecutar este instalador
+    echo.
+    pause
+    exit /b
+)
+
+:: Configurar PHP
+echo [*] Configurando PHP...
+if not exist "servidor\php\php.ini" (
+    copy "servidor\php\php.ini-development" "servidor\php\php.ini" >nul
+    
+    :: Habilitar extensiones necesarias
+    powershell -Command "(gc servidor\php\php.ini) -replace ';extension=pdo_sqlite', 'extension=pdo_sqlite' | Out-File -encoding ASCII servidor\php\php.ini"
+    powershell -Command "(gc servidor\php\php.ini) -replace ';extension=sqlite3', 'extension=sqlite3' | Out-File -encoding ASCII servidor\php\php.ini"
+    powershell -Command "(gc servidor\php\php.ini) -replace ';extension=mbstring', 'extension=mbstring' | Out-File -encoding ASCII servidor\php\php.ini"
+    
+    echo [OK] PHP configurado correctamente
+) else (
+    echo [OK] PHP ya configurado
+)
+
+:: Crear estructura de directorios
+echo [*] Creando estructura de directorios...
+if not exist "app\database" mkdir "app\database"
+if not exist "app\database\migrations" mkdir "app\database\migrations"
+if not exist "datos\backup" mkdir "datos\backup"
+echo [OK] Directorios creados
+
+:: Inicializar base de datos
+echo [*] Inicializando base de datos...
+servidor\php\php.exe -f app\index.php >nul 2>&1
+if exist "app\database\database.db" (
+    echo [OK] Base de datos inicializada
+) else (
+    echo [ERROR] No se pudo crear la base de datos
+    pause
+    exit /b
+)
+
+echo.
+echo ========================================
+echo   INSTALACIÓN COMPLETADA
+echo ========================================
+echo.
+echo Para iniciar el sistema ejecute: iniciar.bat
+echo.
+pause
+========================================
+
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\migrar.bat
+Contenido:
+----------------------------------------
+@echo off
+
+echo ========================================
+echo   Migrar Sistema a Nueva Estructura
+echo ========================================
+echo.
+echo ADVERTENCIA: Este proceso modificara la base de datos.
+echo Se recomienda hacer una copia de seguridad antes.
+echo.
+pause
+
+:: Hacer backup de la base de datos actual
+if exist "app\database\database.db" (
+    echo [*] Creando backup de la base de datos...
+    if not exist "datos\backup" mkdir "datos\backup"
+    set TIMESTAMP=%date:~-4,4%%date:~-10,2%%date:~-7,2%_%time:~0,2%%time:~3,2%%time:~6,2%
+    set TIMESTAMP=%TIMESTAMP: =0%
+    copy "app\database\database.db" "datos\backup\database_backup_%TIMESTAMP%.db"
+    echo [OK] Backup creado: datos\backup\database_backup_%TIMESTAMP%.db
+    echo.
+)
+
+:: Eliminar base de datos antigua
+echo [*] Eliminando base de datos antigua...
+if exist "app\database\database.db" (
+    del "app\database\database.db"
+    echo [OK] Base de datos antigua eliminada
+)
+
+:: Inicializar nueva base de datos
+echo [*] Inicializando nueva estructura de base de datos...
+servidor\php\php.exe -f app\index.php >nul 2>&1
+
+if exist "app\database\database.db" (
+    echo [OK] Nueva base de datos creada exitosamente
+    echo.
+    echo ========================================
+    echo   MIGRACION COMPLETADA
+    echo ========================================
+    echo.
+    echo La base de datos ha sido actualizada con la nueva estructura.
+    echo.
+    echo Nuevas tablas creadas:
+    echo - productos_padre
+    echo - variedades
+    echo - promociones
+    echo - pedidos y pedido_detalles
+    echo - ventas y venta_detalles (actualizadas)
+    echo.
+    echo Puede iniciar el sistema con: iniciar.bat
+) else (
+    echo [ERROR] No se pudo crear la base de datos
+)
+
+echo.
+pause
+========================================
+
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\index.php
+Contenido:
+----------------------------------------
+<?php
+// app/index.php - Router principal
+session_start();
+
+define('BASE_PATH', __DIR__);
+define('DB_PATH', BASE_PATH . '/database/database.db');
+
+spl_autoload_register(function ($class) {
+    $paths = [
+        BASE_PATH . '/models/' . $class . '.php',
+        BASE_PATH . '/controllers/' . $class . '.php'
+    ];
+    
+    foreach ($paths as $path) {
+        if (file_exists($path)) {
+            require_once $path;
+            return;
+        }
+    }
+});
+
+require_once BASE_PATH . '/config/database.php';
+Database::initialize();
+
+$controller = $_GET['c'] ?? 'variedad';
+$action = $_GET['a'] ?? 'index';
+$id = $_GET['id'] ?? null;
+
+$controllerName = ucfirst($controller) . 'Controller';
+
+if (class_exists($controllerName)) {
+    $controllerInstance = new $controllerName();
+    
+    if (method_exists($controllerInstance, $action)) {
+        $controllerInstance->$action($id);
+    } else {
+        header("HTTP/1.0 404 Not Found");
+        echo "Acción no encontrada";
+    }
+} else {
+    header("HTTP/1.0 404 Not Found");
+    echo "Controlador no encontrado";
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\config\database.php
+Contenido:
+----------------------------------------
+<?php
+// app/config/database.php
+class Database {
+    private static $instance = null;
+    private $conn;
+    
+    private function __construct() {
+        try {
+            $this->conn = new PDO('sqlite:' . DB_PATH);
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+        } catch(PDOException $e) {
+            die("Error de conexión: " . $e->getMessage());
+        }
+    }
+    
+    public static function getInstance() {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+    
+    public function getConnection() {
+        return $this->conn;
+    }
+    
+    public static function initialize() {
+        $dbDir = dirname(DB_PATH);
+        if (!is_dir($dbDir)) {
+            mkdir($dbDir, 0777, true);
+        }
+        
+        $db = self::getInstance()->getConnection();
+        
+        // Tabla de PRODUCTOS PADRE (categorías generales)
+        $sql = "CREATE TABLE IF NOT EXISTS productos_padre (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nombre VARCHAR(200) NOT NULL,
+            porcentaje_pack3_tarjeta DECIMAL(5,2) DEFAULT 100,
+            porcentaje_pack3_efectivo DECIMAL(5,2) DEFAULT 80,
+            porcentaje_unidad_tarjeta DECIMAL(5,2) DEFAULT 100,
+            porcentaje_unidad_efectivo DECIMAL(5,2) DEFAULT 80,
+            activo INTEGER DEFAULT 1,
+            fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP
+        )";
+        $db->exec($sql);
+        
+        // Tabla de VARIEDADES (productos hijos)
+        $sql = "CREATE TABLE IF NOT EXISTS variedades (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            producto_padre_id INTEGER NOT NULL,
+            nombre VARCHAR(200) NOT NULL,
+            descripcion TEXT,
+            precio_compra_total DECIMAL(10,2) NOT NULL,
+            cantidad_comprada INTEGER NOT NULL,
+            precio_costo_unitario DECIMAL(10,2) NOT NULL,
+            precio_venta_unitario DECIMAL(10,2) NOT NULL,
+            stock INTEGER DEFAULT 0,
+            stock_minimo INTEGER DEFAULT 10,
+            activo INTEGER DEFAULT 1,
+            fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (producto_padre_id) REFERENCES productos_padre(id)
+        )";
+        $db->exec($sql);
+        
+        // Tabla de PROMOCIONES
+        $sql = "CREATE TABLE IF NOT EXISTS promociones (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            variedad_id INTEGER NOT NULL,
+            cantidad INTEGER NOT NULL,
+            precio_promocional DECIMAL(10,2) NOT NULL,
+            activo INTEGER DEFAULT 1,
+            fecha_inicio DATETIME DEFAULT CURRENT_TIMESTAMP,
+            fecha_fin DATETIME,
+            FOREIGN KEY (variedad_id) REFERENCES variedades(id)
+        )";
+        $db->exec($sql);
+        
+        // Tabla de VENTAS
+        $sql = "CREATE TABLE IF NOT EXISTS ventas (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            total DECIMAL(10,2) NOT NULL,
+            metodo_pago VARCHAR(20) NOT NULL,
+            descuento_aplicado DECIMAL(10,2) DEFAULT 0,
+            fecha DATETIME DEFAULT CURRENT_TIMESTAMP
+        )";
+        $db->exec($sql);
+        
+        // Tabla de DETALLE DE VENTAS
+        $sql = "CREATE TABLE IF NOT EXISTS venta_detalles (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            venta_id INTEGER NOT NULL,
+            variedad_id INTEGER NOT NULL,
+            cantidad INTEGER NOT NULL,
+            precio_unitario DECIMAL(10,2) NOT NULL,
+            descuento_unitario DECIMAL(10,2) DEFAULT 0,
+            subtotal DECIMAL(10,2) NOT NULL,
+            FOREIGN KEY (venta_id) REFERENCES ventas(id),
+            FOREIGN KEY (variedad_id) REFERENCES variedades(id)
+        )";
+        $db->exec($sql);
+        
+        // Tabla de PEDIDOS
+        $sql = "CREATE TABLE IF NOT EXISTS pedidos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            estado VARCHAR(20) DEFAULT 'pendiente',
+            observaciones TEXT,
+            fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+            fecha_realizacion DATETIME
+        )";
+        $db->exec($sql);
+        
+        // Tabla de DETALLE DE PEDIDOS
+        $sql = "CREATE TABLE IF NOT EXISTS pedido_detalles (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            pedido_id INTEGER NOT NULL,
+            variedad_id INTEGER NOT NULL,
+            cantidad_solicitada INTEGER NOT NULL,
+            cantidad_recibida INTEGER DEFAULT 0,
+            precio_estimado DECIMAL(10,2),
+            observaciones TEXT,
+            FOREIGN KEY (pedido_id) REFERENCES pedidos(id),
+            FOREIGN KEY (variedad_id) REFERENCES variedades(id)
+        )";
+        $db->exec($sql);
+        
+        // Tabla de MIGRACIONES
+        $sql = "CREATE TABLE IF NOT EXISTS migraciones (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            version VARCHAR(50) NOT NULL,
+            fecha DATETIME DEFAULT CURRENT_TIMESTAMP
+        )";
+        $db->exec($sql);
+        
+        // Insertar datos iniciales de ejemplo
+        self::insertarDatosIniciales($db);
+    }
+    
+    private static function insertarDatosIniciales($db) {
+        // Verificar si ya hay datos
+        $count = $db->query("SELECT COUNT(*) FROM productos_padre")->fetchColumn();
+        if ($count > 0) return;
+        
+        // Productos padre de ejemplo
+        $db->exec("INSERT INTO productos_padre (nombre, porcentaje_pack3_tarjeta, porcentaje_pack3_efectivo, porcentaje_unidad_tarjeta, porcentaje_unidad_efectivo) VALUES 
+            ('Remera Básica', 100, 80, 100, 80),
+            ('Pantalón Jean', 100, 85, 100, 85),
+            ('Campera', 100, 90, 100, 90)");
+        
+        // Variedades de ejemplo
+        $db->exec("INSERT INTO variedades (producto_padre_id, nombre, descripcion, precio_compra_total, cantidad_comprada, precio_costo_unitario, precio_venta_unitario, stock, stock_minimo) VALUES 
+            (1, 'Remera Básica Negra M', 'Remera negra talle M', 100000, 10, 10000, 12000, 10, 5),
+            (1, 'Remera Básica Blanca L', 'Remera blanca talle L', 100000, 10, 10000, 12000, 8, 5),
+            (2, 'Jean Azul 32', 'Jean azul talle 32', 150000, 8, 18750, 22000, 8, 3),
+            (3, 'Campera Deportiva S', 'Campera deportiva talle S', 200000, 5, 40000, 48000, 5, 2)");
+        
+        // Promociones de ejemplo
+        $db->exec("INSERT INTO promociones (variedad_id, cantidad, precio_promocional, activo) VALUES 
+            (1, 3, 30000, 1),
+            (2, 3, 30000, 1)");
+    }
+    
+    public static function runMigration($version, $sql) {
+        $db = self::getInstance()->getConnection();
+        
+        $stmt = $db->prepare("SELECT COUNT(*) FROM migraciones WHERE version = ?");
+        $stmt->execute([$version]);
+        
+        if ($stmt->fetchColumn() == 0) {
+            $db->exec($sql);
+            $stmt = $db->prepare("INSERT INTO migraciones (version) VALUES (?)");
+            $stmt->execute([$version]);
+            return true;
+        }
+        return false;
+    }
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\controllers\ConfiguracionController.php
+Contenido:
+----------------------------------------
+<?php
+// app/controllers/ConfiguracionController.php
+class ConfiguracionController {
+    private $tamanoModel;
+    private $saborModel;
+    private $variedadSaladoModel;
+    private $tipoSaladoModel;
+    
+    public function __construct() {
+        $this->tamanoModel = new Tamano();
+        $this->saborModel = new Sabor();
+        $this->variedadSaladoModel = new VariedadSalado();
+        $this->tipoSaladoModel = new TipoSalado();
+    }
+    
+    public function index() {
+        $this->render('configuracion/index', [
+            'tamanos' => $this->tamanoModel->getAll(false),
+            'sabores' => $this->saborModel->getAll(false),
+            'variedades' => $this->variedadSaladoModel->getAll(false),
+            'tipos_salados' => $this->tipoSaladoModel->getAll()
+        ]);
+    }
+    
+    public function agregarTamano() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $nombre = $_POST['nombre'];
+            
+            if ($this->tamanoModel->crear($nombre)) {
+                $_SESSION['mensaje'] = 'Tamaño agregado exitosamente';
+                $_SESSION['tipo_mensaje'] = 'success';
+            } else {
+                $_SESSION['mensaje'] = 'Error al agregar tamaño';
+                $_SESSION['tipo_mensaje'] = 'error';
+            }
+        }
+        
+        header('Location: index.php?c=configuracion&a=index');
+        exit;
+    }
+    
+    public function agregarSabor() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $nombre = $_POST['nombre'];
+            
+            if ($this->saborModel->crear($nombre)) {
+                $_SESSION['mensaje'] = 'Sabor agregado exitosamente';
+                $_SESSION['tipo_mensaje'] = 'success';
+            } else {
+                $_SESSION['mensaje'] = 'Error al agregar sabor';
+                $_SESSION['tipo_mensaje'] = 'error';
+            }
+        }
+        
+        header('Location: index.php?c=configuracion&a=index');
+        exit;
+    }
+    
+    public function agregarVariedad() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $tipo_id = $_POST['tipo_salado_id'];
+            $nombre = $_POST['nombre'];
+            
+            if ($this->variedadSaladoModel->crear($tipo_id, $nombre)) {
+                $_SESSION['mensaje'] = 'Variedad agregada exitosamente';
+                $_SESSION['tipo_mensaje'] = 'success';
+            } else {
+                $_SESSION['mensaje'] = 'Error al agregar variedad';
+                $_SESSION['tipo_mensaje'] = 'error';
+            }
+        }
+        
+        header('Location: index.php?c=configuracion&a=index');
+        exit;
+    }
+    
+    public function eliminarTamano($id) {
+        if ($this->tamanoModel->eliminar($id)) {
+            $_SESSION['mensaje'] = 'Tamaño eliminado';
+            $_SESSION['tipo_mensaje'] = 'success';
+        }
+        header('Location: index.php?c=configuracion&a=index');
+        exit;
+    }
+    
+    public function eliminarSabor($id) {
+        if ($this->saborModel->eliminar($id)) {
+            $_SESSION['mensaje'] = 'Sabor eliminado';
+            $_SESSION['tipo_mensaje'] = 'success';
+        }
+        header('Location: index.php?c=configuracion&a=index');
+        exit;
+    }
+    
+    public function eliminarVariedad($id) {
+        if ($this->variedadSaladoModel->eliminar($id)) {
+            $_SESSION['mensaje'] = 'Variedad eliminada';
+            $_SESSION['tipo_mensaje'] = 'success';
+        }
+        header('Location: index.php?c=configuracion&a=index');
+        exit;
+    }
+    
+    private function render($view, $data = []) {
+        extract($data);
+        ob_start();
+        require BASE_PATH . '/views/' . $view . '.php';
+        $content = ob_get_clean();
+        require BASE_PATH . '/views/layout.php';
+    }
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\controllers\PedidoController.php
+Contenido:
+----------------------------------------
+<?php
+// app/controllers/PedidoController.php
+class PedidoController {
+    private $pedidoModel;
+    private $variedadModel;
+    
+    public function __construct() {
+        $this->pedidoModel = new Pedido();
+        $this->variedadModel = new Variedad();
+    }
+    
+    public function index() {
+        $pedidos = $this->pedidoModel->getAll();
+        
+        $this->render('pedidos/index', [
+            'pedidos' => $pedidos
+        ]);
+    }
+    
+    public function nuevo() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $productos_pedido = json_decode($_POST['productos_json'], true);
+            $observaciones = $_POST['observaciones'] ?? '';
+            
+            $detalles = [];
+            foreach ($productos_pedido as $item) {
+                $variedad = $this->variedadModel->getById($item['variedad_id']);
+                
+                $detalles[] = [
+                    'variedad_id' => $item['variedad_id'],
+                    'cantidad_solicitada' => $item['cantidad'],
+                    'precio_estimado' => $variedad['precio_costo_unitario'] * $item['cantidad'],
+                    'observaciones' => $item['observaciones'] ?? ''
+                ];
+            }
+            
+            $pedido_id = $this->pedidoModel->crear($observaciones, $detalles);
+            
+            if ($pedido_id) {
+                $_SESSION['mensaje'] = 'Pedido creado exitosamente';
+                $_SESSION['tipo_mensaje'] = 'success';
+                header('Location: index.php?c=pedido&a=detalle&id=' . $pedido_id);
+                exit;
+            } else {
+                $_SESSION['mensaje'] = 'Error al crear el pedido';
+                $_SESSION['tipo_mensaje'] = 'error';
+            }
+        }
+        
+        $variedades = $this->variedadModel->getAll(true);
+        $variedades_stock_bajo = $this->variedadModel->getStockBajo();
+        
+        $this->render('pedidos/nuevo', [
+            'variedades' => $variedades,
+            'variedades_stock_bajo' => $variedades_stock_bajo
+        ]);
+    }
+    
+    public function detalle($id) {
+        $pedido = $this->pedidoModel->getById($id);
+        
+        if (!$pedido) {
+            header('Location: index.php?c=pedido&a=index');
+            exit;
+        }
+        
+        $detalles = $this->pedidoModel->getDetalles($id);
+        
+        $this->render('pedidos/detalle', [
+            'pedido' => $pedido,
+            'detalles' => $detalles
+        ]);
+    }
+    
+    public function marcarRealizado($id) {
+        if ($this->pedidoModel->marcarComoRealizado($id)) {
+            $_SESSION['mensaje'] = 'Pedido marcado como realizado';
+            $_SESSION['tipo_mensaje'] = 'success';
+        } else {
+            $_SESSION['mensaje'] = 'Error al actualizar el pedido';
+            $_SESSION['tipo_mensaje'] = 'error';
+        }
+        
+        header('Location: index.php?c=pedido&a=detalle&id=' . $id);
+        exit;
+    }
+    
+    public function marcarFaltante($id) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $observaciones = $_POST['observaciones'] ?? '';
+            
+            if ($this->pedidoModel->marcarComoFaltante($id, $observaciones)) {
+                $_SESSION['mensaje'] = 'Pedido marcado con faltantes';
+                $_SESSION['tipo_mensaje'] = 'success';
+            } else {
+                $_SESSION['mensaje'] = 'Error al actualizar el pedido';
+                $_SESSION['tipo_mensaje'] = 'error';
+            }
+        }
+        
+        header('Location: index.php?c=pedido&a=detalle&id=' . $id);
+        exit;
+    }
+    
+    public function actualizarDetalle($id) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $detalle_id = $_POST['detalle_id'];
+            $cantidad_recibida = $_POST['cantidad_recibida'];
+            $observaciones = $_POST['observaciones'] ?? '';
+            
+            if ($this->pedidoModel->actualizarDetalle($detalle_id, $cantidad_recibida, $observaciones)) {
+                $_SESSION['mensaje'] = 'Detalle actualizado correctamente';
+                $_SESSION['tipo_mensaje'] = 'success';
+            } else {
+                $_SESSION['mensaje'] = 'Error al actualizar el detalle';
+                $_SESSION['tipo_mensaje'] = 'error';
+            }
+        }
+        
+        header('Location: index.php?c=pedido&a=detalle&id=' . $id);
+        exit;
+    }
+    
+    public function eliminar($id) {
+        if ($this->pedidoModel->eliminar($id)) {
+            $_SESSION['mensaje'] = 'Pedido eliminado exitosamente';
+            $_SESSION['tipo_mensaje'] = 'success';
+        } else {
+            $_SESSION['mensaje'] = 'Error al eliminar el pedido';
+            $_SESSION['tipo_mensaje'] = 'error';
+        }
+        
+        header('Location: index.php?c=pedido&a=index');
+        exit;
+    }
+    
+    private function render($view, $data = []) {
+        extract($data);
+        ob_start();
+        require BASE_PATH . '/views/' . $view . '.php';
+        $content = ob_get_clean();
+        require BASE_PATH . '/views/layout.php';
+    }
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\controllers\ProductoPadreController.php
+Contenido:
+----------------------------------------
+<?php
+// app/controllers/ProductoPadreController.php
+class ProductoPadreController {
+    private $productoPadreModel;
+    
+    public function __construct() {
+        $this->productoPadreModel = new ProductoPadre();
+    }
+    
+    public function index() {
+        $productos = $this->productoPadreModel->getAll(true); // Cambiar false a true
+        
+        $this->render('productos_padre/index', [
+            'productos' => $productos
+        ]);
+    }
+    
+    public function crear() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $datos = [
+                'nombre' => $_POST['nombre'],
+                'porcentaje_pack3_tarjeta' => $_POST['porcentaje_pack3_tarjeta'] ?? 100,
+                'porcentaje_pack3_efectivo' => $_POST['porcentaje_pack3_efectivo'] ?? 80,
+                'porcentaje_unidad_tarjeta' => $_POST['porcentaje_unidad_tarjeta'] ?? 100,
+                'porcentaje_unidad_efectivo' => $_POST['porcentaje_unidad_efectivo'] ?? 80
+            ];
+            
+            if ($this->productoPadreModel->crear($datos)) {
+                $_SESSION['mensaje'] = 'Producto padre creado exitosamente';
+                $_SESSION['tipo_mensaje'] = 'success';
+                header('Location: index.php?c=productoPadre&a=index');
+                exit;
+            } else {
+                $_SESSION['mensaje'] = 'Error al crear el producto padre';
+                $_SESSION['tipo_mensaje'] = 'error';
+            }
+        }
+        
+        $this->render('productos_padre/crear', []);
+    }
+    
+    public function editar($id) {
+        $producto = $this->productoPadreModel->getById($id);
+        
+        if (!$producto) {
+            header('Location: index.php?c=productoPadre&a=index');
+            exit;
+        }
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $datos = [
+                'nombre' => $_POST['nombre'],
+                'porcentaje_pack3_tarjeta' => $_POST['porcentaje_pack3_tarjeta'] ?? 100,
+                'porcentaje_pack3_efectivo' => $_POST['porcentaje_pack3_efectivo'] ?? 80,
+                'porcentaje_unidad_tarjeta' => $_POST['porcentaje_unidad_tarjeta'] ?? 100,
+                'porcentaje_unidad_efectivo' => $_POST['porcentaje_unidad_efectivo'] ?? 80,
+                'activo' => isset($_POST['activo']) ? 1 : 0
+            ];
+            
+            if ($this->productoPadreModel->actualizar($id, $datos)) {
+                $_SESSION['mensaje'] = 'Producto padre actualizado exitosamente';
+                $_SESSION['tipo_mensaje'] = 'success';
+                header('Location: index.php?c=productoPadre&a=index');
+                exit;
+            } else {
+                $_SESSION['mensaje'] = 'Error al actualizar el producto padre';
+                $_SESSION['tipo_mensaje'] = 'error';
+            }
+        }
+        
+        $this->render('productos_padre/editar', ['producto' => $producto]);
+    }
+    
+    public function eliminar($id) {
+        if ($this->productoPadreModel->eliminar($id)) {
+            $_SESSION['mensaje'] = 'Producto padre eliminado exitosamente';
+            $_SESSION['tipo_mensaje'] = 'success';
+        } else {
+            $_SESSION['mensaje'] = 'Error al eliminar el producto padre';
+            $_SESSION['tipo_mensaje'] = 'error';
+        }
+        
+        header('Location: index.php?c=productoPadre&a=index');
+        exit;
+    }
+    
+    private function render($view, $data = []) {
+        extract($data);
+        ob_start();
+        require BASE_PATH . '/views/' . $view . '.php';
+        $content = ob_get_clean();
+        require BASE_PATH . '/views/layout.php';
+    }
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\controllers\PromocionController.php
+Contenido:
+----------------------------------------
+<?php
+// app/controllers/PromocionController.php
+class PromocionController {
+    private $promocionModel;
+    private $variedadModel;
+    
+    public function __construct() {
+        $this->promocionModel = new Promocion();
+        $this->variedadModel = new Variedad();
+    }
+    
+    public function index() {
+        $promociones = $this->promocionModel->getAll(true);
+        
+        $this->render('promociones/index', [
+            'promociones' => $promociones
+        ]);
+    }
+    
+    public function crear() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $datos = [
+                'variedad_id' => $_POST['variedad_id'],
+                'cantidad' => $_POST['cantidad'],
+                'precio_promocional' => $_POST['precio_promocional'],
+                'fecha_inicio' => $_POST['fecha_inicio'] ?? null,
+                'fecha_fin' => $_POST['fecha_fin'] ?? null
+            ];
+            
+            if ($this->promocionModel->crear($datos)) {
+                $_SESSION['mensaje'] = 'Promoción creada exitosamente';
+                $_SESSION['tipo_mensaje'] = 'success';
+                header('Location: index.php?c=promocion&a=index');
+                exit;
+            } else {
+                $_SESSION['mensaje'] = 'Error al crear la promoción';
+                $_SESSION['tipo_mensaje'] = 'error';
+            }
+        }
+        
+        $variedades = $this->variedadModel->getAll();
+        
+        $this->render('promociones/crear', [
+            'variedades' => $variedades
+        ]);
+    }
+    
+    public function editar($id) {
+        $promocion = $this->promocionModel->getById($id);
+        
+        if (!$promocion) {
+            header('Location: index.php?c=promocion&a=index');
+            exit;
+        }
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $datos = [
+                'cantidad' => $_POST['cantidad'],
+                'precio_promocional' => $_POST['precio_promocional'],
+                'fecha_inicio' => $_POST['fecha_inicio'] ?? null,
+                'fecha_fin' => $_POST['fecha_fin'] ?? null,
+                'activo' => isset($_POST['activo']) ? 1 : 0
+            ];
+            
+            if ($this->promocionModel->actualizar($id, $datos)) {
+                $_SESSION['mensaje'] = 'Promoción actualizada exitosamente';
+                $_SESSION['tipo_mensaje'] = 'success';
+                header('Location: index.php?c=promocion&a=index');
+                exit;
+            } else {
+                $_SESSION['mensaje'] = 'Error al actualizar la promoción';
+                $_SESSION['tipo_mensaje'] = 'error';
+            }
+        }
+        
+        $this->render('promociones/editar', ['promocion' => $promocion]);
+    }
+    
+    public function eliminar($id) {
+        if ($this->promocionModel->eliminar($id)) {
+            $_SESSION['mensaje'] = 'Promoción eliminada exitosamente';
+            $_SESSION['tipo_mensaje'] = 'success';
+        } else {
+            $_SESSION['mensaje'] = 'Error al eliminar la promoción';
+            $_SESSION['tipo_mensaje'] = 'error';
+        }
+        
+        header('Location: index.php?c=promocion&a=index');
+        exit;
+    }
+    
+    private function render($view, $data = []) {
+        extract($data);
+        ob_start();
+        require BASE_PATH . '/views/' . $view . '.php';
+        $content = ob_get_clean();
+        require BASE_PATH . '/views/layout.php';
+    }
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\controllers\VariedadController.php
+Contenido:
+----------------------------------------
+<?php
+// app/controllers/VariedadController.php
+class VariedadController {
+    private $variedadModel;
+    private $productoPadreModel;
+    private $promocionModel;
+    
+    public function __construct() {
+        $this->variedadModel = new Variedad();
+        $this->productoPadreModel = new ProductoPadre();
+        $this->promocionModel = new Promocion();
+    }
+    
+    public function index() {
+        // Obtener filtros
+        $filtros = [];
+        if (isset($_GET['stock_estado'])) {
+            $filtros['stock_estado'] = $_GET['stock_estado'];
+        }
+        if (isset($_GET['producto_padre_id']) && $_GET['producto_padre_id'] !== '') {
+            $filtros['producto_padre_id'] = $_GET['producto_padre_id'];
+        }
+        
+        $variedades = $this->variedadModel->getAllConFiltros($filtros);
+        $productos_padre = $this->productoPadreModel->getAll();
+        
+        $this->render('variedades/index', [
+            'variedades' => $variedades,
+            'productos_padre' => $productos_padre,
+            'filtros' => $filtros
+        ]);
+    }
+    
+    public function crear() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $precio_compra_total = $_POST['precio_compra_total'];
+            $cantidad_comprada = $_POST['cantidad_comprada'];
+            $precio_costo_unitario = $this->variedadModel->calcularPrecioCostoUnitario($precio_compra_total, $cantidad_comprada);
+            
+            $datos = [
+                'producto_padre_id' => $_POST['producto_padre_id'],
+                'nombre' => $_POST['nombre'],
+                'descripcion' => $_POST['descripcion'] ?? '',
+                'precio_compra_total' => $precio_compra_total,
+                'cantidad_comprada' => $cantidad_comprada,
+                'precio_costo_unitario' => $precio_costo_unitario,
+                'precio_venta_unitario' => $_POST['precio_venta_unitario'],
+                'stock' => $_POST['stock'] ?? $cantidad_comprada,
+                'stock_minimo' => $_POST['stock_minimo'] ?? 10
+            ];
+            
+            $variedad_id = $this->variedadModel->crear($datos);
+            
+            if ($variedad_id) {
+                // Crear promoción si se configuró
+                if (!empty($_POST['promo_cantidad']) && !empty($_POST['promo_precio'])) {
+                    $promo_datos = [
+                        'variedad_id' => $variedad_id,
+                        'cantidad' => $_POST['promo_cantidad'],
+                        'precio_promocional' => $_POST['promo_precio']
+                    ];
+                    $this->promocionModel->crear($promo_datos);
+                }
+                
+                $_SESSION['mensaje'] = 'Variedad creada exitosamente';
+                $_SESSION['tipo_mensaje'] = 'success';
+                header('Location: index.php?c=variedad&a=index');
+                exit;
+            } else {
+                $_SESSION['mensaje'] = 'Error al crear la variedad';
+                $_SESSION['tipo_mensaje'] = 'error';
+            }
+        }
+        
+        $productos_padre = $this->productoPadreModel->getAll();
+        
+        $this->render('variedades/crear', [
+            'productos_padre' => $productos_padre
+        ]);
+    }
+    
+    public function editar($id) {
+        $variedad = $this->variedadModel->getById($id);
+        
+        if (!$variedad) {
+            header('Location: index.php?c=variedad&a=index');
+            exit;
+        }
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $precio_compra_total = $_POST['precio_compra_total'];
+            $cantidad_comprada = $_POST['cantidad_comprada'];
+            $precio_costo_unitario = $this->variedadModel->calcularPrecioCostoUnitario($precio_compra_total, $cantidad_comprada);
+            
+            $datos = [
+                'nombre' => $_POST['nombre'],
+                'descripcion' => $_POST['descripcion'] ?? '',
+                'precio_compra_total' => $precio_compra_total,
+                'cantidad_comprada' => $cantidad_comprada,
+                'precio_costo_unitario' => $precio_costo_unitario,
+                'precio_venta_unitario' => $_POST['precio_venta_unitario'],
+                'stock' => $_POST['stock'],
+                'stock_minimo' => $_POST['stock_minimo'] ?? 10,
+                'activo' => isset($_POST['activo']) ? 1 : 0
+            ];
+            
+            if ($this->variedadModel->actualizar($id, $datos)) {
+                $_SESSION['mensaje'] = 'Variedad actualizada exitosamente';
+                $_SESSION['tipo_mensaje'] = 'success';
+                header('Location: index.php?c=variedad&a=index');
+                exit;
+            } else {
+                $_SESSION['mensaje'] = 'Error al actualizar la variedad';
+                $_SESSION['tipo_mensaje'] = 'error';
+            }
+        }
+        
+        $promociones = $this->promocionModel->getByVariedad($id);
+        
+        $this->render('variedades/editar', [
+            'variedad' => $variedad,
+            'promociones' => $promociones
+        ]);
+    }
+    
+    public function eliminar($id) {
+        if ($this->variedadModel->eliminar($id)) {
+            $_SESSION['mensaje'] = 'Variedad eliminada exitosamente';
+            $_SESSION['tipo_mensaje'] = 'success';
+        } else {
+            $_SESSION['mensaje'] = 'Error al eliminar la variedad';
+            $_SESSION['tipo_mensaje'] = 'error';
+        }
+        
+        header('Location: index.php?c=variedad&a=index');
+        exit;
+    }
+    
+    public function calcularPrecioCosto() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $precio_total = floatval($_POST['precio_total']);
+            $cantidad = intval($_POST['cantidad']);
+            
+            $precio_unitario = $this->variedadModel->calcularPrecioCostoUnitario($precio_total, $cantidad);
+            
+            echo json_encode(['precio_unitario' => $precio_unitario]);
+            exit;
+        }
+    }
+    
+    private function render($view, $data = []) {
+        extract($data);
+        ob_start();
+        require BASE_PATH . '/views/' . $view . '.php';
+        $content = ob_get_clean();
+        require BASE_PATH . '/views/layout.php';
+    }
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\controllers\VentaController.php
+Contenido:
+----------------------------------------
+<?php
+// app/controllers/VentaController.php
+class VentaController {
+    private $ventaModel;
+    private $variedadModel;
+    private $productoPadreModel;
+    private $promocionModel;
+    
+    public function __construct() {
+        $this->ventaModel = new Venta();
+        $this->variedadModel = new Variedad();
+        $this->productoPadreModel = new ProductoPadre();
+        $this->promocionModel = new Promocion();
+    }
+    
+    public function index() {
+        // Obtener filtros
+        $filtros = [];
+        if (!empty($_GET['fecha_desde'])) {
+            $filtros['fecha_desde'] = $_GET['fecha_desde'];
+        }
+        if (!empty($_GET['fecha_hasta'])) {
+            $filtros['fecha_hasta'] = $_GET['fecha_hasta'];
+        }
+        if (!empty($_GET['metodo_pago'])) {
+            $filtros['metodo_pago'] = $_GET['metodo_pago'];
+        }
+        
+        $ventas = $this->ventaModel->getAll($filtros);
+        $total_ventas = $this->ventaModel->getTotalVentas($filtros);
+        $estadisticas = $this->ventaModel->getEstadisticas(
+            $filtros['fecha_desde'] ?? null,
+            $filtros['fecha_hasta'] ?? null
+        );
+        
+        $this->render('ventas/index', [
+            'ventas' => $ventas,
+            'total_ventas' => $total_ventas,
+            'estadisticas' => $estadisticas,
+            'filtros' => $filtros
+        ]);
+    }
+    
+    public function nueva() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $productos_venta = json_decode($_POST['productos_json'], true);
+            $metodo_pago = $_POST['metodo_pago'];
+            $total = 0;
+            $descuento_total = 0;
+            
+            $detalles = [];
+            foreach ($productos_venta as $item) {
+                $variedad = $this->variedadModel->getById($item['variedad_id']);
+                
+                // Verificar stock
+                if ($variedad['stock'] < $item['cantidad']) {
+                    $_SESSION['mensaje'] = 'Stock insuficiente para: ' . $variedad['nombre'];
+                    $_SESSION['tipo_mensaje'] = 'error';
+                    header('Location: index.php?c=venta&a=nueva');
+                    exit;
+                }
+                
+                // Calcular precio según cantidad y método de pago
+                $costo = $variedad['precio_costo_unitario'];
+                $producto_padre = $this->productoPadreModel->getById($variedad['producto_padre_id']);
+                
+                $precio_calculado = 0;
+                
+                if ($item['cantidad'] == 3) {
+                    // Pack x3
+                    $porcentaje = $metodo_pago == 'efectivo' 
+                        ? $producto_padre['porcentaje_pack3_efectivo'] 
+                        : $producto_padre['porcentaje_pack3_tarjeta'];
+                    
+                    $precio_pack = $costo * 3 + (($costo * 3) * $porcentaje / 100);
+                    $precio_calculado = $precio_pack / 3; // Precio unitario del pack
+                } else {
+                    // Por unidad
+                    $porcentaje = $metodo_pago == 'efectivo' 
+                        ? $producto_padre['porcentaje_unidad_efectivo'] 
+                        : $producto_padre['porcentaje_unidad_tarjeta'];
+                    
+                    $precio_calculado = $costo + ($costo * $porcentaje / 100);
+                }
+                
+                $subtotal = $precio_calculado * $item['cantidad'];
+                $total += $subtotal;
+                
+                $detalles[] = [
+                    'variedad_id' => $item['variedad_id'],
+                    'cantidad' => $item['cantidad'],
+                    'precio_unitario' => $precio_calculado,
+                    'descuento_unitario' => 0,
+                    'subtotal' => $subtotal
+                ];
+            }
+            
+            $venta_id = $this->ventaModel->crear($total, $metodo_pago, $descuento_total, $detalles);
+            
+            if ($venta_id) {
+                $_SESSION['mensaje'] = 'Venta registrada exitosamente. Total: $' . number_format($total, 2);
+                $_SESSION['tipo_mensaje'] = 'success';
+                header('Location: index.php?c=venta&a=detalle&id=' . $venta_id);
+                exit;
+            } else {
+                $_SESSION['mensaje'] = 'Error al registrar la venta';
+                $_SESSION['tipo_mensaje'] = 'error';
+            }
+        }
+        
+        $variedades = $this->variedadModel->getAll(true);
+        
+        $this->render('ventas/nueva', [
+            'variedades' => $variedades
+        ]);
+    }
+    
+    public function detalle($id) {
+        $venta = $this->ventaModel->getById($id);
+        
+        if (!$venta) {
+            header('Location: index.php?c=venta&a=index');
+            exit;
+        }
+        
+        $detalles = $this->ventaModel->getDetalles($id);
+        
+        $this->render('ventas/detalle', [
+            'venta' => $venta,
+            'detalles' => $detalles
+        ]);
+    }
+    
+    private function render($view, $data = []) {
+        extract($data);
+        ob_start();
+        require BASE_PATH . '/views/' . $view . '.php';
+        $content = ob_get_clean();
+        require BASE_PATH . '/views/layout.php';
+    }
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\database\migrations\migrar.php
+Contenido:
+----------------------------------------
+<?php
+// app/database/migrations/migrar.php
+// Ejecutar: servidor\php\php.exe -f app\database\migrations\migrar.php
+
+define('BASE_PATH', dirname(__DIR__));
+define('DB_PATH', BASE_PATH . '/database/database.db');
+
+require_once BASE_PATH . '/config/database.php';
+
+echo "===========================================\n";
+echo "  Sistema de Migraciones\n";
+echo "===========================================\n\n";
+
+// Cargar todas las migraciones del directorio
+$migracionesDir = __DIR__;
+$archivos = glob($migracionesDir . '/migration_*.php');
+
+if (empty($archivos)) {
+    echo "[!] No se encontraron archivos de migración\n";
+    exit;
+}
+
+sort($archivos);
+
+echo "[*] Migraciones encontradas: " . count($archivos) . "\n\n";
+
+foreach ($archivos as $archivo) {
+    $nombreArchivo = basename($archivo);
+    echo "[*] Procesando: $nombreArchivo\n";
+    
+    // Incluir el archivo de migración
+    $migracion = require $archivo;
+    
+    if (!isset($migracion['version']) || !isset($migracion['sql'])) {
+        echo "    [ERROR] Formato de migración inválido\n";
+        continue;
+    }
+    
+    $version = $migracion['version'];
+    $sql = $migracion['sql'];
+    $descripcion = $migracion['descripcion'] ?? 'Sin descripción';
+    
+    // Ejecutar migración
+    if (Database::runMigration($version, $sql)) {
+        echo "    [OK] Migración $version aplicada: $descripcion\n";
+    } else {
+        echo "    [SKIP] Migración $version ya fue aplicada\n";
+    }
+}
+
+echo "\n[✓] Proceso de migraciones completado\n\n";
+
+// Mostrar versión actual
+$db = Database::getInstance()->getConnection();
+$stmt = $db->query("SELECT version, fecha FROM migraciones ORDER BY fecha DESC LIMIT 5");
+$versiones = $stmt->fetchAll();
+
+if ($versiones) {
+    echo "Últimas migraciones aplicadas:\n";
+    foreach ($versiones as $v) {
+        echo "  - {$v['version']} ({$v['fecha']})\n";
+    }
+}
+
+echo "\n";
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\database\migrations\migration_001_agregar_categorias.php
+Contenido:
+----------------------------------------
+<?php
+// app/database/migrations/migration_001_agregar_categorias.php
+// Ejemplo de cómo crear una migración
+
+return [
+    'version' => '001_agregar_categorias',
+    'descripcion' => 'Agregar tabla de categorías y relación con artículos',
+    'sql' => "
+        -- Crear tabla categorias
+        CREATE TABLE IF NOT EXISTS categorias (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nombre VARCHAR(100) NOT NULL,
+            descripcion TEXT,
+            activo INTEGER DEFAULT 1,
+            fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+        
+        -- Agregar columna categoria_id a articulos
+        ALTER TABLE articulos ADD COLUMN categoria_id INTEGER;
+        
+        -- Insertar categorías por defecto
+        INSERT INTO categorias (nombre, descripcion) VALUES 
+            ('General', 'Categoría general'),
+            ('Electrónica', 'Productos electrónicos'),
+            ('Hogar', 'Artículos para el hogar');
+    "
+];
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\models\Pedido.php
+Contenido:
+----------------------------------------
+<?php
+// app/models/Pedido.php
+class Pedido {
+    private $db;
+    
+    public function __construct() {
+        $this->db = Database::getInstance()->getConnection();
+    }
+    
+    public function getAll() {
+        $sql = "SELECT p.*, 
+                COUNT(pd.id) as cantidad_items,
+                SUM(pd.cantidad_solicitada) as total_unidades
+                FROM pedidos p
+                LEFT JOIN pedido_detalles pd ON p.id = pd.pedido_id
+                GROUP BY p.id
+                ORDER BY p.fecha_creacion DESC";
+        
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchAll();
+    }
+    
+    public function getById($id) {
+        $stmt = $this->db->prepare("SELECT * FROM pedidos WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    }
+    
+    public function getDetalles($pedido_id) {
+        $sql = "SELECT pd.*, v.nombre as variedad_nombre, v.stock, v.stock_minimo,
+                p.nombre as producto_padre_nombre
+                FROM pedido_detalles pd
+                JOIN variedades v ON pd.variedad_id = v.id
+                JOIN productos_padre p ON v.producto_padre_id = p.id
+                WHERE pd.pedido_id = ?
+                ORDER BY p.nombre, v.nombre";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$pedido_id]);
+        return $stmt->fetchAll();
+    }
+    
+    public function crear($observaciones, $detalles) {
+        try {
+            $this->db->beginTransaction();
+            
+            // Crear pedido
+            $stmt = $this->db->prepare("INSERT INTO pedidos (observaciones) VALUES (?)");
+            $stmt->execute([$observaciones]);
+            $pedido_id = $this->db->lastInsertId();
+            
+            // Insertar detalles
+            $stmtDetalle = $this->db->prepare(
+                "INSERT INTO pedido_detalles (pedido_id, variedad_id, cantidad_solicitada, precio_estimado, observaciones) 
+                VALUES (?, ?, ?, ?, ?)"
+            );
+            
+            foreach ($detalles as $detalle) {
+                $stmtDetalle->execute([
+                    $pedido_id,
+                    $detalle['variedad_id'],
+                    $detalle['cantidad_solicitada'],
+                    $detalle['precio_estimado'] ?? null,
+                    $detalle['observaciones'] ?? ''
+                ]);
+            }
+            
+            $this->db->commit();
+            return $pedido_id;
+        } catch (PDOException $e) {
+            $this->db->rollBack();
+            return false;
+        }
+    }
+    
+    public function actualizar($id, $datos) {
+        try {
+            $sql = "UPDATE pedidos SET 
+                estado = ?,
+                observaciones = ?,
+                fecha_realizacion = ?
+                WHERE id = ?";
+            
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute([
+                $datos['estado'],
+                $datos['observaciones'] ?? '',
+                $datos['estado'] == 'realizado' ? date('Y-m-d H:i:s') : null,
+                $id
+            ]);
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+    
+    public function actualizarDetalle($detalle_id, $cantidad_recibida, $observaciones = '') {
+        try {
+            $this->db->beginTransaction();
+            
+            // Actualizar detalle del pedido
+            $stmt = $this->db->prepare(
+                "UPDATE pedido_detalles SET cantidad_recibida = ?, observaciones = ? WHERE id = ?"
+            );
+            $stmt->execute([$cantidad_recibida, $observaciones, $detalle_id]);
+            
+            // Obtener variedad_id y actualizar stock si se recibió mercadería
+            if ($cantidad_recibida > 0) {
+                $stmt = $this->db->prepare("SELECT variedad_id FROM pedido_detalles WHERE id = ?");
+                $stmt->execute([$detalle_id]);
+                $detalle = $stmt->fetch();
+                
+                if ($detalle) {
+                    $stmt = $this->db->prepare("UPDATE variedades SET stock = stock + ? WHERE id = ?");
+                    $stmt->execute([$cantidad_recibida, $detalle['variedad_id']]);
+                }
+            }
+            
+            $this->db->commit();
+            return true;
+        } catch (PDOException $e) {
+            $this->db->rollBack();
+            return false;
+        }
+    }
+    
+    public function marcarComoRealizado($id) {
+        $stmt = $this->db->prepare(
+            "UPDATE pedidos SET estado = 'realizado', fecha_realizacion = ? WHERE id = ?"
+        );
+        return $stmt->execute([date('Y-m-d H:i:s'), $id]);
+    }
+    
+    public function marcarComoFaltante($id, $observaciones = '') {
+        $stmt = $this->db->prepare(
+            "UPDATE pedidos SET estado = 'faltante', observaciones = ? WHERE id = ?"
+        );
+        return $stmt->execute([$observaciones, $id]);
+    }
+    
+    public function eliminar($id) {
+        try {
+            $this->db->beginTransaction();
+            
+            // Eliminar detalles
+            $stmt = $this->db->prepare("DELETE FROM pedido_detalles WHERE pedido_id = ?");
+            $stmt->execute([$id]);
+            
+            // Eliminar pedido
+            $stmt = $this->db->prepare("DELETE FROM pedidos WHERE id = ?");
+            $stmt->execute([$id]);
+            
+            $this->db->commit();
+            return true;
+        } catch (PDOException $e) {
+            $this->db->rollBack();
+            return false;
+        }
+    }
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\models\ProductoPadre.php
+Contenido:
+----------------------------------------
+<?php
+// app/models/ProductoPadre.php
+class ProductoPadre {
+    private $db;
+    
+    public function __construct() {
+        $this->db = Database::getInstance()->getConnection();
+    }
+    
+    public function getAll($soloActivos = true) {
+        $sql = "SELECT * FROM productos_padre";
+        if ($soloActivos) $sql .= " WHERE activo = 1";
+        $sql .= " ORDER BY nombre";
+        
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchAll();
+    }
+    
+    public function getById($id) {
+        $stmt = $this->db->prepare("SELECT * FROM productos_padre WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    }
+    
+    public function crear($datos) {
+        try {
+            $sql = "INSERT INTO productos_padre (
+                nombre, 
+                porcentaje_pack3_tarjeta, 
+                porcentaje_pack3_efectivo,
+                porcentaje_unidad_tarjeta,
+                porcentaje_unidad_efectivo
+            ) VALUES (?, ?, ?, ?, ?)";
+            
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([
+                $datos['nombre'],
+                $datos['porcentaje_pack3_tarjeta'] ?? 100,
+                $datos['porcentaje_pack3_efectivo'] ?? 80,
+                $datos['porcentaje_unidad_tarjeta'] ?? 100,
+                $datos['porcentaje_unidad_efectivo'] ?? 80
+            ]);
+            
+            return $this->db->lastInsertId();
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+    
+    public function actualizar($id, $datos) {
+        try {
+            $sql = "UPDATE productos_padre SET 
+                nombre = ?,
+                porcentaje_pack3_tarjeta = ?,
+                porcentaje_pack3_efectivo = ?,
+                porcentaje_unidad_tarjeta = ?,
+                porcentaje_unidad_efectivo = ?,
+                activo = ?
+                WHERE id = ?";
+            
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute([
+                $datos['nombre'],
+                $datos['porcentaje_pack3_tarjeta'] ?? 100,
+                $datos['porcentaje_pack3_efectivo'] ?? 80,
+                $datos['porcentaje_unidad_tarjeta'] ?? 100,
+                $datos['porcentaje_unidad_efectivo'] ?? 80,
+                $datos['activo'] ?? 1,
+                $id
+            ]);
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+    
+    public function eliminar($id) {
+        $stmt = $this->db->prepare("UPDATE productos_padre SET activo = 0 WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
+    
+    public function calcularPrecioVenta($costo, $cantidad, $metodoPago, $producto_padre_id) {
+        $producto = $this->getById($producto_padre_id);
+        if (!$producto) return $costo;
+        
+        $porcentaje = 100;
+        
+        if ($cantidad == 3) {
+            // Pack x3
+            $porcentaje = $metodoPago == 'efectivo' 
+                ? $producto['porcentaje_pack3_efectivo'] 
+                : $producto['porcentaje_pack3_tarjeta'];
+        } else {
+            // Por unidad
+            $porcentaje = $metodoPago == 'efectivo' 
+                ? $producto['porcentaje_unidad_efectivo'] 
+                : $producto['porcentaje_unidad_tarjeta'];
+        }
+        
+        // Calcular precio: costo + (costo * porcentaje / 100)
+        $precioFinal = $costo + ($costo * $porcentaje / 100);
+        
+        return round($precioFinal, 2);
+    }
+    
+    public function cantidadVariedades($id) {
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM variedades WHERE producto_padre_id = ? AND activo = 1");
+        $stmt->execute([$id]);
+        return $stmt->fetchColumn();
+    }
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\models\Promocion.php
+Contenido:
+----------------------------------------
+<?php
+// app/models/Promocion.php
+class Promocion {
+    private $db;
+    
+    public function __construct() {
+        $this->db = Database::getInstance()->getConnection();
+    }
+    
+    public function getAll($soloActivos = true) {
+        $sql = "SELECT pr.*, v.nombre as variedad_nombre, p.nombre as producto_padre_nombre
+                FROM promociones pr
+                JOIN variedades v ON pr.variedad_id = v.id
+                JOIN productos_padre p ON v.producto_padre_id = p.id";
+        if ($soloActivos) $sql .= " WHERE pr.activo = 1";
+        $sql .= " ORDER BY p.nombre, v.nombre";
+        
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchAll();
+    }
+    
+    public function getById($id) {
+        $sql = "SELECT pr.*, v.nombre as variedad_nombre, p.nombre as producto_padre_nombre
+                FROM promociones pr
+                JOIN variedades v ON pr.variedad_id = v.id
+                JOIN productos_padre p ON v.producto_padre_id = p.id
+                WHERE pr.id = ?";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    }
+    
+    public function getByVariedad($variedad_id, $soloActivos = true) {
+        $sql = "SELECT * FROM promociones WHERE variedad_id = ?";
+        if ($soloActivos) $sql .= " AND activo = 1";
+        $sql .= " ORDER BY cantidad";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$variedad_id]);
+        return $stmt->fetchAll();
+    }
+    
+    public function crear($datos) {
+        try {
+            $sql = "INSERT INTO promociones (
+                variedad_id,
+                cantidad,
+                precio_promocional,
+                fecha_inicio,
+                fecha_fin
+            ) VALUES (?, ?, ?, ?, ?)";
+            
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([
+                $datos['variedad_id'],
+                $datos['cantidad'],
+                $datos['precio_promocional'],
+                $datos['fecha_inicio'] ?? date('Y-m-d H:i:s'),
+                $datos['fecha_fin'] ?? null
+            ]);
+            
+            return $this->db->lastInsertId();
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+    
+    public function actualizar($id, $datos) {
+        try {
+            $sql = "UPDATE promociones SET 
+                cantidad = ?,
+                precio_promocional = ?,
+                fecha_inicio = ?,
+                fecha_fin = ?,
+                activo = ?
+                WHERE id = ?";
+            
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute([
+                $datos['cantidad'],
+                $datos['precio_promocional'],
+                $datos['fecha_inicio'] ?? date('Y-m-d H:i:s'),
+                $datos['fecha_fin'] ?? null,
+                $datos['activo'] ?? 1,
+                $id
+            ]);
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+    
+    public function eliminar($id) {
+        $stmt = $this->db->prepare("UPDATE promociones SET activo = 0 WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
+    
+    public function aplicarPromocion($variedad_id, $cantidad) {
+        // Buscar la mejor promoción aplicable
+        $sql = "SELECT * FROM promociones 
+                WHERE variedad_id = ? AND activo = 1 AND cantidad <= ?
+                ORDER BY cantidad DESC LIMIT 1";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$variedad_id, $cantidad]);
+        $promo = $stmt->fetch();
+        
+        if ($promo) {
+            $cantidadPromos = floor($cantidad / $promo['cantidad']);
+            $sobrante = $cantidad % $promo['cantidad'];
+            
+            return [
+                'aplica' => true,
+                'cantidad_promos' => $cantidadPromos,
+                'sobrante' => $sobrante,
+                'precio_promo' => $promo['precio_promocional'],
+                'cantidad_promo' => $promo['cantidad']
+            ];
+        }
+        
+        return ['aplica' => false];
+    }
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\models\Variedad.php
+Contenido:
+----------------------------------------
+<?php
+// app/models/Variedad.php
+class Variedad {
+    private $db;
+    
+    public function __construct() {
+        $this->db = Database::getInstance()->getConnection();
+    }
+    
+    public function getAll($soloActivos = true) {
+        $sql = "SELECT v.*, p.nombre as producto_padre_nombre
+                FROM variedades v
+                JOIN productos_padre p ON v.producto_padre_id = p.id";
+        if ($soloActivos) $sql .= " WHERE v.activo = 1";
+        $sql .= " ORDER BY p.nombre, v.nombre";
+        
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchAll();
+    }
+    
+    public function getAllConFiltros($filtros = []) {
+        $sql = "SELECT v.*, p.nombre as producto_padre_nombre
+                FROM variedades v
+                JOIN productos_padre p ON v.producto_padre_id = p.id
+                WHERE v.activo = 1";
+        
+        $params = [];
+        
+        // Filtro por estado de stock
+        if (!empty($filtros['stock_estado'])) {
+            switch ($filtros['stock_estado']) {
+                case 'bajo':
+                    $sql .= " AND v.stock <= v.stock_minimo";
+                    break;
+                case 'normal':
+                    $sql .= " AND v.stock > v.stock_minimo AND v.stock <= (v.stock_minimo * 2)";
+                    break;
+                case 'alto':
+                    $sql .= " AND v.stock > (v.stock_minimo * 2)";
+                    break;
+                case 'sin_stock':
+                    $sql .= " AND v.stock = 0";
+                    break;
+            }
+        }
+        
+        // Filtro por producto padre
+        if (!empty($filtros['producto_padre_id'])) {
+            $sql .= " AND v.producto_padre_id = ?";
+            $params[] = $filtros['producto_padre_id'];
+        }
+        
+        $sql .= " ORDER BY p.nombre, v.nombre";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll();
+    }
+    
+    public function getById($id) {
+        $sql = "SELECT v.*, p.nombre as producto_padre_nombre
+                FROM variedades v
+                JOIN productos_padre p ON v.producto_padre_id = p.id
+                WHERE v.id = ?";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    }
+    
+    public function getByProductoPadre($producto_padre_id, $soloActivos = true) {
+        $sql = "SELECT * FROM variedades WHERE producto_padre_id = ?";
+        if ($soloActivos) $sql .= " AND activo = 1";
+        $sql .= " ORDER BY nombre";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$producto_padre_id]);
+        return $stmt->fetchAll();
+    }
+    
+    public function getStockBajo() {
+        $sql = "SELECT v.*, p.nombre as producto_padre_nombre
+                FROM variedades v
+                JOIN productos_padre p ON v.producto_padre_id = p.id
+                WHERE v.stock <= v.stock_minimo AND v.activo = 1
+                ORDER BY v.stock ASC";
+        
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchAll();
+    }
+    
+    public function crear($datos) {
+        try {
+            $sql = "INSERT INTO variedades (
+                producto_padre_id,
+                nombre,
+                descripcion,
+                precio_compra_total,
+                cantidad_comprada,
+                precio_costo_unitario,
+                precio_venta_unitario,
+                stock,
+                stock_minimo
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([
+                $datos['producto_padre_id'],
+                $datos['nombre'],
+                $datos['descripcion'] ?? '',
+                $datos['precio_compra_total'],
+                $datos['cantidad_comprada'],
+                $datos['precio_costo_unitario'],
+                $datos['precio_venta_unitario'],
+                $datos['stock'] ?? $datos['cantidad_comprada'],
+                $datos['stock_minimo'] ?? 10
+            ]);
+            
+            return $this->db->lastInsertId();
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+    
+    public function actualizar($id, $datos) {
+        try {
+            $sql = "UPDATE variedades SET 
+                nombre = ?,
+                descripcion = ?,
+                precio_compra_total = ?,
+                cantidad_comprada = ?,
+                precio_costo_unitario = ?,
+                precio_venta_unitario = ?,
+                stock = ?,
+                stock_minimo = ?,
+                activo = ?
+                WHERE id = ?";
+            
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute([
+                $datos['nombre'],
+                $datos['descripcion'] ?? '',
+                $datos['precio_compra_total'],
+                $datos['cantidad_comprada'],
+                $datos['precio_costo_unitario'],
+                $datos['precio_venta_unitario'],
+                $datos['stock'],
+                $datos['stock_minimo'] ?? 10,
+                $datos['activo'] ?? 1,
+                $id
+            ]);
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+    
+    public function actualizarStock($id, $cantidad) {
+        $stmt = $this->db->prepare("UPDATE variedades SET stock = stock + ? WHERE id = ?");
+        return $stmt->execute([$cantidad, $id]);
+    }
+    
+    public function eliminar($id) {
+        $stmt = $this->db->prepare("UPDATE variedades SET activo = 0 WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
+    
+    public function calcularPrecioCostoUnitario($precioTotal, $cantidad) {
+        if ($cantidad == 0) return 0;
+        return round($precioTotal / $cantidad, 2);
+    }
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\models\Venta.php
+Contenido:
+----------------------------------------
+<?php
+// app/models/Venta.php
+class Venta {
+    private $db;
+    
+    public function __construct() {
+        $this->db = Database::getInstance()->getConnection();
+    }
+    
+    public function getAll($filtros = []) {
+        $sql = "SELECT * FROM ventas WHERE 1=1";
+        $params = [];
+        
+        // Filtro por fecha
+        if (!empty($filtros['fecha_desde'])) {
+            $sql .= " AND DATE(fecha) >= ?";
+            $params[] = $filtros['fecha_desde'];
+        }
+        
+        if (!empty($filtros['fecha_hasta'])) {
+            $sql .= " AND DATE(fecha) <= ?";
+            $params[] = $filtros['fecha_hasta'];
+        }
+        
+        // Filtro por método de pago
+        if (!empty($filtros['metodo_pago'])) {
+            $sql .= " AND metodo_pago = ?";
+            $params[] = $filtros['metodo_pago'];
+        }
+        
+        $sql .= " ORDER BY fecha DESC";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll();
+    }
+    
+    public function getById($id) {
+        $stmt = $this->db->prepare("SELECT * FROM ventas WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    }
+    
+    public function getDetalles($venta_id) {
+        $sql = "SELECT vd.*, v.nombre as variedad_nombre, p.nombre as producto_padre_nombre
+                FROM venta_detalles vd
+                JOIN variedades v ON vd.variedad_id = v.id
+                JOIN productos_padre p ON v.producto_padre_id = p.id
+                WHERE vd.venta_id = ?";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$venta_id]);
+        return $stmt->fetchAll();
+    }
+    
+    public function getVentasPorProducto($variedad_id, $fecha_desde = null, $fecha_hasta = null) {
+        $sql = "SELECT SUM(vd.cantidad) as total_vendido, COUNT(DISTINCT vd.venta_id) as cantidad_ventas
+                FROM venta_detalles vd
+                JOIN ventas v ON vd.venta_id = v.id
+                WHERE vd.variedad_id = ?";
+        
+        $params = [$variedad_id];
+        
+        if ($fecha_desde) {
+            $sql .= " AND DATE(v.fecha) >= ?";
+            $params[] = $fecha_desde;
+        }
+        
+        if ($fecha_hasta) {
+            $sql .= " AND DATE(v.fecha) <= ?";
+            $params[] = $fecha_hasta;
+        }
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetch();
+    }
+    
+    public function crear($total, $metodo_pago, $descuento_aplicado, $detalles) {
+        try {
+            $this->db->beginTransaction();
+            
+            // Crear venta
+            $stmt = $this->db->prepare("INSERT INTO ventas (total, metodo_pago, descuento_aplicado) VALUES (?, ?, ?)");
+            $stmt->execute([$total, $metodo_pago, $descuento_aplicado]);
+            $venta_id = $this->db->lastInsertId();
+            
+            // Insertar detalles y actualizar stock
+            $stmtDetalle = $this->db->prepare(
+                "INSERT INTO venta_detalles (venta_id, variedad_id, cantidad, precio_unitario, descuento_unitario, subtotal) VALUES (?, ?, ?, ?, ?, ?)"
+            );
+            
+            $stmtStock = $this->db->prepare("UPDATE variedades SET stock = stock - ? WHERE id = ?");
+            
+            foreach ($detalles as $detalle) {
+                $stmtDetalle->execute([
+                    $venta_id,
+                    $detalle['variedad_id'],
+                    $detalle['cantidad'],
+                    $detalle['precio_unitario'],
+                    $detalle['descuento_unitario'] ?? 0,
+                    $detalle['subtotal']
+                ]);
+                
+                $stmtStock->execute([
+                    $detalle['cantidad'],
+                    $detalle['variedad_id']
+                ]);
+            }
+            
+            $this->db->commit();
+            return $venta_id;
+        } catch (PDOException $e) {
+            $this->db->rollBack();
+            return false;
+        }
+    }
+    
+    public function getTotalVentas($filtros = []) {
+        $sql = "SELECT SUM(total) as total FROM ventas WHERE 1=1";
+        $params = [];
+        
+        if (!empty($filtros['fecha_desde'])) {
+            $sql .= " AND DATE(fecha) >= ?";
+            $params[] = $filtros['fecha_desde'];
+        }
+        
+        if (!empty($filtros['fecha_hasta'])) {
+            $sql .= " AND DATE(fecha) <= ?";
+            $params[] = $filtros['fecha_hasta'];
+        }
+        
+        if (!empty($filtros['metodo_pago'])) {
+            $sql .= " AND metodo_pago = ?";
+            $params[] = $filtros['metodo_pago'];
+        }
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        $result = $stmt->fetch();
+        
+        return $result['total'] ?? 0;
+    }
+    
+    public function getEstadisticas($fecha_desde = null, $fecha_hasta = null) {
+        $sql = "SELECT 
+                COUNT(*) as total_ventas,
+                SUM(total) as total_vendido,
+                AVG(total) as promedio_venta,
+                SUM(CASE WHEN metodo_pago = 'efectivo' THEN total ELSE 0 END) as total_efectivo,
+                SUM(CASE WHEN metodo_pago = 'transferencia' THEN total ELSE 0 END) as total_transferencia
+                FROM ventas WHERE 1=1";
+        
+        $params = [];
+        
+        if ($fecha_desde) {
+            $sql .= " AND DATE(fecha) >= ?";
+            $params[] = $fecha_desde;
+        }
+        
+        if ($fecha_hasta) {
+            $sql .= " AND DATE(fecha) <= ?";
+            $params[] = $fecha_hasta;
+        }
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetch();
+    }
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\layout.php
+Contenido:
+----------------------------------------
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; }
+        .header { background: #9c3b9e; color: white; padding: 15px 0; margin-bottom: 20px; }
+        .header .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .header h1 { font-size: 24px; margin-bottom: 10px; }
+        .nav { display: flex; gap: 10px; flex-wrap: wrap; }
+        .nav a { color: white; text-decoration: none; padding: 8px 15px; background: rgba(255,255,255,0.2); border-radius: 4px; font-size: 14px; }
+        .nav a:hover { background: rgba(255,255,255,0.3); }
+        .nav a.active { background: rgba(255,255,255,0.4); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .content { background: white; padding: 20px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .btn { display: inline-block; padding: 10px 20px; text-decoration: none; border-radius: 4px; cursor: pointer; border: none; font-size: 14px; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-success { background: #27ae60; color: white; }
+        .btn-success:hover { background: #229954; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-danger:hover { background: #c0392b; }
+        .btn-secondary { background: #95a5a6; color: white; }
+        .btn-secondary:hover { background: #7f8c8d; }
+        .btn-warning { background: #f39c12; color: white; }
+        .btn-warning:hover { background: #e67e22; }
+        .btn-info { background: #16a085; color: white; }
+        .btn-info:hover { background: #138d75; }
+        .alert { padding: 15px; margin-bottom: 20px; border-radius: 4px; }
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        table th, table td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        table th { background: #55345e; color: white; }
+        table tr:hover { background: #f5f5f5; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        .form-group textarea { min-height: 100px; }
+        .form-actions { margin-top: 20px; }
+        .checkbox-group { display: flex; align-items: center; }
+        .checkbox-group input { width: auto; margin-right: 8px; }
+        .badge { padding: 5px 10px; border-radius: 3px; font-size: 12px; color: white; }
+        .badge-activo { background: #27ae60; }
+        .badge-inactivo { background: #95a5a6; }
+        .badge-stock-bajo { background: #e74c3c; }
+        .badge-stock-ok { background: #27ae60; }
+        .badge-pendiente { background: #f39c12; }
+        .badge-realizado { background: #27ae60; }
+        .badge-faltante { background: #e74c3c; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+        .card { background: #ecf0f1; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
+        .filtros { background: #ecf0f1; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .filtros form { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }
+        .filtros .form-group { margin-bottom: 0; flex: 1; min-width: 150px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>📦 Sistema de Gestión</h1>
+            <div class="nav">
+                <a href="index.php?c=variedad&a=index">🏷️ Variedades</a>
+                <a href="index.php?c=productoPadre&a=index">📁 Productos Padre</a>
+                <a href="index.php?c=promocion&a=index">🎁 Promociones</a>
+                <a href="index.php?c=venta&a=index">💰 Ventas</a>
+                <a href="index.php?c=venta&a=nueva">➕ Nueva Venta</a>
+                <a href="index.php?c=pedido&a=index">📋 Pedidos</a>
+                <a href="index.php?c=pedido&a=nuevo">🛒 Nuevo Pedido</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="content">
+            <?php if (isset($_SESSION['mensaje'])): ?>
+                <div class="alert alert-<?= $_SESSION['tipo_mensaje'] ?>">
+                    <?= htmlspecialchars($_SESSION['mensaje']) ?>
+                </div>
+                <?php unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']); ?>
+            <?php endif; ?>
+            
+            <?= $content ?>
+        </div>
+    </div>
+</body>
+</html>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\configuracion\index.php
+Contenido:
+----------------------------------------
+<!-- app/views/configuracion/index.php -->
+<h2>Configuración del Sistema</h2>
+
+<div class="grid-2" style="margin-top: 20px;">
+    <!-- TAMAÑOS -->
+    <div class="card">
+        <h3 style="margin-bottom: 15px;">🍯 Tamaños (Dulces)</h3>
+        
+        <form method="POST" action="index.php?c=configuracion&a=agregarTamano" style="margin-bottom: 15px;">
+            <div style="display: flex; gap: 10px;">
+                <input type="text" name="nombre" placeholder="Ej: 500g" required style="flex: 1; padding: 8px;">
+                <button type="submit" class="btn btn-success">Agregar</button>
+            </div>
+        </form>
+        
+        <div style="max-height: 300px; overflow-y: auto;">
+            <?php foreach ($tamanos as $t): ?>
+                <div style="display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #ddd; <?= !$t['activo'] ? 'opacity: 0.5;' : '' ?>">
+                    <span><?= htmlspecialchars($t['nombre']) ?></span>
+                    <?php if ($t['activo']): ?>
+                        <a href="index.php?c=configuracion&a=eliminarTamano&id=<?= $t['id'] ?>" 
+                           class="btn btn-danger" style="padding: 3px 8px; font-size: 12px;"
+                           onclick="return confirm('¿Eliminar?')">✕</a>
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    
+    <!-- SABORES -->
+    <div class="card">
+        <h3 style="margin-bottom: 15px;">🍫 Sabores (Dulces)</h3>
+        
+        <form method="POST" action="index.php?c=configuracion&a=agregarSabor" style="margin-bottom: 15px;">
+            <div style="display: flex; gap: 10px;">
+                <input type="text" name="nombre" placeholder="Ej: Frutilla" required style="flex: 1; padding: 8px;">
+                <button type="submit" class="btn btn-success">Agregar</button>
+            </div>
+        </form>
+        
+        <div style="max-height: 300px; overflow-y: auto;">
+            <?php foreach ($sabores as $s): ?>
+                <div style="display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #ddd; <?= !$s['activo'] ? 'opacity: 0.5;' : '' ?>">
+                    <span><?= htmlspecialchars($s['nombre']) ?></span>
+                    <?php if ($s['activo']): ?>
+                        <a href="index.php?c=configuracion&a=eliminarSabor&id=<?= $s['id'] ?>" 
+                           class="btn btn-danger" style="padding: 3px 8px; font-size: 12px;"
+                           onclick="return confirm('¿Eliminar?')">✕</a>
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>
+
+<!-- VARIEDADES DE SALADOS -->
+<div class="card" style="margin-top: 20px;">
+    <h3 style="margin-bottom: 15px;">🧀 Variedades de Salados</h3>
+    
+    <form method="POST" action="index.php?c=configuracion&a=agregarVariedad" style="margin-bottom: 15px;">
+        <div style="display: flex; gap: 10px;">
+            <select name="tipo_salado_id" required style="padding: 8px;">
+                <?php foreach ($tipos_salados as $ts): ?>
+                    <option value="<?= $ts['id'] ?>"><?= htmlspecialchars($ts['nombre']) ?></option>
+                <?php endforeach; ?>
+            </select>
+            <input type="text" name="nombre" placeholder="Ej: Queso con Ajo" required style="flex: 1; padding: 8px;">
+            <button type="submit" class="btn btn-success">Agregar</button>
+        </div>
+    </form>
+    
+    <div style="max-height: 400px; overflow-y: auto;">
+        <?php foreach ($variedades as $v): ?>
+            <div style="display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #ddd; <?= !$v['activo'] ? 'opacity: 0.5;' : '' ?>">
+                <span>
+                    <span class="badge" style="background: #95a5a6;"><?= htmlspecialchars($v['tipo_nombre']) ?></span>
+                    <?= htmlspecialchars($v['nombre']) ?>
+                </span>
+                <?php if ($v['activo']): ?>
+                    <a href="index.php?c=configuracion&a=eliminarVariedad&id=<?= $v['id'] ?>" 
+                       class="btn btn-danger" style="padding: 3px 8px; font-size: 12px;"
+                       onclick="return confirm('¿Eliminar?')">✕</a>
+                <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\pedidos\detalle.php
+Contenido:
+----------------------------------------
+<!-- app/views/pedidos/detalle.php -->
+<div style="margin-bottom: 20px;">
+    <a href="index.php?c=pedido&a=index" class="btn btn-secondary">← Volver a Pedidos</a>
+</div>
+
+<div class="card" style="margin-bottom: 20px;">
+    <h2>Detalle del Pedido #<?= $pedido['id'] ?></h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 15px;">
+        <div>
+            <strong>Fecha Creación:</strong><br>
+            <?= date('d/m/Y H:i', strtotime($pedido['fecha_creacion'])) ?>
+        </div>
+        <div>
+            <strong>Estado:</strong><br>
+            <?php if ($pedido['estado'] == 'pendiente'): ?>
+                <span class="badge badge-pendiente">⏳ Pendiente</span>
+            <?php elseif ($pedido['estado'] == 'realizado'): ?>
+                <span class="badge badge-realizado">✓ Realizado</span>
+            <?php else: ?>
+                <span class="badge badge-faltante">⚠ Faltante</span>
+            <?php endif; ?>
+        </div>
+        <div>
+            <strong>Fecha Realización:</strong><br>
+            <?php if ($pedido['fecha_realizacion']): ?>
+                <?= date('d/m/Y H:i', strtotime($pedido['fecha_realizacion'])) ?>
+            <?php else: ?>
+                <span style="color: #95a5a6;">-</span>
+            <?php endif; ?>
+        </div>
+    </div>
+    
+    <?php if ($pedido['observaciones']): ?>
+    <div style="margin-top: 15px; padding: 10px; background: #ecf0f1; border-radius: 4px;">
+        <strong>Observaciones:</strong><br>
+        <?= nl2br(htmlspecialchars($pedido['observaciones'])) ?>
+    </div>
+    <?php endif; ?>
+</div>
+
+<?php if ($pedido['estado'] == 'pendiente'): ?>
+<div class="card" style="margin-bottom: 20px; background: #fff3cd;">
+    <h3 style="margin-bottom: 15px;">Acciones del Pedido</h3>
+    <div style="display: flex; gap: 10px;">
+        <a href="index.php?c=pedido&a=marcarRealizado&id=<?= $pedido['id'] ?>" 
+           class="btn btn-success"
+           onclick="return confirm('¿Marcar este pedido como realizado? Esto actualizará el stock de todos los productos.')">
+            ✓ Marcar como Realizado
+        </a>
+        
+        <button type="button" class="btn btn-warning" onclick="mostrarFormFaltante()">
+            ⚠ Marcar con Faltantes
+        </button>
+    </div>
+    
+    <div id="form_faltante" style="display: none; margin-top: 15px;">
+        <form method="POST" action="index.php?c=pedido&a=marcarFaltante&id=<?= $pedido['id'] ?>">
+            <div class="form-group">
+                <label for="observaciones">Detalles de los faltantes:</label>
+                <textarea id="observaciones" name="observaciones" rows="3" required placeholder="Especifique qué productos faltaron y otros detalles..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-warning">Guardar</button>
+            <button type="button" class="btn btn-secondary" onclick="ocultarFormFaltante()">Cancelar</button>
+        </form>
+    </div>
+</div>
+<?php endif; ?>
+
+<h3 style="margin-bottom: 15px;">Productos del Pedido</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>Producto Padre</th>
+            <th>Variedad</th>
+            <th>Stock Actual</th>
+            <th>Cant. Solicitada</th>
+            <th>Cant. Recibida</th>
+            <th>Observaciones</th>
+            <?php if ($pedido['estado'] == 'pendiente'): ?>
+            <th>Acciones</th>
+            <?php endif; ?>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($detalles as $detalle): 
+            $stockBajo = $detalle['stock'] <= $detalle['stock_minimo'];
+        ?>
+            <tr>
+                <td>
+                    <span style="color: #7f8c8d; font-size: 12px;"><?= htmlspecialchars($detalle['producto_padre_nombre']) ?></span>
+                </td>
+                <td>
+                    <?= $stockBajo ? '<span style="color: #e74c3c;">⚠️</span> ' : '' ?>
+                    <strong><?= htmlspecialchars($detalle['variedad_nombre']) ?></strong>
+                </td>
+                <td>
+                    <span style="color: <?= $stockBajo ? '#e74c3c' : '#27ae60' ?>; font-weight: bold;">
+                        <?= $detalle['stock'] ?>
+                    </span>
+                    <br>
+                    <small style="color: #95a5a6;">Mín: <?= $detalle['stock_minimo'] ?></small>
+                </td>
+                <td><strong><?= $detalle['cantidad_solicitada'] ?></strong></td>
+                <td>
+                    <?php if ($detalle['cantidad_recibida'] > 0): ?>
+                        <span style="color: #27ae60; font-weight: bold;"><?= $detalle['cantidad_recibida'] ?></span>
+                    <?php else: ?>
+                        <span style="color: #95a5a6;">-</span>
+                    <?php endif; ?>
+                </td>
+                <td>
+                    <?php if ($detalle['observaciones']): ?>
+                        <small><?= nl2br(htmlspecialchars($detalle['observaciones'])) ?></small>
+                    <?php else: ?>
+                        <span style="color: #95a5a6;">-</span>
+                    <?php endif; ?>
+                </td>
+                <?php if ($pedido['estado'] == 'pendiente'): ?>
+                <td>
+                    <button type="button" class="btn btn-info" style="padding: 5px 10px;" 
+                            onclick="mostrarFormRecepcion(<?= $detalle['id'] ?>, '<?= htmlspecialchars($detalle['variedad_nombre']) ?>', <?= $detalle['cantidad_solicitada'] ?>)">
+                        Recibir
+                    </button>
+                </td>
+                <?php endif; ?>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+
+<!-- Modal para recepción de mercadería -->
+<div id="modal_recepcion" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 8px; min-width: 400px;">
+        <h3 id="modal_titulo" style="margin-bottom: 15px;">Recibir Mercadería</h3>
+        <form method="POST" action="index.php?c=pedido&a=actualizarDetalle&id=<?= $pedido['id'] ?>">
+            <input type="hidden" id="detalle_id" name="detalle_id">
+            
+            <div class="form-group">
+                <label for="cantidad_recibida">Cantidad Recibida *</label>
+                <input type="number" id="cantidad_recibida" name="cantidad_recibida" min="0" required style="width: 100%; padding: 8px;">
+                <small style="color: #666;">El stock se actualizará automáticamente</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="obs_recepcion">Observaciones</label>
+                <textarea id="obs_recepcion" name="observaciones" rows="3" style="width: 100%; padding: 8px;" placeholder="Notas sobre la recepción..."></textarea>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="button" class="btn btn-secondary" onclick="cerrarModal()">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function mostrarFormFaltante() {
+    document.getElementById('form_faltante').style.display = 'block';
+}
+
+function ocultarFormFaltante() {
+    document.getElementById('form_faltante').style.display = 'none';
+}
+
+function mostrarFormRecepcion(detalleId, nombreVariedad, cantidadSolicitada) {
+    document.getElementById('detalle_id').value = detalleId;
+    document.getElementById('modal_titulo').textContent = 'Recibir: ' + nombreVariedad;
+    document.getElementById('cantidad_recibida').value = cantidadSolicitada;
+    document.getElementById('cantidad_recibida').max = cantidadSolicitada * 2; // Permitir recibir hasta el doble
+    document.getElementById('modal_recepcion').style.display = 'block';
+}
+
+function cerrarModal() {
+    document.getElementById('modal_recepcion').style.display = 'none';
+}
+
+// Cerrar modal al hacer clic fuera
+document.getElementById('modal_recepcion')?.addEventListener('click', function(e) {
+    if (e.target === this) {
+        cerrarModal();
+    }
+});
+</script>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\pedidos\index.php
+Contenido:
+----------------------------------------
+<!-- app/views/pedidos/index.php -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Gestión de Pedidos</h2>
+    <a href="index.php?c=pedido&a=nuevo" class="btn btn-primary">+ Nuevo Pedido</a>
+</div>
+
+<?php if (empty($pedidos)): ?>
+    <p>No hay pedidos registrados.</p>
+<?php else: ?>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Fecha Creación</th>
+                <th>Cantidad Items</th>
+                <th>Total Unidades</th>
+                <th>Estado</th>
+                <th>Fecha Realización</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($pedidos as $pedido): ?>
+                <tr>
+                    <td><strong>#<?= $pedido['id'] ?></strong></td>
+                    <td><?= date('d/m/Y H:i', strtotime($pedido['fecha_creacion'])) ?></td>
+                    <td>
+                        <span class="badge" style="background: #3498db;"><?= $pedido['cantidad_items'] ?> productos</span>
+                    </td>
+                    <td>
+                        <strong><?= $pedido['total_unidades'] ?></strong> unidades
+                    </td>
+                    <td>
+                        <?php if ($pedido['estado'] == 'pendiente'): ?>
+                            <span class="badge badge-pendiente">⏳ Pendiente</span>
+                        <?php elseif ($pedido['estado'] == 'realizado'): ?>
+                            <span class="badge badge-realizado">✓ Realizado</span>
+                        <?php else: ?>
+                            <span class="badge badge-faltante">⚠ Faltante</span>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <?php if ($pedido['fecha_realizacion']): ?>
+                            <?= date('d/m/Y H:i', strtotime($pedido['fecha_realizacion'])) ?>
+                        <?php else: ?>
+                            <span style="color: #95a5a6;">-</span>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <a href="index.php?c=pedido&a=detalle&id=<?= $pedido['id'] ?>" class="btn btn-primary" style="padding: 5px 10px;">Ver Detalle</a>
+                        <?php if ($pedido['estado'] == 'pendiente'): ?>
+                            <a href="index.php?c=pedido&a=eliminar&id=<?= $pedido['id'] ?>" 
+                               class="btn btn-danger" 
+                               style="padding: 5px 10px;"
+                               onclick="return confirm('¿Eliminar este pedido?')">Eliminar</a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    
+    <div style="margin-top: 20px; color: #666;">
+        Total de pedidos: <?= count($pedidos) ?>
+    </div>
+<?php endif; ?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\pedidos\nuevo.php
+Contenido:
+----------------------------------------
+<!-- app/views/pedidos/nuevo.php -->
+<h2>Nuevo Pedido</h2>
+
+<?php if (!empty($variedades_stock_bajo)): ?>
+<div class="card" style="margin-bottom: 20px; background: #fff3cd; border: 1px solid #ffc107;">
+    <h3 style="margin-bottom: 15px; color: #856404;">⚠️ Productos con Stock Bajo</h3>
+    <p style="margin-bottom: 10px;">Los siguientes productos tienen stock por debajo del mínimo:</p>
+    <div style="display: grid; gap: 10px;">
+        <?php foreach ($variedades_stock_bajo as $var): ?>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: white; border-radius: 4px;">
+                <div>
+                    <strong><?= htmlspecialchars($var['producto_padre_nombre']) ?> - <?= htmlspecialchars($var['nombre']) ?></strong><br>
+                    <small style="color: #666;">Stock actual: <span style="color: #e74c3c; font-weight: bold;"><?= $var['stock'] ?></span> | Mínimo: <?= $var['stock_minimo'] ?></small>
+                </div>
+                <button type="button" class="btn btn-warning" style="padding: 5px 10px;" onclick="agregarProductoRapido(<?= $var['id'] ?>, '<?= htmlspecialchars($var['producto_padre_nombre'] . ' - ' . $var['nombre']) ?>', <?= $var['stock_minimo'] - $var['stock'] + 10 ?>)">
+                    + Agregar al Pedido
+                </button>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>
+<?php endif; ?>
+
+<div class="card" style="margin-bottom: 20px;">
+    <h3 style="margin-bottom: 15px;">Agregar Productos al Pedido</h3>
+    
+    <div class="form-group">
+        <label for="variedad_select">Seleccionar Producto</label>
+        <select id="variedad_select" style="width: 100%; padding: 10px;">
+            <option value="">Seleccione un producto...</option>
+            <?php foreach ($variedades as $var): 
+                $stock_bajo = $var['stock'] <= $var['stock_minimo'];
+            ?>
+                <option value="<?= $var['id'] ?>" 
+                        data-nombre="<?= htmlspecialchars($var['producto_padre_nombre'] . ' - ' . $var['nombre']) ?>"
+                        data-stock="<?= $var['stock'] ?>"
+                        data-minimo="<?= $var['stock_minimo'] ?>"
+                        data-stock-bajo="<?= $stock_bajo ? 'true' : 'false' ?>">
+                    <?= $stock_bajo ? '⚠️ ' : '' ?>
+                    <?= htmlspecialchars($var['producto_padre_nombre']) ?> - <?= htmlspecialchars($var['nombre']) ?> 
+                    (Stock: <?= $var['stock'] ?> / Mín: <?= $var['stock_minimo'] ?>)
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    
+    <button type="button" onclick="agregarProducto()" class="btn btn-success">➕ Agregar al Pedido</button>
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom: 15px;">Productos en el Pedido</h3>
+    
+    <table id="tabla_pedido">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Stock Actual</th>
+                <th>Cantidad a Pedir</th>
+                <th>Observaciones</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="items_pedido">
+            <tr id="sin_productos">
+                <td colspan="5" style="text-align: center; color: #95a5a6;">No hay productos agregados al pedido</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<form method="POST" action="index.php?c=pedido&a=nuevo" id="form_pedido" style="margin-top: 20px;">
+    <input type="hidden" name="productos_json" id="productos_json">
+    
+    <div class="form-group">
+        <label for="observaciones">Observaciones del Pedido</label>
+        <textarea id="observaciones" name="observaciones" rows="4" placeholder="Notas adicionales sobre el pedido..."></textarea>
+    </div>
+    
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary" onclick="return validarPedido()">✓ Crear Pedido</button>
+        <a href="index.php?c=pedido&a=index" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+<script>
+let productosPedido = [];
+
+function agregarProductoRapido(variedadId, nombre, cantidadSugerida) {
+    // Verificar si ya está agregado
+    const existe = productosPedido.find(p => p.variedad_id == variedadId);
+    if (existe) {
+        existe.cantidad = cantidadSugerida;
+    } else {
+        productosPedido.push({
+            variedad_id: variedadId,
+            nombre: nombre,
+            cantidad: cantidadSugerida,
+            observaciones: 'Stock bajo - Pedido automático'
+        });
+    }
+    
+    actualizarTabla();
+}
+
+function agregarProducto() {
+    const select = document.getElementById('variedad_select');
+    const option = select.options[select.selectedIndex];
+    
+    if (!option.value) {
+        alert('Seleccione un producto');
+        return;
+    }
+    
+    const variedadId = option.value;
+    const nombre = option.dataset.nombre;
+    const stock = parseInt(option.dataset.stock);
+    const minimo = parseInt(option.dataset.minimo);
+    const stockBajo = option.dataset.stockBajo === 'true';
+    
+    // Verificar si ya está agregado
+    const existe = productosPedido.find(p => p.variedad_id == variedadId);
+    if (existe) {
+        alert('Este producto ya está en el pedido');
+        return;
+    }
+    
+    // Calcular cantidad sugerida
+    let cantidadSugerida = 10;
+    if (stockBajo) {
+        cantidadSugerida = minimo - stock + 10;
+    }
+    
+    // Agregar nuevo producto
+    productosPedido.push({
+        variedad_id: variedadId,
+        nombre: nombre,
+        cantidad: cantidadSugerida,
+        stock: stock,
+        minimo: minimo,
+        observaciones: ''
+    });
+    
+    actualizarTabla();
+    select.selectedIndex = 0;
+}
+
+function eliminarProducto(index) {
+    productosPedido.splice(index, 1);
+    actualizarTabla();
+}
+
+function cambiarCantidad(index, cantidad) {
+    const nuevaCantidad = parseInt(cantidad);
+    
+    if (nuevaCantidad < 1) {
+        alert('La cantidad debe ser al menos 1');
+        return;
+    }
+    
+    productosPedido[index].cantidad = nuevaCantidad;
+    actualizarTabla();
+}
+
+function cambiarObservaciones(index, observaciones) {
+    productosPedido[index].observaciones = observaciones;
+}
+
+function actualizarTabla() {
+    const tbody = document.getElementById('items_pedido');
+    const sinProductos = document.getElementById('sin_productos');
+    
+    if (productosPedido.length === 0) {
+        sinProductos.style.display = 'table-row';
+        return;
+    }
+    
+    sinProductos.style.display = 'none';
+    tbody.innerHTML = '';
+    
+    productosPedido.forEach((item, index) => {
+        const stockBajo = item.stock <= item.minimo;
+        
+        const row = `
+            <tr>
+                <td>
+                    ${stockBajo ? '<span style="color: #e74c3c;">⚠️</span> ' : ''}
+                    <strong>${item.nombre}</strong>
+                </td>
+                <td>
+                    <span style="color: ${stockBajo ? '#e74c3c' : '#27ae60'}; font-weight: bold;">
+                        ${item.stock || 0}
+                    </span>
+                    <small style="display: block; color: #95a5a6;">Mínimo: ${item.minimo || 10}</small>
+                </td>
+                <td>
+                    <input type="number" value="${item.cantidad}" min="1" 
+                           style="width: 100px; padding: 5px;" 
+                           onchange="cambiarCantidad(${index}, this.value)">
+                </td>
+                <td>
+                    <input type="text" value="${item.observaciones || ''}" 
+                           style="width: 200px; padding: 5px;" 
+                           placeholder="Notas..."
+                           onchange="cambiarObservaciones(${index}, this.value)">
+                </td>
+                <td>
+                    <button type="button" class="btn btn-danger" style="padding: 5px 10px;" 
+                            onclick="eliminarProducto(${index})">Quitar</button>
+                </td>
+            </tr>
+        `;
+        tbody.innerHTML += row;
+    });
+    
+    tbody.innerHTML += sinProductos.outerHTML;
+}
+
+function validarPedido() {
+    if (productosPedido.length === 0) {
+        alert('Debe agregar al menos un producto al pedido');
+        return false;
+    }
+    
+    document.getElementById('productos_json').value = JSON.stringify(productosPedido);
+    return true;
+}
+</script>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\productos_padre\crear.php
+Contenido:
+----------------------------------------
+<!-- app/views/productos_padre/crear.php -->
+<h2>Crear Producto Padre</h2>
+
+<form method="POST" action="index.php?c=productoPadre&a=crear">
+    <div class="form-group">
+        <label for="nombre">Nombre del Producto *</label>
+        <input type="text" id="nombre" name="nombre" required placeholder="Ej: Colaless VINTAGE">
+    </div>
+    
+    <div class="card">
+        <h3 style="margin-bottom: 15px;">📦 Precios Pack x3</h3>
+        <p style="color: #666; margin-bottom: 15px;">
+            El precio final será: <strong>Costo + (Costo × Porcentaje / 100)</strong><br>
+            Ejemplo: Si costo = $7,904 y porcentaje = 100%, precio final = $7,904 + ($7,904 × 100/100) = $15,808
+        </p>
+        <div class="grid-2">
+            <div class="form-group">
+                <label for="porcentaje_pack3_tarjeta">💳 Porcentaje Tarjeta (%)</label>
+                <input type="number" id="porcentaje_pack3_tarjeta" name="porcentaje_pack3_tarjeta" step="0.01" min="0" value="100">
+                <small style="color: #666;">100% = precio es el doble del costo</small>
+            </div>
+            <div class="form-group">
+                <label for="porcentaje_pack3_efectivo">💵 Porcentaje Efectivo (%)</label>
+                <input type="number" id="porcentaje_pack3_efectivo" name="porcentaje_pack3_efectivo" step="0.01" min="0" value="80">
+                <small style="color: #666;">80% = precio es costo + 80% del costo</small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h3 style="margin-bottom: 15px;">🏷️ Precios Por Unidad</h3>
+        <p style="color: #666; margin-bottom: 15px;">
+            El precio por unidad se calcula dividiendo el precio del pack x3 entre 3
+        </p>
+        <div class="grid-2">
+            <div class="form-group">
+                <label for="porcentaje_unidad_tarjeta">💳 Porcentaje Tarjeta (%)</label>
+                <input type="number" id="porcentaje_unidad_tarjeta" name="porcentaje_unidad_tarjeta" step="0.01" min="0" value="100">
+                <small style="color: #666;">Normalmente igual al pack x3</small>
+            </div>
+            <div class="form-group">
+                <label for="porcentaje_unidad_efectivo">💵 Porcentaje Efectivo (%)</label>
+                <input type="number" id="porcentaje_unidad_efectivo" name="porcentaje_unidad_efectivo" step="0.01" min="0" value="80">
+                <small style="color: #666;">Normalmente igual al pack x3</small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card" style="background: #e8f5e9;">
+        <h4 style="margin-bottom: 10px;">💡 Ejemplo de Cálculo</h4>
+        <p style="margin-bottom: 5px;"><strong>Si el costo es $7,904:</strong></p>
+        <ul style="margin-left: 20px;">
+            <li>Pack x3 Tarjeta (100%): $7,904 + $7,904 = <strong>$15,808</strong></li>
+            <li>Pack x3 Efectivo (80%): $7,904 + $6,323.20 = <strong>$14,227.20</strong></li>
+            <li>Por 1 Tarjeta: $15,808 / 3 = <strong>$5,269.33</strong></li>
+            <li>Por 1 Efectivo: $14,227.20 / 3 = <strong>$4,742.40</strong></li>
+        </ul>
+    </div>
+    
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Guardar Producto Padre</button>
+        <a href="index.php?c=productoPadre&a=index" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\productos_padre\editar.php
+Contenido:
+----------------------------------------
+<!-- app/views/productos_padre/editar.php -->
+<h2>Editar Producto Padre</h2>
+
+<form method="POST" action="index.php?c=productoPadre&a=editar&id=<?= $producto['id'] ?>">
+    <div class="form-group">
+        <label for="nombre">Nombre del Producto *</label>
+        <input type="text" id="nombre" name="nombre" required value="<?= htmlspecialchars($producto['nombre']) ?>">
+    </div>
+    
+    <div class="card">
+        <h3 style="margin-bottom: 15px;">📦 Precios Pack x3</h3>
+        <div class="grid-2">
+            <div class="form-group">
+                <label for="porcentaje_pack3_tarjeta">💳 Porcentaje Tarjeta (%)</label>
+                <input type="number" id="porcentaje_pack3_tarjeta" name="porcentaje_pack3_tarjeta" step="0.01" min="0" value="<?= $producto['porcentaje_pack3_tarjeta'] ?>">
+            </div>
+            <div class="form-group">
+                <label for="porcentaje_pack3_efectivo">💵 Porcentaje Efectivo (%)</label>
+                <input type="number" id="porcentaje_pack3_efectivo" name="porcentaje_pack3_efectivo" step="0.01" min="0" value="<?= $producto['porcentaje_pack3_efectivo'] ?>">
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h3 style="margin-bottom: 15px;">🏷️ Precios Por Unidad</h3>
+        <div class="grid-2">
+            <div class="form-group">
+                <label for="porcentaje_unidad_tarjeta">💳 Porcentaje Tarjeta (%)</label>
+                <input type="number" id="porcentaje_unidad_tarjeta" name="porcentaje_unidad_tarjeta" step="0.01" min="0" value="<?= $producto['porcentaje_unidad_tarjeta'] ?>">
+            </div>
+            <div class="form-group">
+                <label for="porcentaje_unidad_efectivo">💵 Porcentaje Efectivo (%)</label>
+                <input type="number" id="porcentaje_unidad_efectivo" name="porcentaje_unidad_efectivo" step="0.01" min="0" value="<?= $producto['porcentaje_unidad_efectivo'] ?>">
+            </div>
+        </div>
+    </div>
+    
+    <div class="form-group checkbox-group">
+        <input type="checkbox" id="activo" name="activo" <?= $producto['activo'] ? 'checked' : '' ?>>
+        <label for="activo">Producto Activo</label>
+    </div>
+    
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Actualizar</button>
+        <a href="index.php?c=productoPadre&a=index" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\productos_padre\index.php
+Contenido:
+----------------------------------------
+<!-- app/views/productos_padre/index.php -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Productos Padre</h2>
+    <a href="index.php?c=productoPadre&a=crear" class="btn btn-primary">+ Nuevo Producto Padre</a>
+</div>
+
+<p style="color: #666; margin-bottom: 20px;">
+    Los productos padre son las categorías generales que agrupan variedades. Aquí se configuran los descuentos que se aplicarán a todas sus variedades.
+</p>
+
+<?php if (empty($productos)): ?>
+    <p>No hay productos padre registrados.</p>
+<?php else: ?>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Pack x3 Tarjeta</th>
+                <th>Pack x3 Efectivo</th>
+                <th>Por 1 Tarjeta</th>
+                <th>Por 1 Efectivo</th>
+                <th>Variedades</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php 
+            $productoPadreModel = new ProductoPadre();
+            foreach ($productos as $prod): 
+                $cantidad_variedades = $productoPadreModel->cantidadVariedades($prod['id']);
+            ?>
+                <tr>
+                    <td><strong><?= htmlspecialchars($prod['nombre']) ?></strong></td>
+                    <td><?= $prod['porcentaje_pack3_tarjeta'] ?>%</td>
+                    <td><?= $prod['porcentaje_pack3_efectivo'] ?>%</td>
+                    <td><?= $prod['porcentaje_unidad_tarjeta'] ?>%</td>
+                    <td><?= $prod['porcentaje_unidad_efectivo'] ?>%</td>
+                    <td>
+                        <span class="badge" style="background: #3498db;"><?= $cantidad_variedades ?> variedades</span>
+                    </td>
+                    <td>
+                        <span class="badge badge-activo">Activo</span>
+                    </td>
+                    <td>
+                        <a href="index.php?c=productoPadre&a=editar&id=<?= $prod['id'] ?>" class="btn btn-success" style="padding: 5px 10px;">Editar</a>
+                        <a href="index.php?c=productoPadre&a=eliminar&id=<?= $prod['id'] ?>" 
+                           class="btn btn-danger" 
+                           style="padding: 5px 10px;"
+                           onclick="return confirm('¿Eliminar este producto padre?')">Eliminar</a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    
+    <div style="margin-top: 20px; color: #666;">
+        Total de productos padre: <?= count($productos) ?>
+    </div>
+<?php endif; ?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\promociones\crear.php
+Contenido:
+----------------------------------------
+<!-- app/views/promociones/crear.php -->
+<h2>Crear Nueva Promoción</h2>
+
+<form method="POST" action="index.php?c=promocion&a=crear">
+    <div class="form-group">
+        <label for="variedad_id">Variedad *</label>
+        <select id="variedad_id" name="variedad_id" required onchange="mostrarInfoVariedad()">
+            <option value="">Seleccione una variedad...</option>
+            <?php foreach ($variedades as $var): ?>
+                <option value="<?= $var['id'] ?>" 
+                        data-precio="<?= $var['precio_venta_unitario'] ?>"
+                        data-nombre="<?= htmlspecialchars($var['nombre']) ?>"
+                        data-padre="<?= htmlspecialchars($var['producto_padre_nombre']) ?>">
+                    <?= htmlspecialchars($var['producto_padre_nombre']) ?> - <?= htmlspecialchars($var['nombre']) ?> 
+                    (Precio: $<?= number_format($var['precio_venta_unitario'], 2) ?>)
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    
+    <div id="info_variedad" style="display: none;" class="card">
+        <h4 style="margin-bottom: 10px;">Información del Producto</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+            <div>
+                <strong>Producto Padre:</strong><br>
+                <span id="info_padre">-</span>
+            </div>
+            <div>
+                <strong>Variedad:</strong><br>
+                <span id="info_nombre">-</span>
+            </div>
+            <div>
+                <strong>Precio Unitario:</strong><br>
+                <span id="info_precio" style="color: #27ae60; font-weight: bold;">-</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="grid-2">
+        <div class="form-group">
+            <label for="cantidad">Cantidad de Unidades *</label>
+            <input type="number" id="cantidad" name="cantidad" min="2" required onchange="calcularPrecioSugerido()">
+            <small style="color: #666;">Cantidad mínima para aplicar la promoción</small>
+        </div>
+        
+        <div class="form-group">
+            <label for="precio_promocional">Precio Promocional *</label>
+            <input type="number" id="precio_promocional" name="precio_promocional" step="0.01" min="0" required onchange="calcularAhorro()">
+            <small style="color: #666;">Precio total de la promoción</small>
+        </div>
+    </div>
+    
+    <div id="calculo_promo" style="display: none;" class="card">
+        <h4 style="margin-bottom: 10px;">Cálculo de Promoción</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+            <div>
+                <strong>Precio Normal:</strong><br>
+                <span id="precio_normal" style="font-size: 18px;">$0.00</span>
+            </div>
+            <div>
+                <strong>Precio Promo:</strong><br>
+                <span id="precio_promo" style="font-size: 18px; color: #27ae60;">$0.00</span>
+            </div>
+            <div>
+                <strong>Ahorro:</strong><br>
+                <span id="ahorro" style="font-size: 18px; color: #e74c3c;">$0.00</span>
+                <br>
+                <span id="ahorro_porcentaje" style="color: #e74c3c; font-weight: bold;">0%</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="grid-2">
+        <div class="form-group">
+            <label for="fecha_inicio">Fecha Inicio (Opcional)</label>
+            <input type="datetime-local" id="fecha_inicio" name="fecha_inicio">
+        </div>
+        
+        <div class="form-group">
+            <label for="fecha_fin">Fecha Fin (Opcional)</label>
+            <input type="datetime-local" id="fecha_fin" name="fecha_fin">
+        </div>
+    </div>
+    
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Crear Promoción</button>
+        <a href="index.php?c=promocion&a=index" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+<script>
+let precioUnitario = 0;
+
+function mostrarInfoVariedad() {
+    const select = document.getElementById('variedad_id');
+    const option = select.options[select.selectedIndex];
+    
+    if (option.value) {
+        precioUnitario = parseFloat(option.dataset.precio);
+        
+        document.getElementById('info_padre').textContent = option.dataset.padre;
+        document.getElementById('info_nombre').textContent = option.dataset.nombre;
+        document.getElementById('info_precio').textContent = '$' + precioUnitario.toFixed(2);
+        document.getElementById('info_variedad').style.display = 'block';
+        
+        calcularPrecioSugerido();
+    } else {
+        document.getElementById('info_variedad').style.display = 'none';
+        document.getElementById('calculo_promo').style.display = 'none';
+    }
+}
+
+function calcularPrecioSugerido() {
+    const cantidad = parseInt(document.getElementById('cantidad').value) || 0;
+    
+    if (cantidad > 0 && precioUnitario > 0) {
+        // Sugerir un 10% de descuento
+        const precioNormal = precioUnitario * cantidad;
+        const precioSugerido = precioNormal * 0.9;
+        
+        document.getElementById('precio_promocional').value = precioSugerido.toFixed(2);
+        calcularAhorro();
+    }
+}
+
+function calcularAhorro() {
+    const cantidad = parseInt(document.getElementById('cantidad').value) || 0;
+    const precioPromo = parseFloat(document.getElementById('precio_promocional').value) || 0;
+    
+    if (cantidad > 0 && precioPromo > 0 && precioUnitario > 0) {
+        const precioNormal = precioUnitario * cantidad;
+        const ahorro = precioNormal - precioPromo;
+        const ahorroPorcentaje = (ahorro / precioNormal) * 100;
+        
+        document.getElementById('precio_normal').textContent = '$' + precioNormal.toFixed(2);
+        document.getElementById('precio_promo').textContent = '$' + precioPromo.toFixed(2);
+        document.getElementById('ahorro').textContent = '$' + ahorro.toFixed(2);
+        document.getElementById('ahorro_porcentaje').textContent = ahorroPorcentaje.toFixed(1) + '%';
+        
+        document.getElementById('calculo_promo').style.display = 'block';
+    }
+}
+</script>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\promociones\editar.php
+Contenido:
+----------------------------------------
+<!-- app/views/promociones/editar.php -->
+<h2>Editar Promoción</h2>
+
+<div class="card" style="margin-bottom: 20px;">
+    <h3><?= htmlspecialchars($promocion['producto_padre_nombre']) ?> - <?= htmlspecialchars($promocion['variedad_nombre']) ?></h3>
+</div>
+
+<form method="POST" action="index.php?c=promocion&a=editar&id=<?= $promocion['id'] ?>">
+    <div class="grid-2">
+        <div class="form-group">
+            <label for="cantidad">Cantidad de Unidades *</label>
+            <input type="number" id="cantidad" name="cantidad" min="2" required value="<?= $promocion['cantidad'] ?>">
+        </div>
+        
+        <div class="form-group">
+            <label for="precio_promocional">Precio Promocional *</label>
+            <input type="number" id="precio_promocional" name="precio_promocional" step="0.01" min="0" required value="<?= $promocion['precio_promocional'] ?>">
+        </div>
+    </div>
+    
+    <div class="grid-2">
+        <div class="form-group">
+            <label for="fecha_inicio">Fecha Inicio</label>
+            <input type="datetime-local" id="fecha_inicio" name="fecha_inicio" 
+                   value="<?= $promocion['fecha_inicio'] ? date('Y-m-d\TH:i', strtotime($promocion['fecha_inicio'])) : '' ?>">
+        </div>
+        
+        <div class="form-group">
+            <label for="fecha_fin">Fecha Fin</label>
+            <input type="datetime-local" id="fecha_fin" name="fecha_fin"
+                   value="<?= $promocion['fecha_fin'] ? date('Y-m-d\TH:i', strtotime($promocion['fecha_fin'])) : '' ?>">
+        </div>
+    </div>
+    
+    <div class="form-group checkbox-group">
+        <input type="checkbox" id="activo" name="activo" <?= $promocion['activo'] ? 'checked' : '' ?>>
+        <label for="activo">Promoción Activa</label>
+    </div>
+    
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Actualizar</button>
+        <a href="index.php?c=promocion&a=index" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\promociones\index.php
+Contenido:
+----------------------------------------
+<!-- app/views/promociones/index.php -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Promociones</h2>
+    <a href="index.php?c=promocion&a=crear" class="btn btn-primary">+ Nueva Promoción</a>
+</div>
+
+<?php if (empty($promociones)): ?>
+    <p>No hay promociones registradas.</p>
+<?php else: ?>
+    <table>
+        <thead>
+            <tr>
+                <th>Producto Padre</th>
+                <th>Variedad</th>
+                <th>Cantidad</th>
+                <th>Precio Promocional</th>
+                <th>Ahorro</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php 
+            $variedadModel = new Variedad();
+            foreach ($promociones as $promo): 
+                $variedad = $variedadModel->getById($promo['variedad_id']);
+                $precio_normal = $variedad['precio_venta_unitario'] * $promo['cantidad'];
+                $ahorro = $precio_normal - $promo['precio_promocional'];
+                $ahorro_porcentaje = ($precio_normal > 0) ? (($ahorro / $precio_normal) * 100) : 0;
+            ?>
+                <tr>
+                    <td>
+                        <span style="color: #7f8c8d; font-size: 12px;"><?= htmlspecialchars($promo['producto_padre_nombre']) ?></span>
+                    </td>
+                    <td><strong><?= htmlspecialchars($promo['variedad_nombre']) ?></strong></td>
+                    <td>
+                        <span class="badge" style="background: #3498db;"><?= $promo['cantidad'] ?> unidades</span>
+                    </td>
+                    <td>
+                        <strong style="color: #27ae60;">$<?= number_format($promo['precio_promocional'], 2) ?></strong>
+                        <br>
+                        <small style="color: #95a5a6;">Normal: $<?= number_format($precio_normal, 2) ?></small>
+                    </td>
+                    <td>
+                        <span style="color: #27ae60; font-weight: bold;">
+                            $<?= number_format($ahorro, 2) ?>
+                            <br>
+                            <small>(<?= number_format($ahorro_porcentaje, 1) ?>%)</small>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge badge-activo">Activa</span>
+                    </td>
+                    <td>
+                        <a href="index.php?c=promocion&a=editar&id=<?= $promo['id'] ?>" class="btn btn-success" style="padding: 5px 10px;">Editar</a>
+                        <a href="index.php?c=promocion&a=eliminar&id=<?= $promo['id'] ?>" 
+                           class="btn btn-danger" 
+                           style="padding: 5px 10px;"
+                           onclick="return confirm('¿Eliminar esta promoción?')">Eliminar</a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    
+    <div style="margin-top: 20px; color: #666;">
+        Total de promociones: <?= count($promociones) ?>
+    </div>
+<?php endif; ?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\variedades\crear.php
+Contenido:
+----------------------------------------
+<!-- app/views/variedades/crear.php -->
+<h2>Crear Nueva Variedad</h2>
+
+<form method="POST" action="index.php?c=variedad&a=crear">
+    <div class="form-group">
+        <label for="producto_padre_id">Producto Padre *</label>
+        <select id="producto_padre_id" name="producto_padre_id" required>
+            <option value="">Seleccione...</option>
+            <?php foreach ($productos_padre as $pp): ?>
+                <option value="<?= $pp['id'] ?>"><?= htmlspecialchars($pp['nombre']) ?></option>
+            <?php endforeach; ?>
+        </select>
+        <small style="color: #666;">Los descuentos se heredan del producto padre</small>
+    </div>
+    
+    <div class="grid-2">
+        <div class="form-group">
+            <label for="nombre">Nombre de la Variedad *</label>
+            <input type="text" id="nombre" name="nombre" required placeholder="Ej: Remera Negra M">
+        </div>
+        
+        <div class="form-group">
+            <label for="descripcion">Descripción</label>
+            <input type="text" id="descripcion" name="descripcion" placeholder="Opcional">
+        </div>
+    </div>
+    
+    <div class="card">
+        <h3 style="margin-bottom: 15px;">💰 Datos de Compra</h3>
+        <div class="grid-3">
+            <div class="form-group">
+                <label for="precio_compra_total">Precio Total de Compra *</label>
+                <input type="number" id="precio_compra_total" name="precio_compra_total" step="0.01" min="0" required onchange="calcularCostoUnitario()">
+                <small style="color: #666;">Precio total pagado al proveedor</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="cantidad_comprada">Cantidad Comprada *</label>
+                <input type="number" id="cantidad_comprada" name="cantidad_comprada" min="1" required onchange="calcularCostoUnitario()">
+                <small style="color: #666;">Unidades que compraste</small>
+            </div>
+            
+            <div class="form-group">
+                <label>Costo Unitario (Calculado)</label>
+                <input type="text" id="costo_unitario_display" readonly style="background: #ecf0f1; font-weight: bold;" value="$0.00">
+                <small style="color: #666;">Se calcula automáticamente</small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h3 style="margin-bottom: 15px;">💵 Precio de Venta y Stock</h3>
+        <div class="grid-3">
+            <div class="form-group">
+                <label for="precio_venta_unitario">Precio Venta Unitario *</label>
+                <input type="number" id="precio_venta_unitario" name="precio_venta_unitario" step="0.01" min="0" required>
+                <small style="color: #666;">Precio al que venderás cada unidad</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="stock">Stock Inicial *</label>
+                <input type="number" id="stock" name="stock" min="0" required>
+                <small style="color: #666;">Por defecto = cantidad comprada</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="stock_minimo">Stock Mínimo</label>
+                <input type="number" id="stock_minimo" name="stock_minimo" min="0" value="10">
+                <small style="color: #666;">Alerta cuando llegue a este nivel</small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h3 style="margin-bottom: 15px;">🎁 Configurar Promoción (Opcional)</h3>
+        <div class="grid-2">
+            <div class="form-group">
+                <label for="promo_cantidad">Cantidad en Promo</label>
+                <input type="number" id="promo_cantidad" name="promo_cantidad" min="2" placeholder="Ej: 3">
+            </div>
+            
+            <div class="form-group">
+                <label for="promo_precio">Precio Promocional</label>
+                <input type="number" id="promo_precio" name="promo_precio" step="0.01" min="0" placeholder="Ej: 30000">
+            </div>
+        </div>
+    </div>
+    
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Guardar Variedad</button>
+        <a href="index.php?c=variedad&a=index" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+<script>
+function calcularCostoUnitario() {
+    const precioTotal = parseFloat(document.getElementById('precio_compra_total').value) || 0;
+    const cantidad = parseInt(document.getElementById('cantidad_comprada').value) || 0;
+    
+    if (cantidad > 0) {
+        const costoUnitario = precioTotal / cantidad;
+        document.getElementById('costo_unitario_display').value = '$' + costoUnitario.toFixed(2);
+        
+        // Auto-completar el stock con la cantidad comprada
+        if (!document.getElementById('stock').value) {
+            document.getElementById('stock').value = cantidad;
+        }
+    }
+}
+</script>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\variedades\editar.php
+Contenido:
+----------------------------------------
+<!-- app/views/variedades/editar.php -->
+<h2>Editar Variedad</h2>
+
+<div class="card" style="margin-bottom: 20px;">
+    <h3><?= htmlspecialchars($variedad['producto_padre_nombre']) ?> - <?= htmlspecialchars($variedad['nombre']) ?></h3>
+</div>
+
+<form method="POST" action="index.php?c=variedad&a=editar&id=<?= $variedad['id'] ?>">
+    <div class="grid-2">
+        <div class="form-group">
+            <label for="nombre">Nombre de la Variedad *</label>
+            <input type="text" id="nombre" name="nombre" required value="<?= htmlspecialchars($variedad['nombre']) ?>">
+        </div>
+        
+        <div class="form-group">
+            <label for="descripcion">Descripción</label>
+            <input type="text" id="descripcion" name="descripcion" value="<?= htmlspecialchars($variedad['descripcion']) ?>">
+        </div>
+    </div>
+    
+    <div class="card">
+        <h3 style="margin-bottom: 15px;">💰 Datos de Compra</h3>
+        <div class="grid-3">
+            <div class="form-group">
+                <label for="precio_compra_total">Precio Total de Compra *</label>
+                <input type="number" id="precio_compra_total" name="precio_compra_total" step="0.01" min="0" required value="<?= $variedad['precio_compra_total'] ?>" onchange="calcularCostoUnitario()">
+            </div>
+            
+            <div class="form-group">
+                <label for="cantidad_comprada">Cantidad Comprada *</label>
+                <input type="number" id="cantidad_comprada" name="cantidad_comprada" min="1" required value="<?= $variedad['cantidad_comprada'] ?>" onchange="calcularCostoUnitario()">
+            </div>
+            
+            <div class="form-group">
+                <label>Costo Unitario (Calculado)</label>
+                <input type="text" id="costo_unitario_display" readonly style="background: #ecf0f1; font-weight: bold;" value="$<?= number_format($variedad['precio_costo_unitario'], 2) ?>">
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h3 style="margin-bottom: 15px;">💵 Precio de Venta y Stock</h3>
+        <div class="grid-3">
+            <div class="form-group">
+                <label for="precio_venta_unitario">Precio Venta Unitario *</label>
+                <input type="number" id="precio_venta_unitario" name="precio_venta_unitario" step="0.01" min="0" required value="<?= $variedad['precio_venta_unitario'] ?>">
+            </div>
+            
+            <div class="form-group">
+                <label for="stock">Stock Actual *</label>
+                <input type="number" id="stock" name="stock" min="0" required value="<?= $variedad['stock'] ?>">
+            </div>
+            
+            <div class="form-group">
+                <label for="stock_minimo">Stock Mínimo</label>
+                <input type="number" id="stock_minimo" name="stock_minimo" min="0" value="<?= $variedad['stock_minimo'] ?>">
+            </div>
+        </div>
+    </div>
+    
+    <?php if (!empty($promociones)): ?>
+    <div class="card">
+        <h3 style="margin-bottom: 15px;">🎁 Promociones Activas</h3>
+        <?php foreach ($promociones as $promo): ?>
+            <div style="padding: 10px; background: white; border-radius: 4px; margin-bottom: 10px;">
+                <strong><?= $promo['cantidad'] ?> unidades por $<?= number_format($promo['precio_promocional'], 2) ?></strong>
+                <?php if ($promo['activo']): ?>
+                    <span class="badge badge-activo">Activa</span>
+                <?php else: ?>
+                    <span class="badge badge-inactivo">Inactiva</span>
+                <?php endif; ?>
+                <a href="index.php?c=promocion&a=editar&id=<?= $promo['id'] ?>" class="btn btn-warning" style="padding: 3px 8px; font-size: 12px; float: right;">Editar</a>
+            </div>
+        <?php endforeach; ?>
+        <a href="index.php?c=promocion&a=crear" class="btn btn-success" style="padding: 5px 10px; margin-top: 10px;">+ Agregar Promoción</a>
+    </div>
+    <?php endif; ?>
+    
+    <div class="form-group checkbox-group">
+        <input type="checkbox" id="activo" name="activo" <?= $variedad['activo'] ? 'checked' : '' ?>>
+        <label for="activo">Variedad Activa</label>
+    </div>
+    
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Actualizar</button>
+        <a href="index.php?c=variedad&a=index" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+<script>
+function calcularCostoUnitario() {
+    const precioTotal = parseFloat(document.getElementById('precio_compra_total').value) || 0;
+    const cantidad = parseInt(document.getElementById('cantidad_comprada').value) || 0;
+    
+    if (cantidad > 0) {
+        const costoUnitario = precioTotal / cantidad;
+        document.getElementById('costo_unitario_display').value = '$' + costoUnitario.toFixed(2);
+    }
+}
+</script>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\variedades\index.php
+Contenido:
+----------------------------------------
+<!-- app/views/variedades/index.php -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Listado de Variedades</h2>
+    <a href="index.php?c=variedad&a=crear" class="btn btn-primary">+ Nueva Variedad</a>
+</div>
+
+<!-- Filtros -->
+<div class="filtros">
+    <form method="GET" action="index.php">
+        <input type="hidden" name="c" value="variedad">
+        <input type="hidden" name="a" value="index">
+        
+        <div class="form-group">
+            <label for="stock_estado">Estado de Stock</label>
+            <select id="stock_estado" name="stock_estado">
+                <option value="">Todos</option>
+                <option value="sin_stock" <?= ($filtros['stock_estado'] ?? '') == 'sin_stock' ? 'selected' : '' ?>>Sin Stock</option>
+                <option value="bajo" <?= ($filtros['stock_estado'] ?? '') == 'bajo' ? 'selected' : '' ?>>Stock Bajo</option>
+                <option value="normal" <?= ($filtros['stock_estado'] ?? '') == 'normal' ? 'selected' : '' ?>>Stock Normal</option>
+                <option value="alto" <?= ($filtros['stock_estado'] ?? '') == 'alto' ? 'selected' : '' ?>>Stock Alto</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="producto_padre_id">Producto Padre</label>
+            <select id="producto_padre_id" name="producto_padre_id">
+                <option value="">Todos</option>
+                <?php foreach ($productos_padre as $pp): ?>
+                    <option value="<?= $pp['id'] ?>" <?= ($filtros['producto_padre_id'] ?? '') == $pp['id'] ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($pp['nombre']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>&nbsp;</label>
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+            <a href="index.php?c=variedad&a=index" class="btn btn-secondary">Limpiar</a>
+        </div>
+    </form>
+</div>
+
+<?php if (empty($variedades)): ?>
+    <p>No hay variedades registradas.</p>
+<?php else: ?>
+    <table>
+        <thead>
+            <tr>
+                <th>Producto Padre</th>
+                <th>Variedad</th>
+                <th>Stock</th>
+                <th>P. Costo Unit.</th>
+                <th>P. Venta Unit.</th>
+                <th>Margen</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($variedades as $var): 
+                $margen = $var['precio_venta_unitario'] - $var['precio_costo_unitario'];
+                $margen_porcentaje = ($var['precio_costo_unitario'] > 0) 
+                    ? (($margen / $var['precio_costo_unitario']) * 100) 
+                    : 0;
+                
+                $stock_bajo = $var['stock'] <= $var['stock_minimo'];
+            ?>
+                <tr>
+                    <td>
+                        <span style="color: #7f8c8d; font-size: 12px;"><?= htmlspecialchars($var['producto_padre_nombre']) ?></span>
+                    </td>
+                    <td>
+                        <strong><?= htmlspecialchars($var['nombre']) ?></strong>
+                        <?php if ($var['descripcion']): ?>
+                            <br><small style="color: #95a5a6;"><?= htmlspecialchars($var['descripcion']) ?></small>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <?php if ($stock_bajo): ?>
+                            <span class="badge badge-stock-bajo"><?= $var['stock'] ?></span>
+                            <small style="display: block; color: #e74c3c;">Mín: <?= $var['stock_minimo'] ?></small>
+                        <?php else: ?>
+                            <span class="badge badge-stock-ok"><?= $var['stock'] ?></span>
+                            <small style="display: block; color: #95a5a6;">Mín: <?= $var['stock_minimo'] ?></small>
+                        <?php endif; ?>
+                    </td>
+                    <td>$<?= number_format($var['precio_costo_unitario'], 2) ?></td>
+                    <td><strong>$<?= number_format($var['precio_venta_unitario'], 2) ?></strong></td>
+                    <td>
+                        <span style="color: <?= $margen > 0 ? '#27ae60' : '#e74c3c' ?>;">
+                            $<?= number_format($margen, 2) ?>
+                            (<?= number_format($margen_porcentaje, 1) ?>%)
+                        </span>
+                    </td>
+                    <td>
+                        <a href="index.php?c=variedad&a=editar&id=<?= $var['id'] ?>" class="btn btn-success" style="padding: 5px 10px;">Editar</a>
+                        <a href="index.php?c=variedad&a=eliminar&id=<?= $var['id'] ?>" 
+                           class="btn btn-danger" 
+                           style="padding: 5px 10px;"
+                           onclick="return confirm('¿Eliminar esta variedad?')">Eliminar</a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    
+    <div style="margin-top: 20px; color: #666;">
+        Total de variedades: <?= count($variedades) ?>
+    </div>
+<?php endif; ?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\detalle.php
+Contenido:
+----------------------------------------
+<!-- app/views/ventas/detalle.php -->
+<div style="margin-bottom: 20px;">
+    <a href="index.php?c=venta&a=index" class="btn btn-secondary">← Volver al Historial</a>
+</div>
+
+<div class="card" style="margin-bottom: 20px;">
+    <h2>Detalle de Venta #<?= $venta['id'] ?></h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 15px;">
+        <div>
+            <strong>Fecha:</strong><br>
+            <?= date('d/m/Y H:i', strtotime($venta['fecha'])) ?>
+        </div>
+        <div>
+            <strong>Método de Pago:</strong><br>
+            <?php if ($venta['metodo_pago'] == 'efectivo'): ?>
+                <span class="badge" style="background: #27ae60;">💵 Efectivo</span>
+            <?php else: ?>
+                <span class="badge" style="background: #3498db;">💳 Transferencia</span>
+            <?php endif; ?>
+        </div>
+        <div>
+            <strong>Descuento Aplicado:</strong><br>
+            <?php if ($venta['descuento_aplicado'] > 0): ?>
+                <span style="color: #e74c3c; font-size: 18px;">-$<?= number_format($venta['descuento_aplicado'], 2) ?></span>
+            <?php else: ?>
+                <span style="color: #95a5a6;">Sin descuento</span>
+            <?php endif; ?>
+        </div>
+        <div>
+            <strong>Total:</strong><br>
+            <span style="color: #27ae60; font-size: 24px; font-weight: bold;">$<?= number_format($venta['total'], 2) ?></span>
+        </div>
+    </div>
+</div>
+
+<h3 style="margin-bottom: 15px;">Productos Vendidos</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>Producto Padre</th>
+            <th>Variedad</th>
+            <th>Cantidad</th>
+            <th>Precio Unit.</th>
+            <th>Descuento Unit.</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($detalles as $detalle): ?>
+            <tr>
+                <td>
+                    <span style="color: #7f8c8d; font-size: 12px;"><?= htmlspecialchars($detalle['producto_padre_nombre']) ?></span>
+                </td>
+                <td><strong><?= htmlspecialchars($detalle['variedad_nombre']) ?></strong></td>
+                <td><?= $detalle['cantidad'] ?></td>
+                <td>$<?= number_format($detalle['precio_unitario'], 2) ?></td>
+                <td>
+                    <?php if ($detalle['descuento_unitario'] > 0): ?>
+                        <span style="color: #e74c3c;">-$<?= number_format($detalle['descuento_unitario'], 2) ?></span>
+                    <?php else: ?>
+                        <span style="color: #95a5a6;">-</span>
+                    <?php endif; ?>
+                </td>
+                <td><strong>$<?= number_format($detalle['subtotal'], 2) ?></strong></td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot>
+        <tr style="background: #ecf0f1; font-weight: bold;">
+            <td colspan="5" style="text-align: right;">TOTAL:</td>
+            <td style="color: #27ae60; font-size: 18px;">$<?= number_format($venta['total'], 2) ?></td>
+        </tr>
+    </tfoot>
+</table>.
+========================================
+.

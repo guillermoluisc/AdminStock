@@ -44,67 +44,102 @@
 <?php if (empty($variedades)): ?>
     <p>No hay variedades registradas.</p>
 <?php else: ?>
-    <table>
-        <thead>
-            <tr>
-                <th>Producto Padre</th>
-                <th>Variedad</th>
-                <th>Stock</th>
-                <th>P. Costo Unit.</th>
-                <th>P. Venta Unit.</th>
-                <th>Margen</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($variedades as $var): 
-                $margen = $var['precio_venta_unitario'] - $var['precio_costo_unitario'];
-                $margen_porcentaje = ($var['precio_costo_unitario'] > 0) 
-                    ? (($margen / $var['precio_costo_unitario']) * 100) 
-                    : 0;
-                
-                $stock_bajo = $var['stock'] <= $var['stock_minimo'];
-            ?>
+    <div style="overflow-x: auto;">
+        <table>
+            <thead>
                 <tr>
-                    <td>
-                        <span style="color: #7f8c8d; font-size: 12px;"><?= htmlspecialchars($var['producto_padre_nombre']) ?></span>
-                    </td>
-                    <td>
-                        <strong><?= htmlspecialchars($var['nombre']) ?></strong>
-                        <?php if ($var['descripcion']): ?>
-                            <br><small style="color: #95a5a6;"><?= htmlspecialchars($var['descripcion']) ?></small>
-                        <?php endif; ?>
-                    </td>
-                    <td>
-                        <?php if ($stock_bajo): ?>
-                            <span class="badge badge-stock-bajo"><?= $var['stock'] ?></span>
-                            <small style="display: block; color: #e74c3c;">Mín: <?= $var['stock_minimo'] ?></small>
-                        <?php else: ?>
-                            <span class="badge badge-stock-ok"><?= $var['stock'] ?></span>
-                            <small style="display: block; color: #95a5a6;">Mín: <?= $var['stock_minimo'] ?></small>
-                        <?php endif; ?>
-                    </td>
-                    <td>$<?= number_format($var['precio_costo_unitario'], 2) ?></td>
-                    <td><strong>$<?= number_format($var['precio_venta_unitario'], 2) ?></strong></td>
-                    <td>
-                        <span style="color: <?= $margen > 0 ? '#27ae60' : '#e74c3c' ?>;">
-                            $<?= number_format($margen, 2) ?>
-                            (<?= number_format($margen_porcentaje, 1) ?>%)
-                        </span>
-                    </td>
-                    <td>
-                        <a href="index.php?c=variedad&a=editar&id=<?= $var['id'] ?>" class="btn btn-success" style="padding: 5px 10px;">Editar</a>
-                        <a href="index.php?c=variedad&a=eliminar&id=<?= $var['id'] ?>" 
-                           class="btn btn-danger" 
-                           style="padding: 5px 10px;"
-                           onclick="return confirm('¿Eliminar esta variedad?')">Eliminar</a>
-                    </td>
+                    <th>Producto Padre</th>
+                    <th>Variedad</th>
+                    <th>Stock</th>
+                    <th>Costo Unit.</th>
+                    <th>Pack x3 💳</th>
+                    <th>Pack x3 💵</th>
+                    <th>x1 💳</th>
+                    <th>x1 💵</th>
+                    <th>Acciones</th>
                 </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <?php foreach ($variedades as $var): 
+                    $stock_bajo = $var['stock'] <= $var['stock_minimo'];
+                ?>
+                    <tr>
+                        <td>
+                            <span style="color: #7f8c8d; font-size: 12px;"><?= htmlspecialchars($var['producto_padre_nombre']) ?></span>
+                        </td>
+                        <td>
+                            <strong><?= htmlspecialchars($var['nombre']) ?></strong>
+                            <?php if ($var['descripcion']): ?>
+                                <br><small style="color: #95a5a6;"><?= htmlspecialchars($var['descripcion']) ?></small>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if ($stock_bajo): ?>
+                                <span class="badge badge-stock-bajo"><?= $var['stock'] ?></span>
+                                <small style="display: block; color: #e74c3c;">Mín: <?= $var['stock_minimo'] ?></small>
+                            <?php else: ?>
+                                <span class="badge badge-stock-ok"><?= $var['stock'] ?></span>
+                                <small style="display: block; color: #95a5a6;">Mín: <?= $var['stock_minimo'] ?></small>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <small style="color: #95a5a6;">Costo:</small><br>
+                            <strong>$<?= number_format($var['precio_costo_unitario'], 2) ?></strong>
+                        </td>
+                        <td>
+                            <?php if ($var['precio_pack3_tarjeta'] > 0): ?>
+                                <strong style="color: #3498db;">$<?= number_format($var['precio_pack3_tarjeta'], 2) ?></strong>
+                                <br><small style="color: #95a5a6;">c/u</small>
+                            <?php else: ?>
+                                <span style="color: #95a5a6;">-</span>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if ($var['precio_pack3_efectivo'] > 0): ?>
+                                <strong style="color: #27ae60;">$<?= number_format($var['precio_pack3_efectivo'], 2) ?></strong>
+                                <br><small style="color: #95a5a6;">c/u</small>
+                            <?php else: ?>
+                                <span style="color: #95a5a6;">-</span>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if ($var['precio_unidad_tarjeta'] > 0): ?>
+                                <strong style="color: #3498db;">$<?= number_format($var['precio_unidad_tarjeta'], 2) ?></strong>
+                            <?php else: ?>
+                                <span style="color: #95a5a6;">-</span>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if ($var['precio_unidad_efectivo'] > 0): ?>
+                                <strong style="color: #27ae60;">$<?= number_format($var['precio_unidad_efectivo'], 2) ?></strong>
+                            <?php else: ?>
+                                <span style="color: #95a5a6;">-</span>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <a href="index.php?c=variedad&a=editar&id=<?= $var['id'] ?>" class="btn btn-success" style="padding: 5px 10px;">Editar</a>
+                            <a href="index.php?c=variedad&a=eliminar&id=<?= $var['id'] ?>" 
+                               class="btn btn-danger" 
+                               style="padding: 5px 10px;"
+                               onclick="return confirm('¿Eliminar esta variedad?')">Eliminar</a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
     
     <div style="margin-top: 20px; color: #666;">
         Total de variedades: <?= count($variedades) ?>
+    </div>
+    
+    <div class="card" style="margin-top: 20px; background: #e3f2fd;">
+        <h4 style="margin-bottom: 10px;">💡 Leyenda de Precios:</h4>
+        <ul style="margin-left: 20px; line-height: 1.8;">
+            <li><strong>Pack x3 💳:</strong> Precio por unidad cuando se vende en pack de 3 con tarjeta</li>
+            <li><strong>Pack x3 💵:</strong> Precio por unidad cuando se vende en pack de 3 en efectivo</li>
+            <li><strong>x1 💳:</strong> Precio cuando se vende 1 unidad individual con tarjeta</li>
+            <li><strong>x1 💵:</strong> Precio cuando se vende 1 unidad individual en efectivo</li>
+        </ul>
     </div>
 <?php endif; ?>

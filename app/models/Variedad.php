@@ -98,10 +98,14 @@ class Variedad {
                 precio_compra_total,
                 cantidad_comprada,
                 precio_costo_unitario,
+                precio_pack3_tarjeta,
+                precio_pack3_efectivo,
+                precio_unidad_tarjeta,
+                precio_unidad_efectivo,
                 precio_venta_unitario,
                 stock,
                 stock_minimo
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             
             $stmt = $this->db->prepare($sql);
             $stmt->execute([
@@ -111,6 +115,10 @@ class Variedad {
                 $datos['precio_compra_total'],
                 $datos['cantidad_comprada'],
                 $datos['precio_costo_unitario'],
+                $datos['precio_pack3_tarjeta'] ?? 0,
+                $datos['precio_pack3_efectivo'] ?? 0,
+                $datos['precio_unidad_tarjeta'] ?? 0,
+                $datos['precio_unidad_efectivo'] ?? 0,
                 $datos['precio_venta_unitario'],
                 $datos['stock'] ?? $datos['cantidad_comprada'],
                 $datos['stock_minimo'] ?? 10
@@ -130,6 +138,10 @@ class Variedad {
                 precio_compra_total = ?,
                 cantidad_comprada = ?,
                 precio_costo_unitario = ?,
+                precio_pack3_tarjeta = ?,
+                precio_pack3_efectivo = ?,
+                precio_unidad_tarjeta = ?,
+                precio_unidad_efectivo = ?,
                 precio_venta_unitario = ?,
                 stock = ?,
                 stock_minimo = ?,
@@ -143,6 +155,10 @@ class Variedad {
                 $datos['precio_compra_total'],
                 $datos['cantidad_comprada'],
                 $datos['precio_costo_unitario'],
+                $datos['precio_pack3_tarjeta'] ?? 0,
+                $datos['precio_pack3_efectivo'] ?? 0,
+                $datos['precio_unidad_tarjeta'] ?? 0,
+                $datos['precio_unidad_efectivo'] ?? 0,
                 $datos['precio_venta_unitario'],
                 $datos['stock'],
                 $datos['stock_minimo'] ?? 10,
@@ -167,6 +183,44 @@ class Variedad {
     public function calcularPrecioCostoUnitario($precioTotal, $cantidad) {
         if ($cantidad == 0) return 0;
         return round($precioTotal / $cantidad, 2);
+    }
+    
+    /**
+     * Calcula los 4 precios de venta basados en el producto padre
+     */
+    public function calcularPreciosVenta($costo_unitario, $producto_padre_id) {
+        $productoPadreModel = new ProductoPadre();
+        $producto_padre = $productoPadreModel->getById($producto_padre_id);
+        
+        if (!$producto_padre) {
+            return [
+                'precio_pack3_tarjeta' => 0,
+                'precio_pack3_efectivo' => 0,
+                'precio_unidad_tarjeta' => 0,
+                'precio_unidad_efectivo' => 0
+            ];
+        }
+        
+        // Pack x3 Tarjeta: Costo × 3 + (Costo × 3 × porcentaje/100)
+        $precio_pack3_tarjeta_total = ($costo_unitario * 3) + (($costo_unitario * 3) * $producto_padre['porcentaje_pack3_tarjeta'] / 100);
+        $precio_pack3_tarjeta = $precio_pack3_tarjeta_total / 3; // Precio por unidad en el pack
+        
+        // Pack x3 Efectivo: Costo × 3 + (Costo × 3 × porcentaje/100)
+        $precio_pack3_efectivo_total = ($costo_unitario * 3) + (($costo_unitario * 3) * $producto_padre['porcentaje_pack3_efectivo'] / 100);
+        $precio_pack3_efectivo = $precio_pack3_efectivo_total / 3; // Precio por unidad en el pack
+        
+        // Unidad Tarjeta: Pack tarjeta total / 3
+        $precio_unidad_tarjeta = $precio_pack3_tarjeta_total / 3;
+        
+        // Unidad Efectivo: Pack efectivo total / 3
+        $precio_unidad_efectivo = $precio_pack3_efectivo_total / 3;
+        
+        return [
+            'precio_pack3_tarjeta' => round($precio_pack3_tarjeta, 2),
+            'precio_pack3_efectivo' => round($precio_pack3_efectivo, 2),
+            'precio_unidad_tarjeta' => round($precio_unidad_tarjeta, 2),
+            'precio_unidad_efectivo' => round($precio_unidad_efectivo, 2)
+        ];
     }
 }
 ?>

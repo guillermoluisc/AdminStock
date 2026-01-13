@@ -1,151 +1,193 @@
-[Tue Jan 13 08:13:14 2026] PHP 8.2.30 Development Server (http://localhost:8080) started
-[Tue Jan 13 08:13:17 2026] [::1]:53469 Accepted
-[Tue Jan 13 08:13:17 2026] [::1]:53469 [200]: GET /
-[Tue Jan 13 08:13:17 2026] [::1]:53469 Closing
-[Tue Jan 13 08:13:17 2026] [::1]:60359 Accepted
-[Tue Jan 13 08:13:17 2026] [::1]:60359 Closed without sending a request; it was probably just an unused speculative preconnection
-[Tue Jan 13 08:13:17 2026] [::1]:60359 Closing
-[Tue Jan 13 08:13:17 2026] [::1]:58550 Accepted
-[Tue Jan 13 08:13:17 2026] [::1]:58550 [404]: GET /favicon.ico - No such file or directory
-[Tue Jan 13 08:13:17 2026] [::1]:58550 Closing
-[Tue Jan 13 08:13:22 2026] [::1]:55609 Accepted
-[Tue Jan 13 08:13:23 2026] [::1]:55609 [302]: GET /index.php?c=variedad&a=eliminar&id=4
-[Tue Jan 13 08:13:23 2026] [::1]:55609 Closing
-[Tue Jan 13 08:13:23 2026] [::1]:56407 Accepted
-[Tue Jan 13 08:13:23 2026] [::1]:56407 [200]: GET /index.php?c=variedad&a=index
-[Tue Jan 13 08:13:23 2026] [::1]:56407 Closing
-[Tue Jan 13 08:13:25 2026] [::1]:63540 Accepted
-[Tue Jan 13 08:13:25 2026] [::1]:63540 [302]: GET /index.php?c=variedad&a=eliminar&id=3
-[Tue Jan 13 08:13:25 2026] [::1]:63540 Closing
-[Tue Jan 13 08:13:25 2026] [::1]:60559 Accepted
-[Tue Jan 13 08:13:25 2026] [::1]:60559 [200]: GET /index.php?c=variedad&a=index
-[Tue Jan 13 08:13:25 2026] [::1]:60559 Closing
-[Tue Jan 13 08:13:26 2026] [::1]:61588 Accepted
-[Tue Jan 13 08:13:26 2026] [::1]:61588 [302]: GET /index.php?c=variedad&a=eliminar&id=2
-[Tue Jan 13 08:13:26 2026] [::1]:61588 Closing
-[Tue Jan 13 08:13:26 2026] [::1]:52861 Accepted
-[Tue Jan 13 08:13:26 2026] [::1]:52861 [200]: GET /index.php?c=variedad&a=index
-[Tue Jan 13 08:13:26 2026] [::1]:52861 Closing
-[Tue Jan 13 08:13:27 2026] [::1]:49670 Accepted
-[Tue Jan 13 08:13:27 2026] [::1]:49670 [302]: GET /index.php?c=variedad&a=eliminar&id=1
-[Tue Jan 13 08:13:27 2026] [::1]:49670 Closing
-[Tue Jan 13 08:13:27 2026] [::1]:51422 Accepted
-[Tue Jan 13 08:13:27 2026] [::1]:51422 [200]: GET /index.php?c=variedad&a=index
-[Tue Jan 13 08:13:27 2026] [::1]:51422 Closing
-[Tue Jan 13 08:13:28 2026] [::1]:58176 Accepted
-[Tue Jan 13 08:13:28 2026] [::1]:58176 [200]: GET /index.php?c=productoPadre&a=index
-[Tue Jan 13 08:13:28 2026] [::1]:58176 Closing
-[Tue Jan 13 08:13:28 2026] [::1]:53117 Accepted
-[Tue Jan 13 08:13:30 2026] [::1]:53117 [302]: GET /index.php?c=productoPadre&a=eliminar&id=3
-[Tue Jan 13 08:13:30 2026] [::1]:53117 Closing
-[Tue Jan 13 08:13:30 2026] [::1]:54704 Accepted
-[Tue Jan 13 08:13:30 2026] [::1]:54704 [200]: GET /index.php?c=productoPadre&a=index
-[Tue Jan 13 08:13:30 2026] [::1]:54704 Closing
-[Tue Jan 13 08:13:32 2026] [::1]:64877 Accepted
-[Tue Jan 13 08:13:32 2026] [::1]:64877 [302]: GET /index.php?c=productoPadre&a=eliminar&id=2
-[Tue Jan 13 08:13:32 2026] [::1]:64877 Closing
-[Tue Jan 13 08:13:32 2026] [::1]:51860 Accepted
-[Tue Jan 13 08:13:32 2026] [::1]:51860 [200]: GET /index.php?c=productoPadre&a=index
-[Tue Jan 13 08:13:32 2026] [::1]:51860 Closing
-[Tue Jan 13 08:13:33 2026] [::1]:54050 Accepted
-[Tue Jan 13 08:13:34 2026] [::1]:54050 [302]: GET /index.php?c=productoPadre&a=eliminar&id=1
-[Tue Jan 13 08:13:34 2026] [::1]:54050 Closing
-[Tue Jan 13 08:13:34 2026] [::1]:54539 Accepted
-[Tue Jan 13 08:13:34 2026] [::1]:54539 [200]: GET /index.php?c=productoPadre&a=index
-[Tue Jan 13 08:13:34 2026] [::1]:54539 Closing
-[Tue Jan 13 08:13:35 2026] [::1]:55624 Accepted
-[Tue Jan 13 08:13:35 2026] [::1]:55624 [200]: GET /index.php?c=promocion&a=index
-[Tue Jan 13 08:13:35 2026] [::1]:55624 Closing
-[Tue Jan 13 08:13:35 2026] [::1]:62099 Accepted
-[Tue Jan 13 08:13:43 2026] [::1]:62099 [302]: GET /index.php?c=promocion&a=eliminar&id=2
-[Tue Jan 13 08:13:43 2026] [::1]:62099 Closing
-[Tue Jan 13 08:13:43 2026] [::1]:49281 Accepted
-[Tue Jan 13 08:13:43 2026] [::1]:49281 [200]: GET /index.php?c=promocion&a=index
-[Tue Jan 13 08:13:43 2026] [::1]:49281 Closing
-[Tue Jan 13 08:13:45 2026] [::1]:49670 Accepted
-[Tue Jan 13 08:13:47 2026] [::1]:49670 [302]: GET /index.php?c=promocion&a=eliminar&id=1
-[Tue Jan 13 08:13:47 2026] [::1]:49670 Closing
-[Tue Jan 13 08:13:47 2026] [::1]:59505 Accepted
-[Tue Jan 13 08:13:47 2026] [::1]:59505 [200]: GET /index.php?c=promocion&a=index
-[Tue Jan 13 08:13:47 2026] [::1]:59505 Closing
-[Tue Jan 13 08:13:48 2026] [::1]:57445 Accepted
-[Tue Jan 13 08:13:48 2026] [::1]:57445 [200]: GET /index.php?c=promocion&a=crear
-[Tue Jan 13 08:13:48 2026] [::1]:57445 Closing
-[Tue Jan 13 08:13:48 2026] [::1]:53629 Accepted
-[Tue Jan 13 08:14:01 2026] [::1]:53629 [200]: GET /index.php?c=promocion&a=index
-[Tue Jan 13 08:14:01 2026] [::1]:53629 Closing
-[Tue Jan 13 08:14:01 2026] [::1]:63370 Accepted
-[Tue Jan 13 08:14:05 2026] [::1]:63370 [200]: GET /index.php?c=variedad&a=index
-[Tue Jan 13 08:14:05 2026] [::1]:63370 Closing
-[Tue Jan 13 08:14:05 2026] [::1]:55599 Accepted
-[Tue Jan 13 08:14:07 2026] [::1]:55599 [200]: GET /index.php?c=productoPadre&a=index
-[Tue Jan 13 08:14:07 2026] [::1]:55599 Closing
-[Tue Jan 13 08:14:07 2026] [::1]:49670 Accepted
-[Tue Jan 13 08:14:09 2026] [::1]:49670 [200]: GET /index.php?c=productoPadre&a=crear
-[Tue Jan 13 08:14:09 2026] [::1]:49670 Closing
-[Tue Jan 13 08:14:09 2026] [::1]:63088 Accepted
-[Tue Jan 13 08:14:30 2026] [::1]:63088 [302]: POST /index.php?c=productoPadre&a=crear
-[Tue Jan 13 08:14:30 2026] [::1]:63088 Closing
-[Tue Jan 13 08:14:30 2026] [::1]:65230 Accepted
-[Tue Jan 13 08:14:30 2026] [::1]:65230 [200]: GET /index.php?c=productoPadre&a=index
-[Tue Jan 13 08:14:30 2026] [::1]:65230 Closing
-[Tue Jan 13 08:14:32 2026] [::1]:60978 Accepted
-[Tue Jan 13 08:14:33 2026] [::1]:60978 [200]: GET /index.php?c=variedad&a=index
-[Tue Jan 13 08:14:33 2026] [::1]:60978 Closing
-[Tue Jan 13 08:14:33 2026] [::1]:60337 Accepted
-[Tue Jan 13 08:14:35 2026] [::1]:60337 [200]: GET /index.php?c=variedad&a=crear
-[Tue Jan 13 08:14:35 2026] [::1]:60337 Closing
-[Tue Jan 13 08:14:35 2026] [::1]:57092 Accepted
-[Tue Jan 13 08:15:48 2026] [::1]:57092 Closed without sending a request; it was probably just an unused speculative preconnection
-[Tue Jan 13 08:15:48 2026] [::1]:57092 Closing
-[Tue Jan 13 08:15:48 2026] [::1]:63519 Accepted
-[Tue Jan 13 08:15:48 2026] [::1]:63519 [302]: POST /index.php?c=variedad&a=crear
-[Tue Jan 13 08:15:48 2026] [::1]:63519 Closing
-[Tue Jan 13 08:15:48 2026] [::1]:58671 Accepted
-[Tue Jan 13 08:15:48 2026] [::1]:58671 [200]: GET /index.php?c=variedad&a=index
-[Tue Jan 13 08:15:48 2026] [::1]:58671 Closing
-[Tue Jan 13 08:15:53 2026] [::1]:56577 Accepted
-[Tue Jan 13 08:15:53 2026] [::1]:56577 [200]: GET /index.php?c=variedad&a=editar&id=5
-[Tue Jan 13 08:15:53 2026] [::1]:56577 Closing
-[Tue Jan 13 08:15:53 2026] [::1]:65200 Accepted
-[Tue Jan 13 08:16:04 2026] [::1]:65200 [200]: GET /index.php?c=variedad&a=index
-[Tue Jan 13 08:16:04 2026] [::1]:65200 Closing
-[Tue Jan 13 08:16:04 2026] [::1]:51042 Accepted
-[Tue Jan 13 08:16:07 2026] [::1]:51042 [302]: GET /index.php?c=variedad&a=eliminar&id=5
-[Tue Jan 13 08:16:07 2026] [::1]:51042 Closing
-[Tue Jan 13 08:16:07 2026] [::1]:56987 Accepted
-[Tue Jan 13 08:16:07 2026] [::1]:56987 [200]: GET /index.php?c=variedad&a=index
-[Tue Jan 13 08:16:07 2026] [::1]:56987 Closing
-[Tue Jan 13 08:16:08 2026] [::1]:53273 Accepted
-[Tue Jan 13 08:16:08 2026] [::1]:53273 [200]: GET /index.php?c=variedad&a=crear
-[Tue Jan 13 08:16:08 2026] [::1]:53273 Closing
-[Tue Jan 13 08:16:08 2026] [::1]:65058 Accepted
-[Tue Jan 13 08:19:49 2026] [::1]:65058 Closed without sending a request; it was probably just an unused speculative preconnection
-[Tue Jan 13 08:19:49 2026] [::1]:65058 Closing
-[Tue Jan 13 08:19:49 2026] [::1]:51803 Accepted
-[Tue Jan 13 08:19:49 2026] [::1]:51803 [302]: POST /index.php?c=variedad&a=crear
-[Tue Jan 13 08:19:49 2026] [::1]:51803 Closing
-[Tue Jan 13 08:19:49 2026] [::1]:62241 Accepted
-[Tue Jan 13 08:19:49 2026] [::1]:62241 [200]: GET /index.php?c=variedad&a=index
-[Tue Jan 13 08:19:49 2026] [::1]:62241 Closing
-[Tue Jan 13 08:20:19 2026] [::1]:53380 Accepted
-[Tue Jan 13 08:20:19 2026] [::1]:53380 [200]: GET /index.php?c=venta&a=index
-[Tue Jan 13 08:20:19 2026] [::1]:53380 Closing
-[Tue Jan 13 08:20:19 2026] [::1]:61425 Accepted
-[Tue Jan 13 08:20:21 2026] [::1]:61425 [200]: GET /index.php?c=venta&a=nueva
-[Tue Jan 13 08:20:21 2026] [::1]:61425 Closing
-[Tue Jan 13 08:20:21 2026] [::1]:53353 Accepted
-[Tue Jan 13 08:20:42 2026] [::1]:53353 [302]: POST /index.php?c=venta&a=nueva
-[Tue Jan 13 08:20:42 2026] [::1]:53353 Closing
-[Tue Jan 13 08:20:42 2026] [::1]:59475 Accepted
-[Tue Jan 13 08:20:42 2026] [::1]:59475 [200]: GET /index.php?c=venta&a=detalle&id=1
-[Tue Jan 13 08:20:42 2026] [::1]:59475 Closing
-[Tue Jan 13 08:20:55 2026] [::1]:61110 Accepted
-[Tue Jan 13 08:20:55 2026] [::1]:61110 [200]: GET /index.php?c=venta&a=nueva
-[Tue Jan 13 08:20:55 2026] [::1]:61110 Closing
-[Tue Jan 13 08:20:55 2026] [::1]:49724 Accepted
-[Tue Jan 13 08:20:58 2026] [::1]:49724 [200]: GET /index.php?c=venta&a=index
-[Tue Jan 13 08:20:58 2026] [::1]:49724 Closing
-[Tue Jan 13 08:20:58 2026] [::1]:63057 Accepted
-[Tue Jan 13 08:22:26 2026] [::1]:63057 Closed without sending a request; it was probably just an unused speculative preconnection
-[Tue Jan 13 08:22:26 2026] [::1]:63057 Closing
+[Tue Jan 13 10:44:23 2026] PHP 8.2.30 Development Server (http://localhost:8080) started
+[Tue Jan 13 10:44:25 2026] [::1]:51404 Accepted
+[Tue Jan 13 10:44:26 2026] [::1]:51404 [200]: GET /
+[Tue Jan 13 10:44:26 2026] [::1]:51404 Closing
+[Tue Jan 13 10:44:26 2026] [::1]:54567 Accepted
+[Tue Jan 13 10:44:26 2026] [::1]:54567 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 13 10:44:26 2026] [::1]:54567 Closing
+[Tue Jan 13 10:44:34 2026] [::1]:58551 Accepted
+[Tue Jan 13 10:44:36 2026] [::1]:58551 [302]: GET /index.php?c=variedad&a=eliminar&id=6
+[Tue Jan 13 10:44:36 2026] [::1]:58551 Closing
+[Tue Jan 13 10:44:36 2026] [::1]:57088 Accepted
+[Tue Jan 13 10:44:36 2026] [::1]:57088 [200]: GET /index.php?c=variedad&a=index
+[Tue Jan 13 10:44:36 2026] [::1]:57088 Closing
+[Tue Jan 13 10:44:37 2026] [::1]:62814 Accepted
+[Tue Jan 13 10:44:38 2026] [::1]:62814 [200]: GET /index.php?c=productoPadre&a=index
+[Tue Jan 13 10:44:38 2026] [::1]:62814 Closing
+[Tue Jan 13 10:44:38 2026] [::1]:64231 Accepted
+[Tue Jan 13 10:44:40 2026] [::1]:64231 [302]: GET /index.php?c=productoPadre&a=eliminar&id=4
+[Tue Jan 13 10:44:40 2026] [::1]:64231 Closing
+[Tue Jan 13 10:44:40 2026] [::1]:60150 Accepted
+[Tue Jan 13 10:44:40 2026] [::1]:60150 [200]: GET /index.php?c=productoPadre&a=index
+[Tue Jan 13 10:44:40 2026] [::1]:60150 Closing
+[Tue Jan 13 10:44:41 2026] [::1]:54392 Accepted
+[Tue Jan 13 10:44:42 2026] [::1]:54392 [200]: GET /index.php?c=promocion&a=index
+[Tue Jan 13 10:44:42 2026] [::1]:54392 Closing
+[Tue Jan 13 10:44:42 2026] [::1]:64586 Accepted
+[Tue Jan 13 10:44:45 2026] [::1]:64586 [302]: GET /index.php?c=promocion&a=eliminar&id=3
+[Tue Jan 13 10:44:45 2026] [::1]:64586 Closing
+[Tue Jan 13 10:44:45 2026] [::1]:60183 Accepted
+[Tue Jan 13 10:44:45 2026] [::1]:60183 [200]: GET /index.php?c=promocion&a=index
+[Tue Jan 13 10:44:45 2026] [::1]:60183 Closing
+[Tue Jan 13 10:44:45 2026] [::1]:64020 Accepted
+[Tue Jan 13 10:44:46 2026] [::1]:64020 [200]: GET /index.php?c=venta&a=index
+[Tue Jan 13 10:44:46 2026] [::1]:64020 Closing
+[Tue Jan 13 10:44:46 2026] [::1]:50471 Accepted
+[Tue Jan 13 10:44:49 2026] [::1]:50471 [200]: GET /index.php?c=venta&a=nueva
+[Tue Jan 13 10:44:49 2026] [::1]:50471 Closing
+[Tue Jan 13 10:44:49 2026] [::1]:64688 Accepted
+[Tue Jan 13 10:44:51 2026] [::1]:64688 [200]: GET /index.php?c=pedido&a=index
+[Tue Jan 13 10:44:51 2026] [::1]:64688 Closing
+[Tue Jan 13 10:44:51 2026] [::1]:64470 Accepted
+[Tue Jan 13 10:44:53 2026] [::1]:64470 [200]: GET /index.php?c=variedad&a=index
+[Tue Jan 13 10:44:53 2026] [::1]:64470 Closing
+[Tue Jan 13 10:44:53 2026] [::1]:49202 Accepted
+[Tue Jan 13 10:44:56 2026] [::1]:49202 [200]: GET /index.php?c=productoPadre&a=index
+[Tue Jan 13 10:44:56 2026] [::1]:49202 Closing
+[Tue Jan 13 10:44:56 2026] [::1]:60475 Accepted
+[Tue Jan 13 10:44:58 2026] [::1]:60475 [200]: GET /index.php?c=productoPadre&a=crear
+[Tue Jan 13 10:44:58 2026] [::1]:60475 Closing
+[Tue Jan 13 10:44:58 2026] [::1]:60759 Accepted
+[Tue Jan 13 10:45:29 2026] [::1]:60759 [302]: POST /index.php?c=productoPadre&a=crear
+[Tue Jan 13 10:45:29 2026] [::1]:60759 Closing
+[Tue Jan 13 10:45:29 2026] [::1]:54234 Accepted
+[Tue Jan 13 10:45:29 2026] [::1]:54234 [200]: GET /index.php?c=productoPadre&a=index
+[Tue Jan 13 10:45:29 2026] [::1]:54234 Closing
+[Tue Jan 13 10:45:31 2026] [::1]:58621 Accepted
+[Tue Jan 13 10:45:32 2026] [::1]:58621 [200]: GET /index.php?c=variedad&a=index
+[Tue Jan 13 10:45:32 2026] [::1]:58621 Closing
+[Tue Jan 13 10:45:32 2026] [::1]:60321 Accepted
+[Tue Jan 13 10:45:33 2026] [::1]:60321 [200]: GET /index.php?c=variedad&a=crear
+[Tue Jan 13 10:45:33 2026] [::1]:60321 Closing
+[Tue Jan 13 10:45:33 2026] [::1]:51603 Accepted
+[Tue Jan 13 11:06:02 2026] [::1]:51603 Closed without sending a request; it was probably just an unused speculative preconnection
+[Tue Jan 13 11:06:02 2026] [::1]:51603 Closing
+[Tue Jan 13 11:11:39 2026] [::1]:59045 Accepted
+[Tue Jan 13 11:11:39 2026] [::1]:59045 [404]: GET /.well-known/appspecific/com.chrome.devtools.json - No such file or directory
+[Tue Jan 13 11:11:39 2026] [::1]:59045 Closing
+[Tue Jan 13 11:11:46 2026] [::1]:61724 Accepted
+[Tue Jan 13 11:11:46 2026] [::1]:61724 [302]: POST /index.php?c=variedad&a=crear
+[Tue Jan 13 11:11:46 2026] [::1]:61724 Closing
+[Tue Jan 13 11:11:46 2026] [::1]:56984 Accepted
+[Tue Jan 13 11:11:46 2026] [::1]:56984 [200]: GET /index.php?c=variedad&a=index
+[Tue Jan 13 11:11:46 2026] [::1]:56984 Closing
+[Tue Jan 13 11:11:46 2026] [::1]:64494 Accepted
+[Tue Jan 13 11:11:46 2026] [::1]:64494 [404]: GET /.well-known/appspecific/com.chrome.devtools.json - No such file or directory
+[Tue Jan 13 11:11:46 2026] [::1]:64494 Closing
+[Tue Jan 13 11:11:49 2026] [::1]:53199 Accepted
+[Tue Jan 13 11:11:50 2026] [::1]:53199 [302]: GET /index.php?c=variedad&a=eliminar&id=7
+[Tue Jan 13 11:11:50 2026] [::1]:53199 Closing
+[Tue Jan 13 11:11:50 2026] [::1]:52172 Accepted
+[Tue Jan 13 11:11:50 2026] [::1]:52172 [200]: GET /index.php?c=variedad&a=index
+[Tue Jan 13 11:11:50 2026] [::1]:52172 Closing
+[Tue Jan 13 11:11:50 2026] [::1]:64710 Accepted
+[Tue Jan 13 11:11:50 2026] [::1]:64710 [404]: GET /.well-known/appspecific/com.chrome.devtools.json - No such file or directory
+[Tue Jan 13 11:11:50 2026] [::1]:64710 Closing
+[Tue Jan 13 11:11:52 2026] [::1]:59059 Accepted
+[Tue Jan 13 11:11:52 2026] [::1]:59059 [200]: GET /index.php?c=variedad&a=crear
+[Tue Jan 13 11:11:52 2026] [::1]:59059 Closing
+[Tue Jan 13 11:11:52 2026] [::1]:49801 Accepted
+[Tue Jan 13 11:11:52 2026] [::1]:49801 [404]: GET /.well-known/appspecific/com.chrome.devtools.json - No such file or directory
+[Tue Jan 13 11:11:52 2026] [::1]:49801 Closing
+[Tue Jan 13 11:15:28 2026] [::1]:56226 Accepted
+[Tue Jan 13 11:15:28 2026] [::1]:50419 Accepted
+[Tue Jan 13 11:15:28 2026] [::1]:50419 [200]: GET /index.php?c=variedad&a=crear
+[Tue Jan 13 11:15:28 2026] [::1]:50419 Closing
+[Tue Jan 13 11:15:28 2026] [::1]:56226 [404]: GET /.well-known/appspecific/com.chrome.devtools.json - No such file or directory
+[Tue Jan 13 11:15:28 2026] [::1]:56226 Closing
+[Tue Jan 13 11:15:28 2026] [::1]:62806 Accepted
+[Tue Jan 13 11:15:28 2026] [::1]:62806 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 13 11:15:28 2026] [::1]:62806 Closing
+[Tue Jan 13 11:16:21 2026] [::1]:58045 Accepted
+[Tue Jan 13 11:16:21 2026] [::1]:59990 Accepted
+[Tue Jan 13 11:16:21 2026] [::1]:58045 [200]: GET /index.php?c=variedad&a=crear
+[Tue Jan 13 11:16:21 2026] [::1]:58045 Closing
+[Tue Jan 13 11:16:21 2026] [::1]:59990 [404]: GET /.well-known/appspecific/com.chrome.devtools.json - No such file or directory
+[Tue Jan 13 11:16:21 2026] [::1]:59990 Closing
+[Tue Jan 13 11:16:21 2026] [::1]:49222 Accepted
+[Tue Jan 13 11:16:21 2026] [::1]:49222 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 13 11:16:21 2026] [::1]:49222 Closing
+[Tue Jan 13 11:16:38 2026] [::1]:52889 Accepted
+[Tue Jan 13 11:16:38 2026] [::1]:52889 [200]: GET /index.php?c=variedad&a=crear
+[Tue Jan 13 11:16:38 2026] [::1]:52889 Closing
+[Tue Jan 13 11:16:38 2026] [::1]:60456 Accepted
+[Tue Jan 13 11:16:38 2026] [::1]:60456 [404]: GET /.well-known/appspecific/com.chrome.devtools.json - No such file or directory
+[Tue Jan 13 11:16:38 2026] [::1]:60456 Closing
+[Tue Jan 13 11:16:38 2026] [::1]:53524 Accepted
+[Tue Jan 13 11:16:38 2026] [::1]:53524 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 13 11:16:38 2026] [::1]:53524 Closing
+[Tue Jan 13 12:45:06 2026] [::1]:58465 Accepted
+[Tue Jan 13 12:45:06 2026] [::1]:51178 Accepted
+[Tue Jan 13 12:45:06 2026] [::1]:58465 [200]: GET /index.php?c=variedad&a=crear
+[Tue Jan 13 12:45:06 2026] [::1]:58465 Closing
+[Tue Jan 13 12:45:06 2026] [::1]:51178 [404]: GET /.well-known/appspecific/com.chrome.devtools.json - No such file or directory
+[Tue Jan 13 12:45:06 2026] [::1]:51178 Closing
+[Tue Jan 13 12:45:06 2026] [::1]:56307 Accepted
+[Tue Jan 13 12:45:06 2026] [::1]:56307 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 13 12:45:06 2026] [::1]:56307 Closing
+[Tue Jan 13 12:45:33 2026] [::1]:64110 Accepted
+[Tue Jan 13 12:45:33 2026] [::1]:64110 [302]: POST /index.php?c=variedad&a=crear
+[Tue Jan 13 12:45:33 2026] [::1]:64110 Closing
+[Tue Jan 13 12:45:33 2026] [::1]:53351 Accepted
+[Tue Jan 13 12:45:33 2026] [::1]:53351 [200]: GET /index.php?c=variedad&a=index
+[Tue Jan 13 12:45:33 2026] [::1]:53351 Closing
+[Tue Jan 13 12:45:33 2026] [::1]:50190 Accepted
+[Tue Jan 13 12:45:33 2026] [::1]:50190 [404]: GET /.well-known/appspecific/com.chrome.devtools.json - No such file or directory
+[Tue Jan 13 12:45:33 2026] [::1]:50190 Closing
+[Tue Jan 13 12:45:49 2026] [::1]:58175 Accepted
+[Tue Jan 13 12:45:49 2026] [::1]:58175 [200]: GET /index.php?c=venta&a=index
+[Tue Jan 13 12:45:49 2026] [::1]:58175 Closing
+[Tue Jan 13 12:45:49 2026] [::1]:63193 Accepted
+[Tue Jan 13 12:45:49 2026] [::1]:63193 [404]: GET /.well-known/appspecific/com.chrome.devtools.json - No such file or directory
+[Tue Jan 13 12:45:49 2026] [::1]:63193 Closing
+[Tue Jan 13 12:57:22 2026] [::1]:59683 Accepted
+[Tue Jan 13 12:57:22 2026] [::1]:59683 [200]: GET /index.php?c=venta&a=nueva
+[Tue Jan 13 12:57:22 2026] [::1]:59683 Closing
+[Tue Jan 13 12:57:22 2026] [::1]:49214 Accepted
+[Tue Jan 13 12:57:22 2026] [::1]:49214 [404]: GET /.well-known/appspecific/com.chrome.devtools.json - No such file or directory
+[Tue Jan 13 12:57:22 2026] [::1]:49214 Closing
+[Tue Jan 13 12:57:48 2026] [::1]:53409 Accepted
+[Tue Jan 13 12:57:48 2026] [::1]:53409 [200]: GET /index.php?c=variedad&a=index
+[Tue Jan 13 12:57:48 2026] [::1]:53409 Closing
+[Tue Jan 13 12:57:48 2026] [::1]:49670 Accepted
+[Tue Jan 13 12:57:51 2026] [::1]:49670 [200]: GET /index.php?c=variedad&a=editar&id=8
+[Tue Jan 13 12:57:51 2026] [::1]:49670 Closing
+[Tue Jan 13 12:57:51 2026] [::1]:53357 Accepted
+[Tue Jan 13 12:58:09 2026] [::1]:53357 [302]: POST /index.php?c=venta&a=nueva
+[Tue Jan 13 12:58:09 2026] [::1]:53357 Closing
+[Tue Jan 13 12:58:09 2026] [::1]:56255 Accepted
+[Tue Jan 13 12:58:09 2026] [::1]:56255 [200]: GET /index.php?c=venta&a=detalle&id=2
+[Tue Jan 13 12:58:09 2026] [::1]:56255 Closing
+[Tue Jan 13 12:58:09 2026] [::1]:50773 Accepted
+[Tue Jan 13 12:58:09 2026] [::1]:50773 [404]: GET /.well-known/appspecific/com.chrome.devtools.json - No such file or directory
+[Tue Jan 13 12:58:09 2026] [::1]:50773 Closing
+[Tue Jan 13 12:58:37 2026] [::1]:51785 Accepted
+[Tue Jan 13 12:58:37 2026] [::1]:51785 [200]: GET /index.php?c=productoPadre&a=index
+[Tue Jan 13 12:58:37 2026] [::1]:51785 Closing
+[Tue Jan 13 12:58:37 2026] [::1]:65340 Accepted
+[Tue Jan 13 12:58:37 2026] [::1]:65340 [404]: GET /.well-known/appspecific/com.chrome.devtools.json - No such file or directory
+[Tue Jan 13 12:58:37 2026] [::1]:65340 Closing
+[Tue Jan 13 12:58:39 2026] [::1]:58184 Accepted
+[Tue Jan 13 12:58:39 2026] [::1]:58184 [200]: GET /index.php?c=variedad&a=index
+[Tue Jan 13 12:58:39 2026] [::1]:58184 Closing
+[Tue Jan 13 12:58:39 2026] [::1]:61110 Accepted
+[Tue Jan 13 12:58:39 2026] [::1]:61110 [404]: GET /.well-known/appspecific/com.chrome.devtools.json - No such file or directory
+[Tue Jan 13 12:58:39 2026] [::1]:61110 Closing
+[Tue Jan 13 12:58:52 2026] [::1]:63671 Accepted
+[Tue Jan 13 12:58:52 2026] [::1]:63671 [200]: GET /index.php?c=venta&a=index
+[Tue Jan 13 12:58:52 2026] [::1]:63671 Closing
+[Tue Jan 13 12:58:52 2026] [::1]:58238 Accepted
+[Tue Jan 13 12:58:52 2026] [::1]:58238 [404]: GET /.well-known/appspecific/com.chrome.devtools.json - No such file or directory
+[Tue Jan 13 12:58:52 2026] [::1]:58238 Closing
+[Tue Jan 13 12:58:54 2026] [::1]:64874 Accepted
+[Tue Jan 13 12:58:54 2026] [::1]:64874 [200]: GET /index.php?c=venta&a=nueva
+[Tue Jan 13 12:58:54 2026] [::1]:64874 Closing
+[Tue Jan 13 12:58:54 2026] [::1]:56397 Accepted
+[Tue Jan 13 12:58:54 2026] [::1]:56397 [404]: GET /.well-known/appspecific/com.chrome.devtools.json - No such file or directory
+[Tue Jan 13 12:58:54 2026] [::1]:56397 Closing
+[Tue Jan 13 13:00:43 2026] [::1]:54581 Accepted
+[Tue Jan 13 13:00:43 2026] [::1]:54581 [200]: GET /index.php?c=variedad&a=index
+[Tue Jan 13 13:00:43 2026] [::1]:54581 Closing
+[Tue Jan 13 13:00:43 2026] [::1]:52492 Accepted
+[Tue Jan 13 13:06:11 2026] [::1]:52492 Closed without sending a request; it was probably just an unused speculative preconnection
+[Tue Jan 13 13:06:11 2026] [::1]:52492 Closing

@@ -44,6 +44,10 @@ class VariedadController {
                 'precio_compra_total' => $precio_compra_total,
                 'cantidad_comprada' => $cantidad_comprada,
                 'precio_costo_unitario' => $precio_costo_unitario,
+                'precio_pack3_tarjeta' => $_POST['precio_pack3_tarjeta'] ?? 0,
+                'precio_pack3_efectivo' => $_POST['precio_pack3_efectivo'] ?? 0,
+                'precio_unidad_tarjeta' => $_POST['precio_unidad_tarjeta'] ?? 0,
+                'precio_unidad_efectivo' => $_POST['precio_unidad_efectivo'] ?? 0,
                 'precio_venta_unitario' => $_POST['precio_venta_unitario'],
                 'stock' => $_POST['stock'] ?? $cantidad_comprada,
                 'stock_minimo' => $_POST['stock_minimo'] ?? 10
@@ -98,6 +102,10 @@ class VariedadController {
                 'precio_compra_total' => $precio_compra_total,
                 'cantidad_comprada' => $cantidad_comprada,
                 'precio_costo_unitario' => $precio_costo_unitario,
+                'precio_pack3_tarjeta' => $_POST['precio_pack3_tarjeta'] ?? 0,
+                'precio_pack3_efectivo' => $_POST['precio_pack3_efectivo'] ?? 0,
+                'precio_unidad_tarjeta' => $_POST['precio_unidad_tarjeta'] ?? 0,
+                'precio_unidad_efectivo' => $_POST['precio_unidad_efectivo'] ?? 0,
                 'precio_venta_unitario' => $_POST['precio_venta_unitario'],
                 'stock' => $_POST['stock'],
                 'stock_minimo' => $_POST['stock_minimo'] ?? 10,
@@ -144,6 +152,18 @@ class VariedadController {
             $precio_unitario = $this->variedadModel->calcularPrecioCostoUnitario($precio_total, $cantidad);
             
             echo json_encode(['precio_unitario' => $precio_unitario]);
+            exit;
+        }
+    }
+    
+    public function calcularPreciosVenta() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $costo_unitario = floatval($_POST['costo_unitario']);
+            $producto_padre_id = intval($_POST['producto_padre_id']);
+            
+            $precios = $this->variedadModel->calcularPreciosVenta($costo_unitario, $producto_padre_id);
+            
+            echo json_encode($precios);
             exit;
         }
     }

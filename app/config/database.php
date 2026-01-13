@@ -46,7 +46,7 @@ class Database {
         )";
         $db->exec($sql);
         
-        // Tabla de VARIEDADES (productos hijos)
+        // Tabla de VARIEDADES (productos hijos) - ACTUALIZADA CON 4 PRECIOS
         $sql = "CREATE TABLE IF NOT EXISTS variedades (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             producto_padre_id INTEGER NOT NULL,
@@ -55,6 +55,10 @@ class Database {
             precio_compra_total DECIMAL(10,2) NOT NULL,
             cantidad_comprada INTEGER NOT NULL,
             precio_costo_unitario DECIMAL(10,2) NOT NULL,
+            precio_pack3_tarjeta DECIMAL(10,2) DEFAULT 0,
+            precio_pack3_efectivo DECIMAL(10,2) DEFAULT 0,
+            precio_unidad_tarjeta DECIMAL(10,2) DEFAULT 0,
+            precio_unidad_efectivo DECIMAL(10,2) DEFAULT 0,
             precio_venta_unitario DECIMAL(10,2) NOT NULL,
             stock INTEGER DEFAULT 0,
             stock_minimo INTEGER DEFAULT 10,
@@ -63,6 +67,17 @@ class Database {
             FOREIGN KEY (producto_padre_id) REFERENCES productos_padre(id)
         )";
         $db->exec($sql);
+        
+        // Verificar si las columnas ya existen (para bases de datos existentes)
+        try {
+            $db->exec("SELECT precio_pack3_tarjeta FROM variedades LIMIT 1");
+        } catch(PDOException $e) {
+            // Si no existe, agregar las columnas
+            $db->exec("ALTER TABLE variedades ADD COLUMN precio_pack3_tarjeta DECIMAL(10,2) DEFAULT 0");
+            $db->exec("ALTER TABLE variedades ADD COLUMN precio_pack3_efectivo DECIMAL(10,2) DEFAULT 0");
+            $db->exec("ALTER TABLE variedades ADD COLUMN precio_unidad_tarjeta DECIMAL(10,2) DEFAULT 0");
+            $db->exec("ALTER TABLE variedades ADD COLUMN precio_unidad_efectivo DECIMAL(10,2) DEFAULT 0");
+        }
         
         // Tabla de PROMOCIONES
         $sql = "CREATE TABLE IF NOT EXISTS promociones (
@@ -144,21 +159,15 @@ class Database {
         
         // Productos padre de ejemplo
         $db->exec("INSERT INTO productos_padre (nombre, porcentaje_pack3_tarjeta, porcentaje_pack3_efectivo, porcentaje_unidad_tarjeta, porcentaje_unidad_efectivo) VALUES 
+            ('Colaless/Vedetina/Culot', 100, 80, 100, 80),
             ('Remera Básica', 100, 80, 100, 80),
-            ('Pantalón Jean', 100, 85, 100, 85),
-            ('Campera', 100, 90, 100, 90)");
+            ('Pantalón Jean', 100, 85, 100, 85)");
         
         // Variedades de ejemplo
-        $db->exec("INSERT INTO variedades (producto_padre_id, nombre, descripcion, precio_compra_total, cantidad_comprada, precio_costo_unitario, precio_venta_unitario, stock, stock_minimo) VALUES 
-            (1, 'Remera Básica Negra M', 'Remera negra talle M', 100000, 10, 10000, 12000, 10, 5),
-            (1, 'Remera Básica Blanca L', 'Remera blanca talle L', 100000, 10, 10000, 12000, 8, 5),
-            (2, 'Jean Azul 32', 'Jean azul talle 32', 150000, 8, 18750, 22000, 8, 3),
-            (3, 'Campera Deportiva S', 'Campera deportiva talle S', 200000, 5, 40000, 48000, 5, 2)");
-        
-        // Promociones de ejemplo
-        $db->exec("INSERT INTO promociones (variedad_id, cantidad, precio_promocional, activo) VALUES 
-            (1, 3, 30000, 1),
-            (2, 3, 30000, 1)");
+        $db->exec("INSERT INTO variedades (producto_padre_id, nombre, descripcion, precio_compra_total, cantidad_comprada, precio_costo_unitario, precio_pack3_tarjeta, precio_pack3_efectivo, precio_unidad_tarjeta, precio_unidad_efectivo, precio_venta_unitario, stock, stock_minimo) VALUES 
+            (1, 'Colaless VINTAGE Negro M', 'Colaless negra talle M', 100000, 10, 10000, 20000, 18000, 6666.67, 6000, 10000, 10, 5),
+            (2, 'Remera Básica Blanca L', 'Remera blanca talle L', 100000, 10, 10000, 20000, 18000, 6666.67, 6000, 12000, 8, 5),
+            (3, 'Jean Azul 32', 'Jean azul talle 32', 150000, 8, 18750, 37500, 34687.5, 12500, 11562.5, 22000, 8, 3)");
     }
     
     public static function runMigration($version, $sql) {

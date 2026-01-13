@@ -196,10 +196,10 @@ function calcularPreciosVenta(costoUnitario) {
     const pack3EfectivoTotal = (costoUnitario * 3) + ((costoUnitario * 3) * porcentajes.pack3_efectivo / 100);
     const pack3EfectivoUnit = pack3EfectivoTotal / 3;
     
-    // Por 1 Tarjeta
+    // Por 1 Tarjeta (dividir el precio unitario del pack entre 3)
     const unidadTarjeta = pack3TarjetaUnit / 3;
     
-    // Por 1 Efectivo
+    // Por 1 Efectivo (dividir el precio unitario del pack entre 3)
     const unidadEfectivo = pack3EfectivoUnit / 3;
     
     // Actualizar campos

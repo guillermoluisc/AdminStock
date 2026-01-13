@@ -209,11 +209,11 @@ class Variedad {
         $precio_pack3_efectivo_total = ($costo_unitario * 3) + (($costo_unitario * 3) * $producto_padre['porcentaje_pack3_efectivo'] / 100);
         $precio_pack3_efectivo = $precio_pack3_efectivo_total / 3; // Precio por unidad en el pack
         
-        // Unidad Tarjeta: Pack tarjeta total / 3
-        $precio_unidad_tarjeta = $precio_pack3_tarjeta_total / 3;
+        // Unidad Tarjeta: Precio unitario del pack / 3
+        $precio_unidad_tarjeta = $precio_pack3_tarjeta / 3;
         
-        // Unidad Efectivo: Pack efectivo total / 3
-        $precio_unidad_efectivo = $precio_pack3_efectivo_total / 3;
+        // Unidad Efectivo: Precio unitario del pack / 3
+        $precio_unidad_efectivo = $precio_pack3_efectivo / 3;
         
         return [
             'precio_pack3_tarjeta' => round($precio_pack3_tarjeta, 2),

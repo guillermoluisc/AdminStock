@@ -44,7 +44,6 @@ class VentaController {
     public function nueva() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $productos_venta = json_decode($_POST['productos_json'], true);
-            $metodo_pago = $_POST['metodo_pago'];
             $total = 0;
             $descuento_total = 0;
             
@@ -60,40 +59,22 @@ class VentaController {
                     exit;
                 }
                 
-                // Calcular precio según cantidad y método de pago
-                $costo = $variedad['precio_costo_unitario'];
-                $producto_padre = $this->productoPadreModel->getById($variedad['producto_padre_id']);
-                
-                $precio_calculado = 0;
-                
-                if ($item['cantidad'] == 3) {
-                    // Pack x3
-                    $porcentaje = $metodo_pago == 'efectivo' 
-                        ? $producto_padre['porcentaje_pack3_efectivo'] 
-                        : $producto_padre['porcentaje_pack3_tarjeta'];
-                    
-                    $precio_pack = $costo * 3 + (($costo * 3) * $porcentaje / 100);
-                    $precio_calculado = $precio_pack / 3; // Precio unitario del pack
-                } else {
-                    // Por unidad
-                    $porcentaje = $metodo_pago == 'efectivo' 
-                        ? $producto_padre['porcentaje_unidad_efectivo'] 
-                        : $producto_padre['porcentaje_unidad_tarjeta'];
-                    
-                    $precio_calculado = $costo + ($costo * $porcentaje / 100);
-                }
-                
-                $subtotal = $precio_calculado * $item['cantidad'];
+                // El precio ya viene calculado desde el frontend según los 4 precios guardados
+                $precio_unitario = floatval($item['precio_unitario']);
+                $subtotal = $precio_unitario * $item['cantidad'];
                 $total += $subtotal;
                 
                 $detalles[] = [
                     'variedad_id' => $item['variedad_id'],
                     'cantidad' => $item['cantidad'],
-                    'precio_unitario' => $precio_calculado,
+                    'precio_unitario' => $precio_unitario,
                     'descuento_unitario' => 0,
                     'subtotal' => $subtotal
                 ];
             }
+            
+            // El método de pago se toma del primer producto (todos deberían tener el mismo)
+            $metodo_pago = $productos_venta[0]['metodo_pago'] ?? 'efectivo';
             
             $venta_id = $this->ventaModel->crear($total, $metodo_pago, $descuento_total, $detalles);
             

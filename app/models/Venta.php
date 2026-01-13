@@ -148,6 +148,7 @@ class Venta {
                 SUM(total) as total_vendido,
                 AVG(total) as promedio_venta,
                 SUM(CASE WHEN metodo_pago = 'efectivo' THEN total ELSE 0 END) as total_efectivo,
+                SUM(CASE WHEN metodo_pago = 'tarjeta' THEN total ELSE 0 END) as total_tarjeta,
                 SUM(CASE WHEN metodo_pago = 'transferencia' THEN total ELSE 0 END) as total_transferencia
                 FROM ventas WHERE 1=1";
         
@@ -165,7 +166,14 @@ class Venta {
         
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
-        return $stmt->fetch();
+        $result = $stmt->fetch();
+        
+        // Combinar tarjeta y transferencia en un solo campo para compatibilidad
+        if ($result) {
+            $result['total_tarjeta_combinado'] = ($result['total_tarjeta'] ?? 0) + ($result['total_transferencia'] ?? 0);
+        }
+        
+        return $result;
     }
 }
 ?>

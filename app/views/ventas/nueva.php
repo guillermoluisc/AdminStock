@@ -41,7 +41,7 @@
             <label for="metodo_pago_item">Método de Pago</label>
             <select id="metodo_pago_item" style="width: 100%; padding: 8px;" onchange="actualizarPrecioVenta()">
                 <option value="efectivo">💵 Efectivo</option>
-                <option value="transferencia">💳 Tarjeta/Transferencia</option>
+                <option value="tarjeta">💳 Tarjeta</option>
             </select>
         </div>
     </div>
@@ -195,7 +195,7 @@ function agregarProducto() {
         return;
     }
     
-    const subtotal = precioUnitario * cantidad;
+    const subtotal = precioUnitario;
     
     // Agregar producto
     productosVenta.push({

@@ -16,7 +16,7 @@
             <?php if ($venta['metodo_pago'] == 'efectivo'): ?>
                 <span class="badge" style="background: #27ae60;">💵 Efectivo</span>
             <?php else: ?>
-                <span class="badge" style="background: #3498db;">💳 Transferencia</span>
+                <span class="badge" style="background: #3498db;">💳 Tarjeta</span>
             <?php endif; ?>
         </div>
         <div>

@@ -61,7 +61,7 @@ class VentaController {
                 
                 // El precio ya viene calculado desde el frontend según los 4 precios guardados
                 $precio_unitario = floatval($item['precio_unitario']);
-                $subtotal = $precio_unitario * $item['cantidad'];
+                $subtotal = $precio_unitario;
                 $total += $subtotal;
                 
                 $detalles[] = [

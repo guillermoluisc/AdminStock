@@ -119,5 +119,69 @@ class VentaController {
         $content = ob_get_clean();
         require BASE_PATH . '/views/layout.php';
     }
+
+    public function exportarExcel() {
+    // Obtener los mismos filtros que en index
+    $filtros = [];
+    if (!empty($_GET['fecha_desde'])) {
+        $filtros['fecha_desde'] = $_GET['fecha_desde'];
+    }
+    if (!empty($_GET['fecha_hasta'])) {
+        $filtros['fecha_hasta'] = $_GET['fecha_hasta'];
+    }
+    if (!empty($_GET['metodo_pago'])) {
+        $filtros['metodo_pago'] = $_GET['metodo_pago'];
+    }
+    
+    $ventas = $this->ventaModel->getAll($filtros);
+    $estadisticas = $this->ventaModel->getEstadisticas(
+        $filtros['fecha_desde'] ?? null,
+        $filtros['fecha_hasta'] ?? null
+    );
+    
+    // Generar nombre del archivo
+    $fecha = date('Y-m-d_H-i-s');
+    $filename = "ventas_export_{$fecha}.csv";
+    
+    // Headers para descarga
+    header('Content-Type: text/csv; charset=utf-8');
+    header('Content-Disposition: attachment; filename="' . $filename . '"');
+    header('Pragma: no-cache');
+    header('Expires: 0');
+    
+    // Crear archivo CSV
+    $output = fopen('php://output', 'w');
+    
+    // BOM para Excel UTF-8
+    fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
+    
+    // Encabezados
+    fputcsv($output, ['ID', 'Fecha', 'Método de Pago', 'Total', 'Descuento Aplicado']);
+    
+    // Datos
+    foreach ($ventas as $venta) {
+        fputcsv($output, [
+            $venta['id'],
+            date('d/m/Y H:i', strtotime($venta['fecha'])),
+            ucfirst($venta['metodo_pago']),
+            number_format($venta['total'], 2),
+            number_format($venta['descuento_aplicado'], 2)
+        ]);
+    }
+    
+    // Línea en blanco
+    fputcsv($output, []);
+    
+    // Totales
+    fputcsv($output, ['ESTADÍSTICAS']);
+    fputcsv($output, ['Total Ventas', number_format($estadisticas['total_vendido'] ?? 0, 2)]);
+    fputcsv($output, ['Cantidad de Ventas', $estadisticas['total_ventas'] ?? 0]);
+    fputcsv($output, ['Promedio por Venta', number_format($estadisticas['promedio_venta'] ?? 0, 2)]);
+    fputcsv($output, ['Total Efectivo', number_format($estadisticas['total_efectivo'] ?? 0, 2)]);
+    fputcsv($output, ['Total Tarjeta/Transferencia', number_format($estadisticas['total_tarjeta_combinado'] ?? 0, 2)]);
+    
+    fclose($output);
+    exit;
+}
 }
 ?>

@@ -3,6 +3,20 @@
     <h2>Historial de Ventas</h2>
     <a href="index.php?c=venta&a=nueva" class="btn btn-primary">+ Nueva Venta</a>
 </div>
+<!-- <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Historial de Ventas</h2>
+    <div style="display: flex; gap: 10px;">
+        <?php
+        // Construir URL con filtros actuales
+        // $exportUrl = 'index.php?c=venta&a=exportarExcel';
+        // if (!empty($filtros['fecha_desde'])) $exportUrl .= '&fecha_desde=' . $filtros['fecha_desde'];
+        // if (!empty($filtros['fecha_hasta'])) $exportUrl .= '&fecha_hasta=' . $filtros['fecha_hasta'];
+        // if (!empty($filtros['metodo_pago'])) $exportUrl .= '&metodo_pago=' . $filtros['metodo_pago'];
+        ?>
+        <a href="<?= $exportUrl ?>" class="btn btn-success">📊 Exportar a Excel</a>
+        <a href="index.php?c=venta&a=nueva" class="btn btn-primary">+ Nueva Venta</a>
+    </div>
+</div> -->
 
 <!-- Estadísticas -->
 <div class="grid-3" style="margin-bottom: 20px;">

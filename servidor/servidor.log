@@ -1,9 +1,21 @@
-[Wed Jan 14 12:04:38 2026] PHP 8.2.30 Development Server (http://localhost:8080) started
-[Wed Jan 14 12:04:40 2026] [::1]:54114 Accepted
-[Wed Jan 14 12:04:40 2026] [::1]:54114 [200]: GET /
-[Wed Jan 14 12:04:40 2026] [::1]:54114 Closing
-[Wed Jan 14 12:04:40 2026] [::1]:49775 Accepted
-[Wed Jan 14 12:04:42 2026] [::1]:49775 [200]: GET /index.php?c=venta&a=index
-[Wed Jan 14 12:04:42 2026] [::1]:49775 Closing
-[Wed Jan 14 12:04:42 2026] [::1]:62363 Accepted
+[Wed Jan 14 12:12:50 2026] PHP 8.2.30 Development Server (http://localhost:8080) started
+[Wed Jan 14 12:12:52 2026] [::1]:55617 Accepted
+[Wed Jan 14 12:12:52 2026] [::1]:55617 [200]: GET /
+[Wed Jan 14 12:12:52 2026] [::1]:55617 Closing
+[Wed Jan 14 12:12:52 2026] [::1]:52795 Accepted
+[Wed Jan 14 12:12:55 2026] [::1]:52795 [200]: GET /index.php?c=venta&a=index
+[Wed Jan 14 12:12:55 2026] [::1]:52795 Closing
+[Wed Jan 14 12:12:55 2026] [::1]:61029 Accepted
+[Wed Jan 14 12:12:56 2026] [::1]:61029 [200]: GET /index.php?c=venta&a=exportarExcel
+[Wed Jan 14 12:12:56 2026] [::1]:61029 Closing
+[Wed Jan 14 12:12:56 2026] [::1]:57221 Accepted
+[Wed Jan 14 12:14:33 2026] [::1]:57221 Closed without sending a request; it was probably just an unused speculative preconnection
+[Wed Jan 14 12:14:33 2026] [::1]:57221 Closing
+[Wed Jan 14 12:14:33 2026] [::1]:59653 Accepted
+[Wed Jan 14 12:14:33 2026] PHP Warning:  Undefined variable $exportUrl in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\index.php on line 16
+[Wed Jan 14 12:14:33 2026] [::1]:59653 [200]: GET /index.php?c=venta&a=index
+[Wed Jan 14 12:14:33 2026] [::1]:59653 Closing
+[Wed Jan 14 12:14:33 2026] [::1]:56563 Accepted
+[Wed Jan 14 12:14:33 2026] [::1]:56563 [404]: GET /favicon.ico - No such file or directory
+[Wed Jan 14 12:14:33 2026] [::1]:56563 Closing
 ^C

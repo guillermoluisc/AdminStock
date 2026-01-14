@@ -43,8 +43,7 @@ if %errorlevel% equ 0 (
     echo.
     echo   URL: http://localhost:%PORT%
     echo.
-    echo   Presione cualquier tecla para abrir
-    echo   el navegador...
+    echo   Abriendo navegador...
     echo.
     echo   Para detener el sistema ejecute:
     echo   detener.bat
@@ -54,12 +53,9 @@ if %errorlevel% equ 0 (
     :: Guardar el puerto para el script detener.bat
     echo %PORT% > servidor\puerto.txt
     
-    pause
-    
-    :: Abrir navegador
+    :: Abrir navegador automáticamente
     start http://localhost:%PORT%
     
-    echo.
     echo El sistema está funcionando.
     echo NO CIERRE ESTA VENTANA.
     echo.
@@ -73,6 +69,5 @@ if %errorlevel% equ 0 (
 ) else (
     echo [ERROR] No se pudo iniciar el servidor
     pause
+    exit /b
 )
-
-exit /b

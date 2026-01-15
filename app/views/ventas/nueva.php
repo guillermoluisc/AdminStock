@@ -223,18 +223,20 @@ function eliminarProducto(index) {
 
 function actualizarTablaVenta() {
     const tbody = document.getElementById('items_venta');
-    const sinProductos = document.getElementById('sin_productos');
     const totalFooter = document.getElementById('total_venta');
     
+    // Limpiar completamente el tbody
+    tbody.innerHTML = '';
+    
     if (productosVenta.length === 0) {
-        sinProductos.style.display = 'table-row';
+        // Si no hay productos, mostrar mensaje
+        tbody.innerHTML = '<tr id="sin_productos"><td colspan="7" style="text-align: center; color: #95a5a6;">No hay productos agregados a la venta</td></tr>';
         totalFooter.style.display = 'none';
         return;
     }
     
-    sinProductos.style.display = 'none';
+    // Si hay productos, construir la tabla
     totalFooter.style.display = 'table-footer-group';
-    tbody.innerHTML = '';
     
     let totalGeneral = 0;
     
@@ -265,7 +267,6 @@ function actualizarTablaVenta() {
         tbody.innerHTML += row;
     });
     
-    tbody.innerHTML += sinProductos.outerHTML;
     document.getElementById('total_general').textContent = '$' + totalGeneral.toFixed(2);
 }
 

@@ -20,6 +20,7 @@
                 <th>Por 1 Tarjeta</th>
                 <th>Por 1 Efectivo</th>
                 <th>Variedades</th>
+                <th>Estado</th>
                 <th>Acciones</th>
             </tr>
         </thead>

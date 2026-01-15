@@ -46,7 +46,7 @@
         </div>
     </div>
     
-    <div class="card" style="background: #e8f5e9;">
+    <!-- <div class="card" style="background: #e8f5e9;">
         <h4 style="margin-bottom: 10px;">💡 Ejemplo de Cálculo</h4>
         <p style="margin-bottom: 5px;"><strong>Si el costo es $7,904:</strong></p>
         <ul style="margin-left: 20px;">
@@ -55,7 +55,7 @@
             <li>Por 1 Tarjeta: $15,808 / 3 = <strong>$5,269.33</strong></li>
             <li>Por 1 Efectivo: $14,227.20 / 3 = <strong>$4,742.40</strong></li>
         </ul>
-    </div>
+    </div> -->
     
     <div class="form-actions">
         <button type="submit" class="btn btn-primary">Guardar Producto Padre</button>

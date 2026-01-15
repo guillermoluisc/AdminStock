@@ -167,52 +167,47 @@ function cambiarObservaciones(index, observaciones) {
 
 function actualizarTabla() {
     const tbody = document.getElementById('items_pedido');
-    const sinProductos = document.getElementById('sin_productos');
+    
+    // Limpiar completamente el tbody
+    tbody.innerHTML = '';
     
     if (productosPedido.length === 0) {
-        sinProductos.style.display = 'table-row';
+        tbody.innerHTML = '<tr id="sin_productos"><td colspan="5" style="text-align: center; color: #95a5a6;">No hay productos agregados al pedido</td></tr>';
         return;
     }
     
-    sinProductos.style.display = 'none';
-    tbody.innerHTML = '';
-    
     productosPedido.forEach((item, index) => {
         const stockBajo = item.stock <= item.minimo;
-        
-        const row = `
-            <tr>
-                <td>
-                    ${stockBajo ? '<span style="color: #e74c3c;">⚠️</span> ' : ''}
-                    <strong>${item.nombre}</strong>
-                </td>
-                <td>
-                    <span style="color: ${stockBajo ? '#e74c3c' : '#27ae60'}; font-weight: bold;">
-                        ${item.stock || 0}
-                    </span>
-                    <small style="display: block; color: #95a5a6;">Mínimo: ${item.minimo || 10}</small>
-                </td>
-                <td>
-                    <input type="number" value="${item.cantidad}" min="1" 
-                           style="width: 100px; padding: 5px;" 
-                           onchange="cambiarCantidad(${index}, this.value)">
-                </td>
-                <td>
-                    <input type="text" value="${item.observaciones || ''}" 
-                           style="width: 200px; padding: 5px;" 
-                           placeholder="Notas..."
-                           onchange="cambiarObservaciones(${index}, this.value)">
-                </td>
-                <td>
-                    <button type="button" class="btn btn-danger" style="padding: 5px 10px;" 
-                            onclick="eliminarProducto(${index})">Quitar</button>
-                </td>
-            </tr>
-        `;
+        const row = `<tr>
+            <td>
+                ${stockBajo ? '<span style="color: #e74c3c;">⚠️</span> ' : ''}
+                <strong>${item.nombre}</strong>
+            </td>
+            <td>
+                <span style="color: ${stockBajo ? '#e74c3c' : '#27ae60'}; font-weight: bold;">
+                    ${item.stock || 0}
+                </span>
+                <small style="display: block; color: #95a5a6;">Mínimo: ${item.minimo || 10}</small>
+            </td>
+            <td>
+                <input type="number" value="${item.cantidad}" min="1" 
+                       style="width: 100px; padding: 5px;" 
+                       onchange="cambiarCantidad(${index}, this.value)">
+            </td>
+            <td>
+                <input type="text" value="${item.observaciones || ''}" 
+                       style="width: 200px; padding: 5px;" 
+                       placeholder="Notas..." 
+                       onchange="cambiarObservaciones(${index}, this.value)">
+            </td>
+            <td>
+                <button type="button" class="btn btn-danger" 
+                        style="padding: 5px 10px;" 
+                        onclick="eliminarProducto(${index})">Quitar</button>
+            </td>
+        </tr>`;
         tbody.innerHTML += row;
     });
-    
-    tbody.innerHTML += sinProductos.outerHTML;
 }
 
 function validarPedido() {

@@ -43,7 +43,6 @@
             <th>Variedad</th>
             <th>Cantidad</th>
             <th>Precio Unit.</th>
-            <th>Descuento Unit.</th>
             <th>Subtotal</th>
         </tr>
     </thead>
@@ -56,21 +55,8 @@
                 <td><strong><?= htmlspecialchars($detalle['variedad_nombre']) ?></strong></td>
                 <td><?= $detalle['cantidad'] ?></td>
                 <td>$<?= number_format($detalle['precio_unitario'], 2) ?></td>
-                <td>
-                    <?php if ($detalle['descuento_unitario'] > 0): ?>
-                        <span style="color: #e74c3c;">-$<?= number_format($detalle['descuento_unitario'], 2) ?></span>
-                    <?php else: ?>
-                        <span style="color: #95a5a6;">-</span>
-                    <?php endif; ?>
-                </td>
                 <td><strong>$<?= number_format($detalle['subtotal'], 2) ?></strong></td>
             </tr>
         <?php endforeach; ?>
     </tbody>
-    <tfoot>
-        <tr style="background: #ecf0f1; font-weight: bold;">
-            <td colspan="5" style="text-align: right;">TOTAL:</td>
-            <td style="color: #27ae60; font-size: 18px;">$<?= number_format($venta['total'], 2) ?></td>
-        </tr>
-    </tfoot>
 </table>

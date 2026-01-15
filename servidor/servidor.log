@@ -1,21 +1,169 @@
-[Wed Jan 14 12:12:50 2026] PHP 8.2.30 Development Server (http://localhost:8080) started
-[Wed Jan 14 12:12:52 2026] [::1]:55617 Accepted
-[Wed Jan 14 12:12:52 2026] [::1]:55617 [200]: GET /
-[Wed Jan 14 12:12:52 2026] [::1]:55617 Closing
-[Wed Jan 14 12:12:52 2026] [::1]:52795 Accepted
-[Wed Jan 14 12:12:55 2026] [::1]:52795 [200]: GET /index.php?c=venta&a=index
-[Wed Jan 14 12:12:55 2026] [::1]:52795 Closing
-[Wed Jan 14 12:12:55 2026] [::1]:61029 Accepted
-[Wed Jan 14 12:12:56 2026] [::1]:61029 [200]: GET /index.php?c=venta&a=exportarExcel
-[Wed Jan 14 12:12:56 2026] [::1]:61029 Closing
-[Wed Jan 14 12:12:56 2026] [::1]:57221 Accepted
-[Wed Jan 14 12:14:33 2026] [::1]:57221 Closed without sending a request; it was probably just an unused speculative preconnection
-[Wed Jan 14 12:14:33 2026] [::1]:57221 Closing
-[Wed Jan 14 12:14:33 2026] [::1]:59653 Accepted
-[Wed Jan 14 12:14:33 2026] PHP Warning:  Undefined variable $exportUrl in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\index.php on line 16
-[Wed Jan 14 12:14:33 2026] [::1]:59653 [200]: GET /index.php?c=venta&a=index
-[Wed Jan 14 12:14:33 2026] [::1]:59653 Closing
-[Wed Jan 14 12:14:33 2026] [::1]:56563 Accepted
-[Wed Jan 14 12:14:33 2026] [::1]:56563 [404]: GET /favicon.ico - No such file or directory
-[Wed Jan 14 12:14:33 2026] [::1]:56563 Closing
-^C
+[Thu Jan 15 09:47:37 2026] PHP 8.2.30 Development Server (http://localhost:8080) started
+[Thu Jan 15 09:47:40 2026] [::1]:54039 Accepted
+[Thu Jan 15 09:47:40 2026] [::1]:50737 Accepted
+[Thu Jan 15 09:47:40 2026] [::1]:54039 [200]: GET /
+[Thu Jan 15 09:47:40 2026] [::1]:54039 Closing
+[Thu Jan 15 09:47:40 2026] [::1]:50737 Closed without sending a request; it was probably just an unused speculative preconnection
+[Thu Jan 15 09:47:40 2026] [::1]:50737 Closing
+[Thu Jan 15 09:47:40 2026] [::1]:52263 Accepted
+[Thu Jan 15 09:47:40 2026] [::1]:52263 [404]: GET /favicon.ico - No such file or directory
+[Thu Jan 15 09:47:40 2026] [::1]:52263 Closing
+[Thu Jan 15 09:49:44 2026] [::1]:63462 Accepted
+[Thu Jan 15 09:49:44 2026] [::1]:63462 [200]: GET /index.php?c=variedad&a=index
+[Thu Jan 15 09:49:44 2026] [::1]:63462 Closing
+[Thu Jan 15 09:49:44 2026] [::1]:52471 Accepted
+[Thu Jan 15 09:49:46 2026] [::1]:52471 [200]: GET /index.php?c=variedad&a=index
+[Thu Jan 15 09:49:46 2026] [::1]:52471 Closing
+[Thu Jan 15 09:49:46 2026] [::1]:62634 Accepted
+[Thu Jan 15 09:49:48 2026] [::1]:62634 [200]: GET /index.php?c=variedad&a=index
+[Thu Jan 15 09:49:48 2026] [::1]:62634 Closing
+[Thu Jan 15 09:49:48 2026] [::1]:59732 Accepted
+[Thu Jan 15 09:49:48 2026] [::1]:59732 [200]: GET /index.php?c=variedad&a=crear
+[Thu Jan 15 09:49:48 2026] [::1]:59732 Closing
+[Thu Jan 15 09:49:48 2026] [::1]:52266 Accepted
+[Thu Jan 15 09:51:07 2026] [::1]:52266 Closed without sending a request; it was probably just an unused speculative preconnection
+[Thu Jan 15 09:51:07 2026] [::1]:52266 Closing
+[Thu Jan 15 09:51:07 2026] [::1]:62226 Accepted
+[Thu Jan 15 09:51:07 2026] [::1]:61225 Accepted
+[Thu Jan 15 09:51:07 2026] [::1]:62226 [302]: POST /index.php?c=variedad&a=crear
+[Thu Jan 15 09:51:07 2026] [::1]:62226 Closing
+[Thu Jan 15 09:51:07 2026] [::1]:61225 [200]: GET /index.php?c=variedad&a=index
+[Thu Jan 15 09:51:07 2026] [::1]:61225 Closing
+[Thu Jan 15 09:51:28 2026] [::1]:54082 Accepted
+[Thu Jan 15 09:51:28 2026] [::1]:54082 [200]: GET /index.php?c=variedad&a=editar&id=21
+[Thu Jan 15 09:51:28 2026] [::1]:54082 Closing
+[Thu Jan 15 09:51:28 2026] [::1]:52806 Accepted
+[Thu Jan 15 09:51:40 2026] [::1]:52806 [200]: GET /index.php?c=venta&a=nueva
+[Thu Jan 15 09:51:40 2026] [::1]:52806 Closing
+[Thu Jan 15 09:51:40 2026] [::1]:64640 Accepted
+[Thu Jan 15 09:52:23 2026] [::1]:64640 [200]: GET /index.php?c=variedad&a=index
+[Thu Jan 15 09:52:23 2026] [::1]:64640 Closing
+[Thu Jan 15 09:52:23 2026] [::1]:49672 Accepted
+[Thu Jan 15 09:53:01 2026] [::1]:49672 [200]: GET /index.php?c=variedad&a=editar&id=21
+[Thu Jan 15 09:53:01 2026] [::1]:49672 Closing
+[Thu Jan 15 09:53:01 2026] [::1]:65328 Accepted
+[Thu Jan 15 09:54:58 2026] [::1]:65328 Closed without sending a request; it was probably just an unused speculative preconnection
+[Thu Jan 15 09:54:58 2026] [::1]:65328 Closing
+[Thu Jan 15 09:56:17 2026] [::1]:52547 Accepted
+[Thu Jan 15 09:56:17 2026] [::1]:54485 Accepted
+[Thu Jan 15 09:56:17 2026] [::1]:52547 [302]: POST /index.php?c=variedad&a=editar&id=21
+[Thu Jan 15 09:56:17 2026] [::1]:52547 Closing
+[Thu Jan 15 09:56:17 2026] [::1]:54485 [200]: GET /index.php?c=variedad&a=index
+[Thu Jan 15 09:56:17 2026] [::1]:54485 Closing
+[Thu Jan 15 09:56:54 2026] [::1]:56599 Accepted
+[Thu Jan 15 09:56:54 2026] [::1]:56599 [200]: GET /index.php?c=venta&a=nueva
+[Thu Jan 15 09:56:54 2026] [::1]:56599 Closing
+[Thu Jan 15 09:56:54 2026] [::1]:61421 Accepted
+[Thu Jan 15 09:57:16 2026] [::1]:61421 [302]: POST /index.php?c=venta&a=nueva
+[Thu Jan 15 09:57:16 2026] [::1]:61421 Closing
+[Thu Jan 15 09:57:16 2026] [::1]:54043 Accepted
+[Thu Jan 15 09:57:16 2026] [::1]:54043 [200]: GET /index.php?c=venta&a=detalle&id=22
+[Thu Jan 15 09:57:16 2026] [::1]:54043 Closing
+[Thu Jan 15 09:57:18 2026] [::1]:64676 Accepted
+[Thu Jan 15 09:57:18 2026] [::1]:64676 [200]: GET /index.php?c=variedad&a=index
+[Thu Jan 15 09:57:18 2026] [::1]:64676 Closing
+[Thu Jan 15 09:57:18 2026] [::1]:64595 Accepted
+[Thu Jan 15 09:57:21 2026] [::1]:64595 [200]: GET /index.php?c=venta&a=nueva
+[Thu Jan 15 09:57:21 2026] [::1]:64595 Closing
+[Thu Jan 15 09:57:21 2026] [::1]:50060 Accepted
+[Thu Jan 15 09:57:25 2026] PHP Warning:  Undefined variable $exportUrl in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\index.php on line 16
+[Thu Jan 15 09:57:25 2026] [::1]:50060 [200]: GET /index.php?c=venta&a=index
+[Thu Jan 15 09:57:25 2026] [::1]:50060 Closing
+[Thu Jan 15 09:57:25 2026] [::1]:61453 Accepted
+[Thu Jan 15 09:57:28 2026] [::1]:61453 [200]: GET /index.php?c=venta&a=detalle&id=22
+[Thu Jan 15 09:57:28 2026] [::1]:61453 Closing
+[Thu Jan 15 09:57:28 2026] [::1]:62097 Accepted
+[Thu Jan 15 09:57:49 2026] [::1]:62097 [200]: GET /index.php?c=venta&a=nueva
+[Thu Jan 15 09:57:49 2026] [::1]:62097 Closing
+[Thu Jan 15 09:57:49 2026] [::1]:60268 Accepted
+[Thu Jan 15 09:58:11 2026] [::1]:60268 [302]: POST /index.php?c=venta&a=nueva
+[Thu Jan 15 09:58:11 2026] [::1]:60268 Closing
+[Thu Jan 15 09:58:11 2026] [::1]:54173 Accepted
+[Thu Jan 15 09:58:11 2026] [::1]:54173 [200]: GET /index.php?c=venta&a=detalle&id=23
+[Thu Jan 15 09:58:11 2026] [::1]:54173 Closing
+[Thu Jan 15 09:58:18 2026] [::1]:63870 Accepted
+[Thu Jan 15 09:58:19 2026] PHP Warning:  Undefined variable $exportUrl in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\index.php on line 16
+[Thu Jan 15 09:58:19 2026] [::1]:63870 [200]: GET /index.php?c=venta&a=index
+[Thu Jan 15 09:58:19 2026] [::1]:63870 Closing
+[Thu Jan 15 09:58:19 2026] [::1]:59572 Accepted
+[Thu Jan 15 09:58:20 2026] [::1]:59572 [200]: GET /index.php?c=venta&a=detalle&id=23
+[Thu Jan 15 09:58:20 2026] [::1]:59572 Closing
+[Thu Jan 15 09:58:20 2026] [::1]:55292 Accepted
+[Thu Jan 15 09:58:24 2026] [::1]:55292 [200]: GET /index.php?c=variedad&a=index
+[Thu Jan 15 09:58:24 2026] [::1]:55292 Closing
+[Thu Jan 15 09:58:24 2026] [::1]:54637 Accepted
+[Thu Jan 15 10:01:24 2026] [::1]:54637 Closed without sending a request; it was probably just an unused speculative preconnection
+[Thu Jan 15 10:01:24 2026] [::1]:54637 Closing
+[Thu Jan 15 10:01:24 2026] [::1]:61346 Accepted
+[Thu Jan 15 10:01:24 2026] [::1]:61346 [200]: GET /index.php?c=variedad&a=crear
+[Thu Jan 15 10:01:24 2026] [::1]:61346 Closing
+[Thu Jan 15 10:01:24 2026] [::1]:54036 Accepted
+[Thu Jan 15 10:03:07 2026] [::1]:54036 Closed without sending a request; it was probably just an unused speculative preconnection
+[Thu Jan 15 10:03:07 2026] [::1]:54036 Closing
+[Thu Jan 15 10:03:07 2026] [::1]:54240 Accepted
+[Thu Jan 15 10:03:08 2026] [::1]:54240 [200]: GET /index.php?c=productoPadre&a=index
+[Thu Jan 15 10:03:08 2026] [::1]:54240 Closing
+[Thu Jan 15 10:03:08 2026] [::1]:65128 Accepted
+[Thu Jan 15 10:03:13 2026] [::1]:65128 [200]: GET /index.php?c=productoPadre&a=editar&id=8
+[Thu Jan 15 10:03:13 2026] [::1]:65128 Closing
+[Thu Jan 15 10:03:13 2026] [::1]:62353 Accepted
+[Thu Jan 15 10:03:24 2026] [::1]:62353 [302]: POST /index.php?c=productoPadre&a=editar&id=8
+[Thu Jan 15 10:03:24 2026] [::1]:62353 Closing
+[Thu Jan 15 10:03:24 2026] [::1]:58507 Accepted
+[Thu Jan 15 10:03:24 2026] [::1]:58507 [200]: GET /index.php?c=productoPadre&a=index
+[Thu Jan 15 10:03:24 2026] [::1]:58507 Closing
+[Thu Jan 15 10:03:29 2026] [::1]:64697 Accepted
+[Thu Jan 15 10:03:30 2026] [::1]:64697 [200]: GET /index.php?c=variedad&a=index
+[Thu Jan 15 10:03:30 2026] [::1]:64697 Closing
+[Thu Jan 15 10:03:30 2026] [::1]:59659 Accepted
+[Thu Jan 15 10:03:30 2026] PHP Warning:  Undefined variable $exportUrl in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\index.php on line 16
+[Thu Jan 15 10:03:30 2026] [::1]:59659 [200]: GET /index.php?c=venta&a=index
+[Thu Jan 15 10:03:30 2026] [::1]:59659 Closing
+[Thu Jan 15 10:03:30 2026] [::1]:63069 Accepted
+[Thu Jan 15 10:03:32 2026] [::1]:63069 [200]: GET /index.php?c=variedad&a=index
+[Thu Jan 15 10:03:32 2026] [::1]:63069 Closing
+[Thu Jan 15 10:03:32 2026] [::1]:52154 Accepted
+[Thu Jan 15 10:03:39 2026] [::1]:52154 [200]: GET /index.php?c=variedad&a=crear
+[Thu Jan 15 10:03:39 2026] [::1]:52154 Closing
+[Thu Jan 15 10:03:39 2026] [::1]:53073 Accepted
+[Thu Jan 15 10:05:06 2026] [::1]:53073 Closed without sending a request; it was probably just an unused speculative preconnection
+[Thu Jan 15 10:05:06 2026] [::1]:53073 Closing
+[Thu Jan 15 10:05:06 2026] [::1]:53710 Accepted
+[Thu Jan 15 10:05:06 2026] [::1]:53710 [200]: GET /index.php?c=variedad&a=index
+[Thu Jan 15 10:05:06 2026] [::1]:53710 Closing
+[Thu Jan 15 10:05:06 2026] [::1]:60686 Accepted
+[Thu Jan 15 10:05:09 2026] [::1]:60686 [200]: GET /index.php?c=productoPadre&a=index
+[Thu Jan 15 10:05:09 2026] [::1]:60686 Closing
+[Thu Jan 15 10:05:09 2026] [::1]:60551 Accepted
+[Thu Jan 15 10:05:14 2026] [::1]:60551 [200]: GET /index.php?c=productoPadre&a=editar&id=8
+[Thu Jan 15 10:05:14 2026] [::1]:60551 Closing
+[Thu Jan 15 10:05:14 2026] [::1]:50496 Accepted
+[Thu Jan 15 10:05:18 2026] [::1]:50496 [302]: POST /index.php?c=productoPadre&a=editar&id=8
+[Thu Jan 15 10:05:18 2026] [::1]:50496 Closing
+[Thu Jan 15 10:05:18 2026] [::1]:62995 Accepted
+[Thu Jan 15 10:05:18 2026] [::1]:62995 [200]: GET /index.php?c=productoPadre&a=index
+[Thu Jan 15 10:05:18 2026] [::1]:62995 Closing
+[Thu Jan 15 10:05:22 2026] [::1]:65185 Accepted
+[Thu Jan 15 10:05:23 2026] [::1]:65185 [200]: GET /index.php?c=variedad&a=index
+[Thu Jan 15 10:05:23 2026] [::1]:65185 Closing
+[Thu Jan 15 10:05:23 2026] [::1]:54173 Accepted
+[Thu Jan 15 10:05:27 2026] [::1]:54173 [200]: GET /index.php?c=variedad&a=editar&id=17
+[Thu Jan 15 10:05:27 2026] [::1]:54173 Closing
+[Thu Jan 15 10:05:27 2026] [::1]:54296 Accepted
+[Thu Jan 15 10:05:31 2026] [::1]:54296 [200]: POST /index.php?c=variedad&a=calcularPreciosVenta
+[Thu Jan 15 10:05:31 2026] [::1]:54296 Closing
+[Thu Jan 15 10:05:35 2026] [::1]:54446 Accepted
+[Thu Jan 15 10:05:35 2026] [::1]:54446 [302]: POST /index.php?c=variedad&a=editar&id=17
+[Thu Jan 15 10:05:35 2026] [::1]:54446 Closing
+[Thu Jan 15 10:05:35 2026] [::1]:53115 Accepted
+[Thu Jan 15 10:05:35 2026] [::1]:53115 [200]: GET /index.php?c=variedad&a=index
+[Thu Jan 15 10:05:35 2026] [::1]:53115 Closing
+[Thu Jan 15 10:21:14 2026] [::1]:65182 Accepted
+[Thu Jan 15 10:21:14 2026] [::1]:65182 [200]: GET /index.php?c=variedad&a=editar&id=21
+[Thu Jan 15 10:21:14 2026] [::1]:65182 Closing
+[Thu Jan 15 10:21:14 2026] [::1]:53499 Accepted
+[Thu Jan 15 10:21:19 2026] [::1]:53499 [200]: GET /index.php?c=variedad&a=index
+[Thu Jan 15 10:21:19 2026] [::1]:53499 Closing
+[Thu Jan 15 10:21:19 2026] [::1]:65234 Accepted
+[Thu Jan 15 10:47:40 2026] [::1]:65234 Closed without sending a request; it was probably just an unused speculative preconnection
+[Thu Jan 15 10:47:40 2026] [::1]:65234 Closing

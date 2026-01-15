@@ -133,7 +133,7 @@
         Total de variedades: <?= count($variedades) ?>
     </div>
     
-    <div class="card" style="margin-top: 20px; background: #e3f2fd;">
+    <!-- <div class="card" style="margin-top: 20px; background: #e3f2fd;">
         <h4 style="margin-bottom: 10px;">💡 Leyenda de Precios:</h4>
         <ul style="margin-left: 20px; line-height: 1.8;">
             <li><strong>Pack x3 💳:</strong> Precio por unidad cuando se vende en pack de 3 con tarjeta</li>
@@ -141,5 +141,5 @@
             <li><strong>x1 💳:</strong> Precio cuando se vende 1 unidad individual con tarjeta</li>
             <li><strong>x1 💵:</strong> Precio cuando se vende 1 unidad individual en efectivo</li>
         </ul>
-    </div>
+    </div> -->
 <?php endif; ?>

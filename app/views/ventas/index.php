@@ -105,7 +105,6 @@
                 <th>Fecha</th>
                 <th>Método de Pago</th>
                 <th>Total</th>
-                <th>Descuento</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -125,31 +124,11 @@
                     </td>
                     <td><strong style="color: #27ae60; font-size: 16px;">$<?= number_format($venta['total'], 2) ?></strong></td>
                     <td>
-                        <?php if ($venta['descuento_aplicado'] > 0): ?>
-                            <span style="color: #e74c3c;">-$<?= number_format($venta['descuento_aplicado'], 2) ?></span>
-                        <?php else: ?>
-                            <span style="color: #95a5a6;">-</span>
-                        <?php endif; ?>
-                    </td>
-                    <td>
                         <a href="index.php?c=venta&a=detalle&id=<?= $venta['id'] ?>" class="btn btn-primary" style="padding: 5px 10px;">Ver Detalle</a>
                     </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
-        <tfoot>
-            <tr style="background: #ecf0f1; font-weight: bold;">
-                <td colspan="3" style="text-align: right;">TOTAL (Filtrado):</td>
-                <td style="color: #27ae60; font-size: 18px;">$<?= number_format($total_ventas, 2) ?></td>
-                <td colspan="2"></td>
-            </tr>
-        </tfoot>
     </table>
     
-    <div style="margin-top: 20px; color: #666;">
-        Total de ventas: <?= count($ventas) ?>
-        <?php if (!empty($filtros['fecha_desde']) || !empty($filtros['fecha_hasta']) || !empty($filtros['metodo_pago'])): ?>
-            (filtrado)
-        <?php endif; ?>
-    </div>
 <?php endif; ?>

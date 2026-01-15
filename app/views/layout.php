@@ -66,7 +66,7 @@
             <div class="nav">
                 <a href="index.php?c=productoPadre&a=index">📁 Productos Padre</a>
                 <a href="index.php?c=variedad&a=index">🏷️ Variedades</a>
-                <a href="index.php?c=promocion&a=index">🎁 Promociones</a>
+                <!-- <a href="index.php?c=promocion&a=index">🎁 Promociones</a> -->
                 <a href="index.php?c=venta&a=index">💰 Ventas</a>
                 <a href="index.php?c=venta&a=nueva">➕ Nueva Venta</a>
                 <a href="index.php?c=pedido&a=index">📋 Pedidos</a>

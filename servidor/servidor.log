@@ -148,3 +148,29 @@ Stack trace:
 [Fri Jan 16 17:30:04 2026] [::1]:65422 [200]: GET /index.php?c=variedad&a=editar&id=13
 [Fri Jan 16 17:30:04 2026] [::1]:65422 Closing
 [Fri Jan 16 17:30:04 2026] [::1]:54606 Accepted
+[Fri Jan 16 17:31:40 2026] [::1]:54606 Closed without sending a request; it was probably just an unused speculative preconnection
+[Fri Jan 16 17:31:40 2026] [::1]:54606 Closing
+[Fri Jan 16 17:31:40 2026] [::1]:54008 Accepted
+[Fri Jan 16 17:31:40 2026] [::1]:54008 [200]: GET /index.php?c=variedad&a=editar&id=13
+[Fri Jan 16 17:31:40 2026] [::1]:54008 Closing
+[Fri Jan 16 17:31:40 2026] [::1]:58221 Accepted
+[Fri Jan 16 17:31:40 2026] [::1]:58221 [404]: GET /favicon.ico - No such file or directory
+[Fri Jan 16 17:31:40 2026] [::1]:58221 Closing
+[Fri Jan 16 17:31:41 2026] [::1]:58188 Accepted
+[Fri Jan 16 17:31:41 2026] [::1]:58188 [200]: GET /index.php?c=variedad&a=editar&id=13
+[Fri Jan 16 17:31:41 2026] [::1]:58188 Closing
+[Fri Jan 16 17:31:41 2026] [::1]:58061 Accepted
+[Fri Jan 16 17:31:41 2026] [::1]:58061 [404]: GET /favicon.ico - No such file or directory
+[Fri Jan 16 17:31:41 2026] [::1]:58061 Closing
+[Fri Jan 16 17:31:45 2026] [::1]:53831 Accepted
+[Fri Jan 16 17:31:45 2026] [::1]:53831 [200]: GET /index.php?c=variedad&a=index
+[Fri Jan 16 17:31:45 2026] [::1]:53831 Closing
+[Fri Jan 16 17:31:45 2026] [::1]:64035 Accepted
+[Fri Jan 16 17:31:46 2026] [::1]:64035 [200]: GET /index.php?c=variedad&a=editar&id=13
+[Fri Jan 16 17:31:46 2026] [::1]:64035 Closing
+[Fri Jan 16 17:31:46 2026] [::1]:62409 Accepted
+[Fri Jan 16 17:31:56 2026] [::1]:62409 [200]: GET /index.php?c=variedad&a=editar&id=13
+[Fri Jan 16 17:31:56 2026] [::1]:62409 Closing
+[Fri Jan 16 17:31:56 2026] [::1]:64880 Accepted
+[Fri Jan 16 17:31:56 2026] [::1]:64880 [404]: GET /favicon.ico - No such file or directory
+[Fri Jan 16 17:31:56 2026] [::1]:64880 Closing

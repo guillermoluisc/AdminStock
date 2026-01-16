@@ -52,6 +52,7 @@
                     <th>Variedad</th>
                     <th>Stock</th>
                     <th>Costo Unit.</th>
+                    <th>Costo Tot. Compra</th>
                     <th>Pack x3 💳</th>
                     <th>Pack x3 💵</th>
                     <th>x1 💳</th>
@@ -59,6 +60,22 @@
                     <th>Acciones</th>
                 </tr>
             </thead>
+            <?php
+                $total_costo_compra = 0;
+                foreach ($variedades as $var) {
+                    $total_costo_compra += $var['precio_compra_total'];
+                }
+            ?>
+            <!-- Estadísticas -->
+            <div class="grid-3" style="margin-bottom: 20px;">
+                <div class="card" style="background: #e8f5e9;">
+                    <h4 style="margin-bottom: 10px; color: #27ae60;">💲 Costo Total de las compras</h4>
+                    <div style="font-size: 28px; font-weight: bold; color: #27ae60;">
+                        $<?= number_format($total_costo_compra, 2, ',', '.') ?>
+                    </div>
+                    <small style="color: #666;"><?= count($variedades) ?? 0 ?> compras realizadas</small>
+                </div>
+            </div>
             <tbody>
                 <?php foreach ($variedades as $var): 
                     $stock_bajo = $var['stock'] <= $var['stock_minimo'];
@@ -85,6 +102,10 @@
                         <td>
                             <small style="color: #95a5a6;">Costo:</small><br>
                             <strong>$<?= number_format($var['precio_costo_unitario'], 2) ?></strong>
+                        </td>
+                        <td>
+                            <small style="color: #95a5a6;">Costo Tot. Compra:</small><br>
+                            <strong>$<?= number_format($var['precio_compra_total'], 2) ?></strong>
                         </td>
                         <td>
                             <?php if ($var['precio_pack3_tarjeta'] > 0): ?>
@@ -117,11 +138,11 @@
                             <?php endif; ?>
                         </td>
                         <td>
-                            <a href="index.php?c=variedad&a=editar&id=<?= $var['id'] ?>" class="btn btn-success" style="padding: 5px 10px;">Editar</a>
+                            <a href="index.php?c=variedad&a=editar&id=<?= $var['id'] ?>" class="btn btn-success" style="padding: 5px 10px;">✏️</a>
                             <a href="index.php?c=variedad&a=eliminar&id=<?= $var['id'] ?>" 
                                class="btn btn-danger" 
                                style="padding: 5px 10px;"
-                               onclick="return confirm('¿Eliminar esta variedad?')">Eliminar</a>
+                               onclick="return confirm('¿Eliminar esta variedad?')">🗑️</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -129,9 +150,8 @@
         </table>
     </div>
     
-    <div style="margin-top: 20px; color: #666;">
-        Total de variedades: <?= count($variedades) ?>
-    </div>
+
+
     
     <!-- <div class="card" style="margin-top: 20px; background: #e3f2fd;">
         <h4 style="margin-bottom: 10px;">💡 Leyenda de Precios:</h4>

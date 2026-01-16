@@ -188,40 +188,41 @@ class Variedad {
     /**
      * Calcula los 4 precios de venta basados en el producto padre
      */
-    public function calcularPreciosVenta($costo_unitario, $producto_padre_id) {
-        $productoPadreModel = new ProductoPadre();
-        $producto_padre = $productoPadreModel->getById($producto_padre_id);
-        
-        if (!$producto_padre) {
-            return [
-                'precio_pack3_tarjeta' => 0,
-                'precio_pack3_efectivo' => 0,
-                'precio_unidad_tarjeta' => 0,
-                'precio_unidad_efectivo' => 0
-            ];
-        }
-        
-        // Pack x3 Tarjeta: Costo × 3 + (Costo × 3 × porcentaje/100)
-        $precio_pack3_tarjeta_total = ($costo_unitario * 3) + (($costo_unitario * 3) * $producto_padre['porcentaje_pack3_tarjeta'] / 100);
-        $precio_pack3_tarjeta = $precio_pack3_tarjeta_total / 3; // Precio por unidad en el pack
-        
-        // Pack x3 Efectivo: Costo × 3 + (Costo × 3 × porcentaje/100)
-        $precio_pack3_efectivo_total = ($costo_unitario * 3) + (($costo_unitario * 3) * $producto_padre['porcentaje_pack3_efectivo'] / 100);
-        $precio_pack3_efectivo = $precio_pack3_efectivo_total / 3; // Precio por unidad en el pack
-        
-        // Unidad Tarjeta: Precio unitario del pack / 3
-        $precio_unidad_tarjeta = $precio_pack3_tarjeta / 3;
-        
-        // Unidad Efectivo: Precio unitario del pack / 3
-        $precio_unidad_efectivo = $precio_pack3_efectivo / 3;
-        
+
+public function calcularPreciosVenta($costo_unitario, $producto_padre_id) {
+    $productoPadreModel = new ProductoPadre();
+    $producto_padre = $productoPadreModel->getById($producto_padre_id);
+    
+    if (!$producto_padre) {
         return [
-            'precio_pack3_tarjeta' => round($precio_pack3_tarjeta, 2),
-            'precio_pack3_efectivo' => round($precio_pack3_efectivo, 2),
-            'precio_unidad_tarjeta' => round($precio_unidad_tarjeta, 2),
-            'precio_unidad_efectivo' => round($precio_unidad_efectivo, 2)
+            'precio_pack3_tarjeta' => 0,
+            'precio_pack3_efectivo' => 0,
+            'precio_unidad_tarjeta' => 0,
+            'precio_unidad_efectivo' => 0
         ];
     }
+    
+    // Pack x3 Tarjeta: (Costo × 3) + ((Costo × 3) × porcentaje/100)
+    $precio_pack3_tarjeta_total = ($costo_unitario * 3) + (($costo_unitario * 3) * $producto_padre['porcentaje_pack3_tarjeta'] / 100);
+    $precio_pack3_tarjeta = $precio_pack3_tarjeta_total / 3; // Precio por unidad en el pack
+    
+    // Pack x3 Efectivo: (Costo × 3) + ((Costo × 3) × porcentaje/100)
+    $precio_pack3_efectivo_total = ($costo_unitario * 3) + (($costo_unitario * 3) * $producto_padre['porcentaje_pack3_efectivo'] / 100);
+    $precio_pack3_efectivo = $precio_pack3_efectivo_total / 3; // Precio por unidad en el pack
+    
+    // Por 1 Unidad Tarjeta: Costo + (Costo × porcentaje/100)
+    $precio_unidad_tarjeta = $costo_unitario + ($costo_unitario * $producto_padre['porcentaje_unidad_tarjeta'] / 100);
+    
+    // Por 1 Unidad Efectivo: Costo + (Costo × porcentaje/100)
+    $precio_unidad_efectivo = $costo_unitario + ($costo_unitario * $producto_padre['porcentaje_unidad_efectivo'] / 100);
+    
+    return [
+        'precio_pack3_tarjeta' => round($precio_pack3_tarjeta, 2),
+        'precio_pack3_efectivo' => round($precio_pack3_efectivo, 2),
+        'precio_unidad_tarjeta' => round($precio_unidad_tarjeta, 2),
+        'precio_unidad_efectivo' => round($precio_unidad_efectivo, 2)
+    ];
+}
     /**
  * Calcula el valor total del stock disponible
  * (suma de precio_compra_total de todas las variedades activas)

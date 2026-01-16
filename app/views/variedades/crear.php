@@ -261,17 +261,21 @@ function calcularPreciosVenta(costoUnitario) {
     const pack3EfectivoTotal = (costoUnitario * 3) + ((costoUnitario * 3) * porcentajes.pack3_efectivo / 100);
     const pack3EfectivoUnit = pack3EfectivoTotal / 3;
     
-    // Por 1 Tarjeta (dividir el precio unitario del pack entre 3)
-    const unidadTarjeta = pack3TarjetaUnit / 3;
+    // Por 1 Tarjeta: Costo + (Costo × porcentaje/100)
+    const unidadTarjeta = costoUnitario + (costoUnitario * porcentajes.unidad_tarjeta / 100);
     
-    // Por 1 Efectivo (dividir el precio unitario del pack entre 3)
-    const unidadEfectivo = pack3EfectivoUnit / 3;
+    // Por 1 Efectivo: Costo + (Costo × porcentaje/100)
+    const unidadEfectivo = costoUnitario + (costoUnitario * porcentajes.unidad_efectivo / 100);
     
     // Actualizar campos
     document.getElementById('precio_pack3_tarjeta').value = pack3TarjetaUnit.toFixed(2);
     document.getElementById('precio_pack3_efectivo').value = pack3EfectivoUnit.toFixed(2);
     document.getElementById('precio_unidad_tarjeta').value = unidadTarjeta.toFixed(2);
     document.getElementById('precio_unidad_efectivo').value = unidadEfectivo.toFixed(2);
+    
+    // Los campos por unidad siguen siendo readonly hasta que se copien manualmente
+    document.getElementById('precio_unidad_tarjeta').style.background = '#f0f0f0';
+    document.getElementById('precio_unidad_efectivo').style.background = '#f0f0f0';
     
     // Mostrar ejemplo de cálculo
     mostrarEjemploCalculo(costoUnitario, pack3TarjetaTotal, pack3EfectivoTotal, pack3TarjetaUnit, pack3EfectivoUnit, unidadTarjeta, unidadEfectivo);
@@ -292,10 +296,12 @@ function mostrarEjemploCalculo(costo, pack3T, pack3E, pack3TU, pack3EU, unit1T, 
     document.getElementById('ej_pack3_efectivo_total').textContent = '$' + pack3E.toFixed(2);
     document.getElementById('ej_pack3_efectivo_unit').textContent = '$' + pack3EU.toFixed(2);
     
-    document.getElementById('ej_unidad_tarjeta_formula').textContent = `$${pack3T.toFixed(2)} / 3`;
+    document.getElementById('ej_unidad_tarjeta_formula').textContent = 
+        `$${costo.toFixed(2)} + ($${costo.toFixed(2)} × ${porcentajes.unidad_tarjeta}%)`;
     document.getElementById('ej_unidad_tarjeta').textContent = '$' + unit1T.toFixed(2);
     
-    document.getElementById('ej_unidad_efectivo_formula').textContent = `$${pack3E.toFixed(2)} / 3`;
+    document.getElementById('ej_unidad_efectivo_formula').textContent = 
+        `$${costo.toFixed(2)} + ($${costo.toFixed(2)} × ${porcentajes.unidad_efectivo}%)`;
     document.getElementById('ej_unidad_efectivo').textContent = '$' + unit1E.toFixed(2);
 }
 

@@ -98,9 +98,20 @@ class Database {
             total DECIMAL(10,2) NOT NULL,
             metodo_pago VARCHAR(20) NOT NULL,
             descuento_aplicado DECIMAL(10,2) DEFAULT 0,
-            fecha DATETIME DEFAULT CURRENT_TIMESTAMP
+            nombre_cliente VARCHAR(200),
+            estado VARCHAR(20) DEFAULT 'completada',
+            fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+            fecha_formalizacion DATETIME
         )";
         $db->exec($sql);
+
+        try {
+            $db->exec("SELECT nombre_cliente FROM ventas LIMIT 1");
+        } catch(PDOException $e) {
+            $db->exec("ALTER TABLE ventas ADD COLUMN nombre_cliente VARCHAR(200)");
+            $db->exec("ALTER TABLE ventas ADD COLUMN estado VARCHAR(20) DEFAULT 'completada'");
+            $db->exec("ALTER TABLE ventas ADD COLUMN fecha_formalizacion DATETIME");
+        }
         
         // Tabla de DETALLE DE VENTAS
         $sql = "CREATE TABLE IF NOT EXISTS venta_detalles (

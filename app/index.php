@@ -8,7 +8,8 @@ define('DB_PATH', BASE_PATH . '/database/database.db');
 spl_autoload_register(function ($class) {
     $paths = [
         BASE_PATH . '/models/' . $class . '.php',
-        BASE_PATH . '/controllers/' . $class . '.php'
+        BASE_PATH . '/controllers/' . $class . '.php',
+        BASE_PATH . '/helpers/' . $class . '.php'
     ];
     
     foreach ($paths as $path) {

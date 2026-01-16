@@ -98,10 +98,34 @@
 
 <form method="POST" action="index.php?c=venta&a=nueva" id="form_venta" style="margin-top: 20px;">
     <input type="hidden" name="productos_json" id="productos_json">
+    <input type="hidden" name="es_preventa" id="es_preventa" value="0">
+    
+    <!-- NUEVO: Campo opcional para nombre del cliente -->
+    <div class="card" style="background: #e3f2fd; margin-bottom: 20px;">
+        <h3 style="margin-bottom: 15px;">👤 Información del Cliente (Opcional)</h3>
+        <div class="form-group">
+            <label for="nombre_cliente">Nombre del Cliente</label>
+            <input type="text" id="nombre_cliente" name="nombre_cliente" placeholder="Dejar vacío para venta anónima" style="width: 100%; padding: 10px;">
+            <small style="color: #666;">Útil para pre-ventas o ventas a crédito</small>
+        </div>
+    </div>
     
     <div class="form-actions">
-        <button type="submit" class="btn btn-primary" onclick="return finalizarVenta()">✅ Finalizar Venta</button>
+        <button type="button" class="btn btn-primary" onclick="finalizarVenta(false)">
+            ✅ Completar Venta
+        </button>
+        <button type="button" class="btn btn-warning" onclick="finalizarVenta(true)" style="margin-left: 10px;">
+            ⏳ Guardar como Pre-venta
+        </button>
         <a href="index.php?c=venta&a=index" class="btn btn-secondary">Cancelar</a>
+    </div>
+    
+    <div style="margin-top: 15px; padding: 15px; background: #fff3cd; border-radius: 4px; border-left: 4px solid #f39c12;">
+        <strong>💡 Diferencia entre Venta y Pre-venta:</strong>
+        <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+            <li><strong>Venta Completa:</strong> Se registra inmediatamente el ingreso y descuenta stock definitivamente.</li>
+            <li><strong>Pre-venta:</strong> Reserva el stock pero no registra el ingreso hasta que se formalice. Útil para apartados o ventas a crédito.</li>
+        </ul>
     </div>
 </form>
 
@@ -270,13 +294,29 @@ function actualizarTablaVenta() {
     document.getElementById('total_general').textContent = '$' + totalGeneral.toFixed(2);
 }
 
-function finalizarVenta() {
+function finalizarVenta(esPreventa) {
     if (productosVenta.length === 0) {
         alert('Debe agregar al menos un producto a la venta');
         return false;
     }
     
+    // Si es pre-venta, recomendar agregar nombre del cliente
+    if (esPreventa) {
+        const nombreCliente = document.getElementById('nombre_cliente').value.trim();
+        if (!nombreCliente) {
+            if (!confirm('⚠️ No ha ingresado el nombre del cliente.\n\n¿Desea continuar con la pre-venta anónima?')) {
+                return false;
+            }
+        }
+        
+        if (!confirm('¿Confirma crear esta PRE-VENTA?\n\nSe reservará el stock pero no se registrará el ingreso hasta que se formalice.')) {
+            return false;
+        }
+    }
+    
     document.getElementById('productos_json').value = JSON.stringify(productosVenta);
+    document.getElementById('es_preventa').value = esPreventa ? '1' : '0';
+    document.getElementById('form_venta').submit();
     return true;
 }
 </script>

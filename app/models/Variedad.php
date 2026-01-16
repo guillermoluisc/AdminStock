@@ -222,5 +222,15 @@ class Variedad {
             'precio_unidad_efectivo' => round($precio_unidad_efectivo, 2)
         ];
     }
+    /**
+ * Calcula el valor total del stock disponible
+ * (suma de precio_compra_total de todas las variedades activas)
+ */
+public function getTotalStockDisponible() {
+    $sql = "SELECT SUM(precio_compra_total) as total FROM variedades WHERE activo = 1";
+    $stmt = $this->db->query($sql);
+    $result = $stmt->fetch();
+    return $result['total'] ?? 0;
+}
 }
 ?>

@@ -71,7 +71,7 @@
                 <div class="card" style="background: #e8f5e9;">
                     <h4 style="margin-bottom: 10px; color: #27ae60;">💲 Costo Total de las compras</h4>
                     <div style="font-size: 28px; font-weight: bold; color: #27ae60;">
-                        $<?= number_format($total_costo_compra, 2, ',', '.') ?>
+                        <?= FormatHelper::precio($total_costo_compra) ?>
                     </div>
                     <small style="color: #666;"><?= count($variedades) ?? 0 ?> compras realizadas</small>
                 </div>
@@ -101,15 +101,15 @@
                         </td>
                         <td>
                             <small style="color: #95a5a6;">Costo:</small><br>
-                            <strong>$<?= number_format($var['precio_costo_unitario'], 2) ?></strong>
+                            <strong><?= FormatHelper::precio($var['precio_costo_unitario']) ?></strong>
                         </td>
                         <td>
                             <small style="color: #95a5a6;">Costo Tot. Compra:</small><br>
-                            <strong>$<?= number_format($var['precio_compra_total'], 2) ?></strong>
+                            <strong><?= FormatHelper::precio($var['precio_compra_total']) ?></strong>
                         </td>
                         <td>
                             <?php if ($var['precio_pack3_tarjeta'] > 0): ?>
-                                <strong style="color: #3498db;">$<?= number_format($var['precio_pack3_tarjeta'], 2) ?></strong>
+                                <strong style="color: #3498db;"><?= FormatHelper::precio($var['precio_pack3_tarjeta']) ?></strong>
                                 <br><small style="color: #95a5a6;">c/u</small>
                             <?php else: ?>
                                 <span style="color: #95a5a6;">-</span>
@@ -117,7 +117,7 @@
                         </td>
                         <td>
                             <?php if ($var['precio_pack3_efectivo'] > 0): ?>
-                                <strong style="color: #27ae60;">$<?= number_format($var['precio_pack3_efectivo'], 2) ?></strong>
+                                <strong style="color: #27ae60;"><?= FormatHelper::precio($var['precio_pack3_efectivo']) ?></strong>
                                 <br><small style="color: #95a5a6;">c/u</small>
                             <?php else: ?>
                                 <span style="color: #95a5a6;">-</span>
@@ -125,14 +125,14 @@
                         </td>
                         <td>
                             <?php if ($var['precio_unidad_tarjeta'] > 0): ?>
-                                <strong style="color: #3498db;">$<?= number_format($var['precio_unidad_tarjeta'], 2) ?></strong>
+                                <strong style="color: #3498db;"><?= FormatHelper::precio($var['precio_unidad_tarjeta']) ?></strong>
                             <?php else: ?>
                                 <span style="color: #95a5a6;">-</span>
                             <?php endif; ?>
                         </td>
                         <td>
                             <?php if ($var['precio_unidad_efectivo'] > 0): ?>
-                                <strong style="color: #27ae60;">$<?= number_format($var['precio_unidad_efectivo'], 2) ?></strong>
+                                <strong style="color: #27ae60;"><?= FormatHelper::precio($var['precio_unidad_efectivo']) ?></strong>
                             <?php else: ?>
                                 <span style="color: #95a5a6;">-</span>
                             <?php endif; ?>
@@ -149,17 +149,4 @@
             </tbody>
         </table>
     </div>
-    
-
-
-    
-    <!-- <div class="card" style="margin-top: 20px; background: #e3f2fd;">
-        <h4 style="margin-bottom: 10px;">💡 Leyenda de Precios:</h4>
-        <ul style="margin-left: 20px; line-height: 1.8;">
-            <li><strong>Pack x3 💳:</strong> Precio por unidad cuando se vende en pack de 3 con tarjeta</li>
-            <li><strong>Pack x3 💵:</strong> Precio por unidad cuando se vende en pack de 3 en efectivo</li>
-            <li><strong>x1 💳:</strong> Precio cuando se vende 1 unidad individual con tarjeta</li>
-            <li><strong>x1 💵:</strong> Precio cuando se vende 1 unidad individual en efectivo</li>
-        </ul>
-    </div> -->
 <?php endif; ?>

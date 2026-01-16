@@ -72,6 +72,11 @@
         <button type="button" class="btn btn-info" onclick="recalcularPrecios()" style="margin-top: 10px;">
             🔄 Recalcular Precios Automáticamente
         </button>
+
+        <!-- NUEVO: Botón para igualar precios -->
+        <button type="button" class="btn btn-warning" onclick="copiarPreciosPack3AUnidad()" style="margin-top: 10px; margin-left: 10px;">
+            📋 Copiar Precios Pack x3 a Por Unidad
+        </button>
     </div>
     
     <div class="card">
@@ -170,5 +175,24 @@ function recalcularPrecios() {
         console.error('Error:', error);
         alert('Error al calcular los precios');
     });
+}
+/**
+ * Copia los precios del Pack x3 a los precios Por Unidad
+ */
+function copiarPreciosPack3AUnidad() {
+    const pack3Tarjeta = document.getElementById('precio_pack3_tarjeta').value;
+    const pack3Efectivo = document.getElementById('precio_pack3_efectivo').value;
+    
+    if (!pack3Tarjeta || !pack3Efectivo) {
+        alert('Los precios del Pack x3 están vacíos.');
+        return;
+    }
+    
+    if (confirm('¿Está seguro de copiar los precios del Pack x3 a Por Unidad?\n\nEsto sobrescribirá los valores actuales de Por 1 Unidad.')) {
+        document.getElementById('precio_unidad_tarjeta').value = pack3Tarjeta;
+        document.getElementById('precio_unidad_efectivo').value = pack3Efectivo;
+        
+        alert('✅ Precios copiados correctamente.');
+    }
 }
 </script>

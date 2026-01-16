@@ -57,6 +57,7 @@
         .filtros { background: #ecf0f1; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
         .filtros form { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }
         .filtros .form-group { margin-bottom: 0; flex: 1; min-width: 150px; }
+        .precio-input {text-align: right; font-family: 'Courier New', monospace; font-weight: bold; }
     </style>
 </head>
 <body>

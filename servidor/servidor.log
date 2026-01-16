@@ -174,3 +174,195 @@ Stack trace:
 [Fri Jan 16 17:31:56 2026] [::1]:64880 Accepted
 [Fri Jan 16 17:31:56 2026] [::1]:64880 [404]: GET /favicon.ico - No such file or directory
 [Fri Jan 16 17:31:56 2026] [::1]:64880 Closing
+[Fri Jan 16 17:50:12 2026] [::1]:64553 Accepted
+[Fri Jan 16 17:50:12 2026] [::1]:64553 [200]: GET /index.php?c=variedad&a=editar&id=13
+[Fri Jan 16 17:50:12 2026] [::1]:64553 Closing
+[Fri Jan 16 17:50:12 2026] [::1]:55248 Accepted
+[Fri Jan 16 17:50:12 2026] [::1]:55248 [404]: GET /favicon.ico - No such file or directory
+[Fri Jan 16 17:50:12 2026] [::1]:55248 Closing
+[Fri Jan 16 17:50:13 2026] [::1]:60221 Accepted
+[Fri Jan 16 17:50:13 2026] [::1]:60221 [200]: GET /index.php?c=variedad&a=editar&id=13
+[Fri Jan 16 17:50:13 2026] [::1]:60221 Closing
+[Fri Jan 16 17:50:13 2026] [::1]:55932 Accepted
+[Fri Jan 16 17:50:13 2026] [::1]:55932 [404]: GET /favicon.ico - No such file or directory
+[Fri Jan 16 17:50:13 2026] [::1]:55932 Closing
+[Fri Jan 16 17:50:25 2026] [::1]:56570 Accepted
+[Fri Jan 16 17:50:25 2026] [::1]:56570 [200]: GET /index.php?c=variedad&a=index
+[Fri Jan 16 17:50:25 2026] [::1]:56570 Closing
+[Fri Jan 16 17:50:25 2026] [::1]:57586 Accepted
+[Fri Jan 16 17:50:28 2026] [::1]:57586 [200]: GET /index.php?c=variedad&a=editar&id=13
+[Fri Jan 16 17:50:28 2026] [::1]:57586 Closing
+[Fri Jan 16 17:50:28 2026] [::1]:55251 Accepted
+[Fri Jan 16 17:53:55 2026] [::1]:55251 Closed without sending a request; it was probably just an unused speculative preconnection
+[Fri Jan 16 17:53:55 2026] [::1]:55251 Closing
+[Fri Jan 16 18:00:57 2026] [::1]:54445 Accepted
+[Fri Jan 16 18:00:57 2026] [::1]:54445 [200]: GET /index.php?c=variedad&a=index
+[Fri Jan 16 18:00:57 2026] [::1]:54445 Closing
+[Fri Jan 16 18:00:57 2026] [::1]:53177 Accepted
+[Fri Jan 16 18:00:58 2026] [::1]:53177 [200]: GET /index.php?c=variedad&a=index
+[Fri Jan 16 18:00:58 2026] [::1]:53177 Closing
+[Fri Jan 16 18:00:58 2026] [::1]:53499 Accepted
+[Fri Jan 16 18:00:58 2026] [::1]:53499 [404]: GET /favicon.ico - No such file or directory
+[Fri Jan 16 18:00:58 2026] [::1]:53499 Closing
+[Fri Jan 16 18:00:59 2026] [::1]:57527 Accepted
+[Fri Jan 16 18:00:59 2026] PHP Warning:  Undefined variable $exportUrl in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\index.php on line 16
+[Fri Jan 16 18:00:59 2026] [::1]:57527 [200]: GET /index.php?c=venta&a=index
+[Fri Jan 16 18:00:59 2026] [::1]:57527 Closing
+[Fri Jan 16 18:00:59 2026] [::1]:54071 Accepted
+[Fri Jan 16 18:02:05 2026] [::1]:54071 Closed without sending a request; it was probably just an unused speculative preconnection
+[Fri Jan 16 18:02:05 2026] [::1]:54071 Closing
+[Fri Jan 16 18:02:11 2026] [::1]:49680 Accepted
+[Fri Jan 16 18:02:11 2026] PHP Fatal error:  Uncaught Error: Call to undefined method Variedad::getTotalStockDisponible() in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\controllers\VentaController.php:44
+Stack trace:
+#0 C:\Users\guill\OneDrive\Escritorio\AdminStock\app\index.php(36): VentaController->index(NULL)
+#1 {main}
+  thrown in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\controllers\VentaController.php on line 44
+[Fri Jan 16 18:02:11 2026] [::1]:49680 [200]: GET /index.php?c=venta&a=index - Uncaught Error: Call to undefined method Variedad::getTotalStockDisponible() in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\controllers\VentaController.php:44
+Stack trace:
+#0 C:\Users\guill\OneDrive\Escritorio\AdminStock\app\index.php(36): VentaController->index(NULL)
+#1 {main}
+  thrown in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\controllers\VentaController.php on line 44
+[Fri Jan 16 18:02:11 2026] [::1]:49680 Closing
+[Fri Jan 16 18:02:11 2026] [::1]:49670 Accepted
+[Fri Jan 16 18:02:11 2026] [::1]:49670 [404]: GET /favicon.ico - No such file or directory
+[Fri Jan 16 18:02:11 2026] [::1]:49670 Closing
+[Fri Jan 16 18:02:52 2026] [::1]:50799 Accepted
+[Fri Jan 16 18:02:52 2026] PHP Warning:  Undefined variable $exportUrl in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\index.php on line 16
+[Fri Jan 16 18:02:52 2026] [::1]:50799 [200]: GET /index.php?c=venta&a=index
+[Fri Jan 16 18:02:52 2026] [::1]:50799 Closing
+[Fri Jan 16 18:02:52 2026] [::1]:65184 Accepted
+[Fri Jan 16 18:02:52 2026] [::1]:65184 [404]: GET /favicon.ico - No such file or directory
+[Fri Jan 16 18:02:52 2026] [::1]:65184 Closing
+[Fri Jan 16 18:02:56 2026] [::1]:61956 Accepted
+[Fri Jan 16 18:02:56 2026] [::1]:61956 [200]: GET /index.php?c=variedad&a=index
+[Fri Jan 16 18:02:56 2026] [::1]:61956 Closing
+[Fri Jan 16 18:02:56 2026] [::1]:59899 Accepted
+[Fri Jan 16 18:02:59 2026] PHP Warning:  Undefined variable $exportUrl in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\index.php on line 16
+[Fri Jan 16 18:02:59 2026] [::1]:59899 [200]: GET /index.php?c=venta&a=index
+[Fri Jan 16 18:02:59 2026] [::1]:59899 Closing
+[Fri Jan 16 18:02:59 2026] [::1]:65054 Accepted
+[Fri Jan 16 18:03:01 2026] [::1]:65054 [200]: GET /index.php?c=variedad&a=index
+[Fri Jan 16 18:03:01 2026] [::1]:65054 Closing
+[Fri Jan 16 18:03:01 2026] [::1]:63512 Accepted
+[Fri Jan 16 18:03:02 2026] PHP Warning:  Undefined variable $exportUrl in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\index.php on line 16
+[Fri Jan 16 18:03:02 2026] [::1]:63512 [200]: GET /index.php?c=venta&a=index
+[Fri Jan 16 18:03:02 2026] [::1]:63512 Closing
+[Fri Jan 16 18:03:02 2026] [::1]:58474 Accepted
+[Fri Jan 16 18:03:24 2026] PHP Warning:  Undefined variable $exportUrl in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\index.php on line 16
+[Fri Jan 16 18:03:24 2026] [::1]:58474 [200]: GET /index.php?c=venta&a=index
+[Fri Jan 16 18:03:24 2026] [::1]:58474 Closing
+[Fri Jan 16 18:03:24 2026] [::1]:54007 Accepted
+[Fri Jan 16 18:03:24 2026] [::1]:54007 [404]: GET /favicon.ico - No such file or directory
+[Fri Jan 16 18:03:24 2026] [::1]:54007 Closing
+[Fri Jan 16 18:08:10 2026] [::1]:57180 Accepted
+[Fri Jan 16 18:08:10 2026] [::1]:57180 [200]: GET /index.php?c=venta&a=detalle&id=23
+[Fri Jan 16 18:08:10 2026] [::1]:57180 Closing
+[Fri Jan 16 18:08:10 2026] [::1]:64309 Accepted
+[Fri Jan 16 18:08:12 2026] PHP Warning:  Undefined variable $exportUrl in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\index.php on line 16
+[Fri Jan 16 18:08:12 2026] [::1]:64309 [200]: GET /index.php?c=venta&a=index
+[Fri Jan 16 18:08:12 2026] [::1]:64309 Closing
+[Fri Jan 16 18:08:12 2026] [::1]:58905 Accepted
+[Fri Jan 16 18:08:13 2026] [::1]:58905 [200]: GET /index.php?c=variedad&a=index
+[Fri Jan 16 18:08:13 2026] [::1]:58905 Closing
+[Fri Jan 16 18:08:13 2026] [::1]:59203 Accepted
+[Fri Jan 16 18:08:14 2026] [::1]:59203 [200]: GET /index.php?c=variedad&a=editar&id=13
+[Fri Jan 16 18:08:14 2026] [::1]:59203 Closing
+[Fri Jan 16 18:08:14 2026] [::1]:49878 Accepted
+[Fri Jan 16 18:09:04 2026] [::1]:49878 [200]: GET /index.php?c=variedad&a=editar&id=13
+[Fri Jan 16 18:09:04 2026] [::1]:49878 Closing
+[Fri Jan 16 18:09:04 2026] [::1]:59450 Accepted
+[Fri Jan 16 18:09:04 2026] [::1]:59450 [404]: GET /favicon.ico - No such file or directory
+[Fri Jan 16 18:09:04 2026] [::1]:59450 Closing
+[Fri Jan 16 18:09:10 2026] [::1]:62764 Accepted
+[Fri Jan 16 18:09:10 2026] PHP Warning:  Undefined variable $exportUrl in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\index.php on line 16
+[Fri Jan 16 18:09:10 2026] [::1]:62764 [200]: GET /index.php?c=venta&a=index
+[Fri Jan 16 18:09:10 2026] [::1]:62764 Closing
+[Fri Jan 16 18:09:10 2026] [::1]:54157 Accepted
+[Fri Jan 16 18:09:11 2026] [::1]:54157 [200]: GET /index.php?c=variedad&a=index
+[Fri Jan 16 18:09:11 2026] [::1]:54157 Closing
+[Fri Jan 16 18:09:11 2026] [::1]:51282 Accepted
+[Fri Jan 16 18:09:11 2026] [::1]:51282 [200]: GET /index.php?c=variedad&a=crear
+[Fri Jan 16 18:09:11 2026] [::1]:51282 Closing
+[Fri Jan 16 18:09:11 2026] [::1]:50258 Accepted
+[Fri Jan 16 18:10:28 2026] [::1]:50258 Closed without sending a request; it was probably just an unused speculative preconnection
+[Fri Jan 16 18:10:28 2026] [::1]:50258 Closing
+[Fri Jan 16 18:10:28 2026] [::1]:64314 Accepted
+[Fri Jan 16 18:10:28 2026] [::1]:64314 [200]: GET /index.php?c=variedad&a=crear
+[Fri Jan 16 18:10:28 2026] [::1]:64314 Closing
+[Fri Jan 16 18:10:28 2026] [::1]:65442 Accepted
+[Fri Jan 16 18:10:28 2026] [::1]:65442 [404]: GET /favicon.ico - No such file or directory
+[Fri Jan 16 18:10:28 2026] [::1]:65442 Closing
+[Fri Jan 16 18:12:21 2026] [::1]:55277 Accepted
+[Fri Jan 16 18:12:21 2026] [::1]:55277 [302]: POST /index.php?c=variedad&a=crear
+[Fri Jan 16 18:12:21 2026] [::1]:55277 Closing
+[Fri Jan 16 18:12:21 2026] [::1]:64281 Accepted
+[Fri Jan 16 18:12:21 2026] [::1]:64281 [200]: GET /index.php?c=variedad&a=index
+[Fri Jan 16 18:12:21 2026] [::1]:64281 Closing
+[Fri Jan 16 18:12:51 2026] [::1]:62806 Accepted
+[Fri Jan 16 18:12:51 2026] [::1]:62806 [200]: GET /index.php?c=venta&a=nueva
+[Fri Jan 16 18:12:51 2026] [::1]:62806 Closing
+[Fri Jan 16 18:12:51 2026] [::1]:61642 Accepted
+[Fri Jan 16 18:13:04 2026] PHP Warning:  Undefined variable $exportUrl in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\index.php on line 16
+[Fri Jan 16 18:13:04 2026] [::1]:61642 [200]: GET /index.php?c=venta&a=index
+[Fri Jan 16 18:13:04 2026] [::1]:61642 Closing
+[Fri Jan 16 18:13:04 2026] [::1]:62745 Accepted
+[Fri Jan 16 18:13:09 2026] [::1]:62745 [200]: GET /index.php?c=variedad&a=index
+[Fri Jan 16 18:13:09 2026] [::1]:62745 Closing
+[Fri Jan 16 18:13:09 2026] [::1]:58748 Accepted
+[Fri Jan 16 18:13:10 2026] [::1]:58748 [200]: GET /index.php?c=variedad&a=crear
+[Fri Jan 16 18:13:10 2026] [::1]:58748 Closing
+[Fri Jan 16 18:13:10 2026] [::1]:64058 Accepted
+[Fri Jan 16 18:13:42 2026] [::1]:64058 [302]: POST /index.php?c=variedad&a=crear
+[Fri Jan 16 18:13:42 2026] [::1]:64058 Closing
+[Fri Jan 16 18:13:42 2026] [::1]:50809 Accepted
+[Fri Jan 16 18:13:42 2026] [::1]:50809 [200]: GET /index.php?c=variedad&a=index
+[Fri Jan 16 18:13:42 2026] [::1]:50809 Closing
+[Fri Jan 16 18:13:54 2026] [::1]:52659 Accepted
+[Fri Jan 16 18:13:54 2026] [::1]:52659 [200]: GET /index.php?c=variedad&a=editar&id=23
+[Fri Jan 16 18:13:54 2026] [::1]:52659 Closing
+[Fri Jan 16 18:13:54 2026] [::1]:53890 Accepted
+[Fri Jan 16 18:14:02 2026] [::1]:53890 [200]: GET /index.php?c=variedad&a=index
+[Fri Jan 16 18:14:02 2026] [::1]:53890 Closing
+[Fri Jan 16 18:14:02 2026] [::1]:64757 Accepted
+[Fri Jan 16 18:14:03 2026] [::1]:64757 [200]: GET /index.php?c=venta&a=nueva
+[Fri Jan 16 18:14:03 2026] [::1]:64757 Closing
+[Fri Jan 16 18:14:03 2026] [::1]:55718 Accepted
+[Fri Jan 16 18:14:08 2026] PHP Warning:  Undefined variable $exportUrl in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\index.php on line 16
+[Fri Jan 16 18:14:08 2026] [::1]:55718 [200]: GET /index.php?c=venta&a=index
+[Fri Jan 16 18:14:08 2026] [::1]:55718 Closing
+[Fri Jan 16 18:14:08 2026] [::1]:54956 Accepted
+[Fri Jan 16 18:14:14 2026] [::1]:54956 [200]: GET /index.php?c=variedad&a=index
+[Fri Jan 16 18:14:14 2026] [::1]:54956 Closing
+[Fri Jan 16 18:14:14 2026] [::1]:63391 Accepted
+[Fri Jan 16 18:14:16 2026] [::1]:63391 [200]: GET /index.php?c=variedad&a=editar&id=23
+[Fri Jan 16 18:14:16 2026] [::1]:63391 Closing
+[Fri Jan 16 18:14:16 2026] [::1]:52701 Accepted
+[Fri Jan 16 18:14:20 2026] [::1]:52701 [200]: POST /index.php?c=variedad&a=calcularPreciosVenta
+[Fri Jan 16 18:14:20 2026] [::1]:52701 Closing
+[Fri Jan 16 18:14:24 2026] [::1]:63395 Accepted
+[Fri Jan 16 18:14:24 2026] [::1]:63395 [302]: POST /index.php?c=variedad&a=editar&id=23
+[Fri Jan 16 18:14:24 2026] [::1]:63395 Closing
+[Fri Jan 16 18:14:24 2026] [::1]:55510 Accepted
+[Fri Jan 16 18:14:24 2026] [::1]:55510 [200]: GET /index.php?c=variedad&a=index
+[Fri Jan 16 18:14:24 2026] [::1]:55510 Closing
+[Fri Jan 16 18:14:34 2026] [::1]:64038 Accepted
+[Fri Jan 16 18:14:34 2026] [::1]:64038 [200]: GET /index.php?c=variedad&a=crear
+[Fri Jan 16 18:14:34 2026] [::1]:64038 Closing
+[Fri Jan 16 18:14:34 2026] [::1]:61999 Accepted
+[Fri Jan 16 18:14:57 2026] [::1]:61999 [302]: POST /index.php?c=variedad&a=crear
+[Fri Jan 16 18:14:57 2026] [::1]:61999 Closing
+[Fri Jan 16 18:14:57 2026] [::1]:50385 Accepted
+[Fri Jan 16 18:14:57 2026] [::1]:50385 [200]: GET /index.php?c=variedad&a=index
+[Fri Jan 16 18:14:57 2026] [::1]:50385 Closing
+[Fri Jan 16 18:15:00 2026] [::1]:61281 Accepted
+[Fri Jan 16 18:15:00 2026] [::1]:61281 [200]: GET /index.php?c=variedad&a=editar&id=24
+[Fri Jan 16 18:15:00 2026] [::1]:61281 Closing
+[Fri Jan 16 18:15:00 2026] [::1]:61582 Accepted
+[Fri Jan 16 18:15:01 2026] [::1]:61582 [200]: POST /index.php?c=variedad&a=calcularPreciosVenta
+[Fri Jan 16 18:15:01 2026] [::1]:61582 Closing
+[Fri Jan 16 18:15:07 2026] [::1]:64482 Accepted
+[Fri Jan 16 18:15:07 2026] [::1]:64482 [302]: POST /index.php?c=variedad&a=editar&id=24
+[Fri Jan 16 18:15:07 2026] [::1]:64482 Closing
+[Fri Jan 16 18:15:07 2026] [::1]:55269 Accepted
+[Fri Jan 16 18:15:07 2026] [::1]:55269 [200]: GET /index.php?c=variedad&a=index
+[Fri Jan 16 18:15:07 2026] [::1]:55269 Closing

@@ -28,6 +28,15 @@ class Venta {
             $params[] = $filtros['metodo_pago'];
         }
         
+        // Filtro por estado
+        if (!empty($filtros['estado'])) {
+            $sql .= " AND estado = ?";
+            $params[] = $filtros['estado'];
+        } else {
+            // Por defecto no mostrar canceladas
+            $sql .= " AND estado != 'cancelada'";
+        }
+        
         $sql .= " ORDER BY fecha DESC";
         
         $stmt = $this->db->prepare($sql);
@@ -57,7 +66,7 @@ class Venta {
         $sql = "SELECT SUM(vd.cantidad) as total_vendido, COUNT(DISTINCT vd.venta_id) as cantidad_ventas
                 FROM venta_detalles vd
                 JOIN ventas v ON vd.venta_id = v.id
-                WHERE vd.variedad_id = ?";
+                WHERE vd.variedad_id = ? AND v.estado != 'cancelada'";
         
         $params = [$variedad_id];
         
@@ -76,13 +85,17 @@ class Venta {
         return $stmt->fetch();
     }
     
-    public function crear($total, $metodo_pago, $descuento_aplicado, $detalles) {
+    public function crear($total, $metodo_pago, $descuento_aplicado, $detalles, $nombre_cliente = null, $es_preventa = false) {
         try {
             $this->db->beginTransaction();
             
+            // Determinar estado inicial
+            $estado = $es_preventa ? 'preventa' : 'completada';
+            $fecha_formalizacion = $es_preventa ? null : date('Y-m-d H:i:s');
+            
             // Crear venta
-            $stmt = $this->db->prepare("INSERT INTO ventas (total, metodo_pago, descuento_aplicado) VALUES (?, ?, ?)");
-            $stmt->execute([$total, $metodo_pago, $descuento_aplicado]);
+            $stmt = $this->db->prepare("INSERT INTO ventas (total, metodo_pago, descuento_aplicado, nombre_cliente, estado, fecha_formalizacion) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$total, $metodo_pago, $descuento_aplicado, $nombre_cliente, $estado, $fecha_formalizacion]);
             $venta_id = $this->db->lastInsertId();
             
             // Insertar detalles y actualizar stock
@@ -102,6 +115,7 @@ class Venta {
                     $detalle['subtotal']
                 ]);
                 
+                // Descontar stock (tanto para venta completa como pre-venta)
                 $stmtStock->execute([
                     $detalle['cantidad'],
                     $detalle['variedad_id']
@@ -116,8 +130,46 @@ class Venta {
         }
     }
     
+    public function formalizarPreventa($id) {
+        try {
+            $stmt = $this->db->prepare(
+                "UPDATE ventas SET estado = 'completada', fecha_formalizacion = ? WHERE id = ? AND estado = 'preventa'"
+            );
+            return $stmt->execute([date('Y-m-d H:i:s'), $id]);
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+    
+    public function cancelarPreventa($id) {
+        try {
+            $this->db->beginTransaction();
+            
+            // Obtener detalles de la venta
+            $detalles = $this->getDetalles($id);
+            
+            // Devolver stock
+            $stmtStock = $this->db->prepare("UPDATE variedades SET stock = stock + ? WHERE id = ?");
+            foreach ($detalles as $detalle) {
+                $stmtStock->execute([$detalle['cantidad'], $detalle['variedad_id']]);
+            }
+            
+            // Marcar venta como cancelada
+            $stmt = $this->db->prepare(
+                "UPDATE ventas SET estado = 'cancelada' WHERE id = ? AND estado = 'preventa'"
+            );
+            $stmt->execute([$id]);
+            
+            $this->db->commit();
+            return true;
+        } catch (PDOException $e) {
+            $this->db->rollBack();
+            return false;
+        }
+    }
+    
     public function getTotalVentas($filtros = []) {
-        $sql = "SELECT SUM(total) as total FROM ventas WHERE 1=1";
+        $sql = "SELECT SUM(total) as total FROM ventas WHERE estado != 'cancelada'";
         $params = [];
         
         if (!empty($filtros['fecha_desde'])) {
@@ -150,7 +202,7 @@ class Venta {
                 SUM(CASE WHEN metodo_pago = 'efectivo' THEN total ELSE 0 END) as total_efectivo,
                 SUM(CASE WHEN metodo_pago = 'tarjeta' THEN total ELSE 0 END) as total_tarjeta,
                 SUM(CASE WHEN metodo_pago = 'transferencia' THEN total ELSE 0 END) as total_transferencia
-                FROM ventas WHERE 1=1";
+                FROM ventas WHERE estado = 'completada'";
         
         $params = [];
         

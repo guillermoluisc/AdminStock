@@ -74,19 +74,84 @@
             </div>
         </div>
         
-        <div class="grid-2">
-            <div class="form-group">
-                <label for="precio_unidad_tarjeta">💳 Por 1 Unidad Tarjeta</label>
-                <input type="number" id="precio_unidad_tarjeta" name="precio_unidad_tarjeta" step="0.01" min="0" readonly style="background: #f0f0f0; font-weight: bold;">
-                <small style="color: #666;">Precio unitario individual</small>
+<div class="card" style="background: #e8f5e9;">
+    <h3 style="margin-bottom: 15px;">📊 Precios de Venta Calculados Automáticamente</h3>
+    <p style="color: #666; margin-bottom: 15px;">
+        Los precios se calculan según los porcentajes configurados en el Producto Padre
+    </p>
+    
+    <div class="grid-2">
+        <div class="form-group">
+            <label for="precio_pack3_tarjeta">💳 Pack x3 Tarjeta (por unidad)</label>
+            <input type="number" id="precio_pack3_tarjeta" name="precio_pack3_tarjeta" step="0.01" min="0" readonly style="background: #f0f0f0; font-weight: bold;">
+            <small style="color: #666;">Precio por unidad en pack de 3</small>
+        </div>
+        
+        <div class="form-group">
+            <label for="precio_pack3_efectivo">💵 Pack x3 Efectivo (por unidad)</label>
+            <input type="number" id="precio_pack3_efectivo" name="precio_pack3_efectivo" step="0.01" min="0" readonly style="background: #f0f0f0; font-weight: bold;">
+            <small style="color: #666;">Precio por unidad en pack de 3</small>
+        </div>
+    </div>
+    
+    <div class="grid-2" style="margin-top: 15px;">
+        <div class="form-group">
+            <label for="precio_unidad_tarjeta">💳 Por 1 Unidad Tarjeta</label>
+            <input type="number" id="precio_unidad_tarjeta" name="precio_unidad_tarjeta" step="0.01" min="0" readonly style="background: #f0f0f0; font-weight: bold;">
+            <small style="color: #666;">Precio unitario individual</small>
+        </div>
+        
+        <div class="form-group">
+            <label for="precio_unidad_efectivo">💵 Por 1 Unidad Efectivo</label>
+            <input type="number" id="precio_unidad_efectivo" name="precio_unidad_efectivo" step="0.01" min="0" readonly style="background: #f0f0f0; font-weight: bold;">
+            <small style="color: #666;">Precio unitario individual</small>
+        </div>
+    </div>
+    
+    <!-- NUEVO: Botón para igualar precios -->
+    <div style="margin-top: 15px; padding: 15px; background: #fff3cd; border-radius: 4px; border-left: 4px solid #f39c12;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <strong>💡 ¿Vender solo por unidad al mismo precio del pack?</strong>
+                <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">
+                    Esto copiará los precios del Pack x3 a los precios Por 1 Unidad
+                </p>
             </div>
-            
-            <div class="form-group">
-                <label for="precio_unidad_efectivo">💵 Por 1 Unidad Efectivo</label>
-                <input type="number" id="precio_unidad_efectivo" name="precio_unidad_efectivo" step="0.01" min="0" readonly style="background: #f0f0f0; font-weight: bold;">
-                <small style="color: #666;">Precio unitario individual</small>
+            <button type="button" class="btn btn-warning" onclick="copiarPreciosPack3AUnidad()">
+                📋 Igualar Precios
+            </button>
+        </div>
+    </div>
+    
+    <div id="ejemplo_calculo" style="display: none; margin-top: 15px; padding: 15px; background: white; border-radius: 4px;">
+        <h4 style="margin-bottom: 10px;">🔍 Ejemplo de Cálculo:</h4>
+        <div style="font-size: 14px; line-height: 1.8;">
+            <div><strong>Costo unitario:</strong> <span id="ej_costo">$0</span></div>
+            <div style="margin-top: 5px;">
+                <strong>Pack x3 Tarjeta:</strong> 
+                <span id="ej_pack3_tarjeta_formula"></span> = 
+                <span id="ej_pack3_tarjeta_total" style="color: #27ae60; font-weight: bold;">$0</span>
+                (por unidad: <span id="ej_pack3_tarjeta_unit" style="color: #27ae60;">$0</span>)
+            </div>
+            <div>
+                <strong>Pack x3 Efectivo:</strong> 
+                <span id="ej_pack3_efectivo_formula"></span> = 
+                <span id="ej_pack3_efectivo_total" style="color: #27ae60; font-weight: bold;">$0</span>
+                (por unidad: <span id="ej_pack3_efectivo_unit" style="color: #27ae60;">$0</span>)
+            </div>
+            <div>
+                <strong>Por 1 Tarjeta:</strong> 
+                <span id="ej_unidad_tarjeta_formula"></span> = 
+                <span id="ej_unidad_tarjeta" style="color: #3498db; font-weight: bold;">$0</span>
+            </div>
+            <div>
+                <strong>Por 1 Efectivo:</strong> 
+                <span id="ej_unidad_efectivo_formula"></span> = 
+                <span id="ej_unidad_efectivo" style="color: #3498db; font-weight: bold;">$0</span>
             </div>
         </div>
+    </div>
+</div>
         
         <div id="ejemplo_calculo" style="display: none; margin-top: 15px; padding: 15px; background: white; border-radius: 4px;">
             <h4 style="margin-bottom: 10px;">📝 Ejemplo de Cálculo:</h4>
@@ -232,5 +297,32 @@ function mostrarEjemploCalculo(costo, pack3T, pack3E, pack3TU, pack3EU, unit1T, 
     
     document.getElementById('ej_unidad_efectivo_formula').textContent = `$${pack3E.toFixed(2)} / 3`;
     document.getElementById('ej_unidad_efectivo').textContent = '$' + unit1E.toFixed(2);
+}
+
+/**
+ * Copia los precios del Pack x3 a los precios Por Unidad
+ */
+function copiarPreciosPack3AUnidad() {
+    const pack3Tarjeta = document.getElementById('precio_pack3_tarjeta').value;
+    const pack3Efectivo = document.getElementById('precio_pack3_efectivo').value;
+    
+    if (!pack3Tarjeta || !pack3Efectivo) {
+        alert('Primero debe calcular los precios del Pack x3.\nIngrese el precio de compra y la cantidad.');
+        return;
+    }
+    
+    // Hacer los campos editables temporalmente
+    document.getElementById('precio_unidad_tarjeta').readOnly = false;
+    document.getElementById('precio_unidad_efectivo').readOnly = false;
+    
+    // Copiar valores
+    document.getElementById('precio_unidad_tarjeta').value = pack3Tarjeta;
+    document.getElementById('precio_unidad_efectivo').value = pack3Efectivo;
+    
+    // Cambiar estilo para indicar que fueron modificados manualmente
+    document.getElementById('precio_unidad_tarjeta').style.background = '#fff3cd';
+    document.getElementById('precio_unidad_efectivo').style.background = '#fff3cd';
+    
+    alert('✅ Precios copiados correctamente.\n\nAhora los precios por unidad son iguales a los del Pack x3.');
 }
 </script>

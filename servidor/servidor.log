@@ -175,3 +175,5 @@
 [Fri Jan 16 18:38:03 2026] [::1]:62402 [200]: GET /index.php?c=variedad&a=index
 [Fri Jan 16 18:38:03 2026] [::1]:62402 Closing
 [Fri Jan 16 18:38:03 2026] [::1]:56199 Accepted
+[Fri Jan 16 18:40:34 2026] [::1]:56199 Closed without sending a request; it was probably just an unused speculative preconnection
+[Fri Jan 16 18:40:34 2026] [::1]:56199 Closing

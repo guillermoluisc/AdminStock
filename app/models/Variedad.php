@@ -185,10 +185,6 @@ class Variedad {
         return round($precioTotal / $cantidad, 2);
     }
     
-    /**
-     * Calcula los 4 precios de venta basados en el producto padre
-     */
-
 public function calcularPreciosVenta($costo_unitario, $producto_padre_id) {
     $productoPadreModel = new ProductoPadre();
     $producto_padre = $productoPadreModel->getById($producto_padre_id);
@@ -202,18 +198,13 @@ public function calcularPreciosVenta($costo_unitario, $producto_padre_id) {
         ];
     }
     
-    // Pack x3 Tarjeta: (Costo × 3) + ((Costo × 3) × porcentaje/100)
-    $precio_pack3_tarjeta_total = ($costo_unitario * 3) + (($costo_unitario * 3) * $producto_padre['porcentaje_pack3_tarjeta'] / 100);
-    $precio_pack3_tarjeta = $precio_pack3_tarjeta_total / 3; // Precio por unidad en el pack
+    // PRECIOS PACK x3 (sobre el costo total: costo_unitario × 3)
+    $costo_pack = $costo_unitario * 3;
+    $precio_pack3_tarjeta = $costo_pack + ($costo_pack * $producto_padre['porcentaje_pack3_tarjeta'] / 100);
+    $precio_pack3_efectivo = $costo_pack + ($costo_pack * $producto_padre['porcentaje_pack3_efectivo'] / 100);
     
-    // Pack x3 Efectivo: (Costo × 3) + ((Costo × 3) × porcentaje/100)
-    $precio_pack3_efectivo_total = ($costo_unitario * 3) + (($costo_unitario * 3) * $producto_padre['porcentaje_pack3_efectivo'] / 100);
-    $precio_pack3_efectivo = $precio_pack3_efectivo_total / 3; // Precio por unidad en el pack
-    
-    // Por 1 Unidad Tarjeta: Costo + (Costo × porcentaje/100)
+    // PRECIOS POR UNIDAD (sobre costo unitario)
     $precio_unidad_tarjeta = $costo_unitario + ($costo_unitario * $producto_padre['porcentaje_unidad_tarjeta'] / 100);
-    
-    // Por 1 Unidad Efectivo: Costo + (Costo × porcentaje/100)
     $precio_unidad_efectivo = $costo_unitario + ($costo_unitario * $producto_padre['porcentaje_unidad_efectivo'] / 100);
     
     return [
@@ -223,10 +214,47 @@ public function calcularPreciosVenta($costo_unitario, $producto_padre_id) {
         'precio_unidad_efectivo' => round($precio_unidad_efectivo, 2)
     ];
 }
-    /**
- * Calcula el valor total del stock disponible
- * (suma de precio_compra_total de todas las variedades activas)
+
+/**
+ * NUEVA FUNCIÓN: Calcula precios con contexto completo
+ * Esta es la que se debe usar desde AJAX para recalcular precios
  */
+public function calcularPreciosVentaCompleto($precio_compra_total, $cantidad_comprada, $producto_padre_id) {
+    $productoPadreModel = new ProductoPadre();
+    $producto_padre = $productoPadreModel->getById($producto_padre_id);
+    
+    if (!$producto_padre) {
+        return [
+            'costo_unitario' => 0,
+            'precio_pack3_tarjeta' => 0,
+            'precio_pack3_efectivo' => 0,
+            'precio_unidad_tarjeta' => 0,
+            'precio_unidad_efectivo' => 0
+        ];
+    }
+    
+    // 1. COSTO UNITARIO
+    $costo_unitario = $cantidad_comprada > 0 ? ($precio_compra_total / $cantidad_comprada) : 0;
+    
+    // 2. PRECIOS PACK x3 (sobre el precio de compra total)
+    // Fórmula: PrecioCompraTotal + (PrecioCompraTotal × Porcentaje/100)
+    $precio_pack3_tarjeta = $precio_compra_total + ($precio_compra_total * $producto_padre['porcentaje_pack3_tarjeta'] / 100);
+    $precio_pack3_efectivo = $precio_compra_total + ($precio_compra_total * $producto_padre['porcentaje_pack3_efectivo'] / 100);
+    
+    // 3. PRECIOS POR UNIDAD (sobre el costo unitario)
+    // Fórmula: CostoUnitario + (CostoUnitario × Porcentaje/100)
+    $precio_unidad_tarjeta = $costo_unitario + ($costo_unitario * $producto_padre['porcentaje_unidad_tarjeta'] / 100);
+    $precio_unidad_efectivo = $costo_unitario + ($costo_unitario * $producto_padre['porcentaje_unidad_efectivo'] / 100);
+    
+    return [
+        'costo_unitario' => round($costo_unitario, 2),
+        'precio_pack3_tarjeta' => round($precio_pack3_tarjeta, 2),
+        'precio_pack3_efectivo' => round($precio_pack3_efectivo, 2),
+        'precio_unidad_tarjeta' => round($precio_unidad_tarjeta, 2),
+        'precio_unidad_efectivo' => round($precio_unidad_efectivo, 2)
+    ];
+}
+
 public function getTotalStockDisponible() {
     $sql = "SELECT SUM(precio_compra_total) as total FROM variedades WHERE activo = 1";
     $stmt = $this->db->query($sql);

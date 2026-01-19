@@ -1,0 +1,3065 @@
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\actualizar_bd_4_precios.bat
+Contenido:
+----------------------------------------
+@echo off
+
+echo ========================================
+echo   Actualizar BD - Agregar 4 Precios
+echo ========================================
+echo.
+echo Este script agregara las columnas para los 4 precios
+echo de venta en la tabla de variedades.
+echo.
+pause
+
+:: Verificar si PHP existe
+if not exist "servidor\php\php.exe" (
+    echo [ERROR] PHP no encontrado
+    pause
+    exit /b
+)
+
+:: Hacer backup
+if exist "app\database\database.db" (
+    echo [*] Creando backup...
+    if not exist "datos\backup" mkdir "datos\backup"
+    set TIMESTAMP=%date:~-4,4%%date:~-10,2%%date:~-7,2%_%time:~0,2%%time:~3,2%%time:~6,2%
+    set TIMESTAMP=%TIMESTAMP: =0%
+    copy "app\database\database.db" "datos\backup\database_antes_4precios_%TIMESTAMP%.db"
+    echo [OK] Backup creado
+)
+
+:: Ejecutar migracion
+echo.
+echo [*] Actualizando estructura de base de datos...
+servidor\php\php.exe -r "require 'app/config/database.php'; define('DB_PATH', 'app/database/database.db'); Database::initialize(); echo '[OK] Base de datos actualizada';"
+
+echo.
+echo ========================================
+echo   Migracion Completada
+echo ========================================
+echo.
+echo Las siguientes columnas fueron agregadas:
+echo - precio_pack3_tarjeta
+echo - precio_pack3_efectivo
+echo - precio_unidad_tarjeta
+echo - precio_unidad_efectivo
+echo.
+echo Ahora puede crear variedades con los 4 precios.
+echo.
+pause
+========================================
+
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\actualizar_bd_preventas.bat
+Contenido:
+----------------------------------------
+@echo off
+
+echo ========================================
+echo   Actualizar BD - Agregar Pre-ventas
+echo ========================================
+echo.
+echo Este script agregara las columnas necesarias
+echo para el sistema de pre-ventas.
+echo.
+pause
+
+:: Verificar si PHP existe
+if not exist "servidor\php\php.exe" (
+    echo [ERROR] PHP no encontrado
+    pause
+    exit /b
+)
+
+:: Hacer backup
+if exist "app\database\database.db" (
+    echo [*] Creando backup...
+    if not exist "datos\backup" mkdir "datos\backup"
+    set TIMESTAMP=%date:~-4,4%%date:~-10,2%%date:~-7,2%_%time:~0,2%%time:~3,2%%time:~6,2%
+    set TIMESTAMP=%TIMESTAMP: =0%
+    copy "app\database\database.db" "datos\backup\database_antes_preventas_%TIMESTAMP%.db"
+    echo [OK] Backup creado
+)
+
+:: Ejecutar migracion
+echo.
+echo [*] Actualizando estructura de base de datos...
+servidor\php\php.exe -r "require 'app/config/database.php'; define('DB_PATH', 'app/database/database.db'); Database::initialize(); echo '[OK] Base de datos actualizada';"
+
+echo.
+echo ========================================
+echo   Migracion Completada
+echo ========================================
+echo.
+echo Las siguientes columnas fueron agregadas:
+echo - nombre_cliente
+echo - estado
+echo - fecha_formalizacion
+echo.
+pause
+========================================
+
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\detener.bat
+Contenido:
+----------------------------------------
+@echo off
+
+echo ========================================
+echo   Sistema de Gestión - DETENIENDO
+echo ========================================
+echo.
+
+:: Leer el puerto guardado
+if exist "servidor\puerto.txt" (
+    set /p PORT=<servidor\puerto.txt
+) else (
+    set PORT=8080
+)
+
+echo [*] Buscando proceso PHP en puerto %PORT%...
+
+:: Encontrar y matar el proceso PHP
+for /f "tokens=5" %%a in ('netstat -ano ^| findstr ":%PORT%"') do (
+    echo [*] Deteniendo proceso %%a...
+    taskkill /F /PID %%a >nul 2>&1
+)
+
+:: Buscar todos los procesos php.exe y detenerlos
+tasklist | findstr "php.exe" >nul
+if %errorlevel% equ 0 (
+    echo [*] Deteniendo todos los procesos PHP...
+    taskkill /F /IM php.exe >nul 2>&1
+)
+
+echo [OK] Sistema detenido
+echo.
+pause
+========================================
+
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\empaquetar.bat
+Contenido:
+----------------------------------------
+@echo off
+
+echo ========================================
+echo   Empaquetar Sistema para Distribución
+echo ========================================
+echo.
+
+set NOMBRE_PAQUETE=sistema-gestion-v1.0
+
+echo [*] Creando directorio temporal...
+if exist "dist" rmdir /s /q "dist"
+mkdir "dist\%NOMBRE_PAQUETE%"
+
+echo [*] Copiando archivos del sistema...
+xcopy "app" "dist\%NOMBRE_PAQUETE%\app\" /E /I /Y >nul
+xcopy "servidor" "dist\%NOMBRE_PAQUETE%\servidor\" /E /I /Y >nul
+
+echo [*] Copiando scripts de ejecución...
+copy "instalador.bat" "dist\%NOMBRE_PAQUETE%\" >nul
+copy "iniciar.bat" "dist\%NOMBRE_PAQUETE%\" >nul
+copy "detener.bat" "dist\%NOMBRE_PAQUETE%\" >nul
+copy "migrar.bat" "dist\%NOMBRE_PAQUETE%\" >nul
+copy "README.md" "dist\%NOMBRE_PAQUETE%\" >nul
+
+echo [*] Limpiando base de datos de desarrollo...
+if exist "dist\%NOMBRE_PAQUETE%\app\database\database.db" (
+    del "dist\%NOMBRE_PAQUETE%\app\database\database.db"
+)
+
+echo [*] Creando estructura de carpetas...
+if not exist "dist\%NOMBRE_PAQUETE%\datos\backup" mkdir "dist\%NOMBRE_PAQUETE%\datos\backup"
+
+echo [*] Creando archivo ZIP...
+powershell Compress-Archive -Path "dist\%NOMBRE_PAQUETE%\*" -DestinationPath "dist\%NOMBRE_PAQUETE%.zip" -Force
+
+if exist "dist\%NOMBRE_PAQUETE%.zip" (
+    echo [OK] Paquete creado: dist\%NOMBRE_PAQUETE%.zip
+    echo.
+    echo Tamaño:
+    dir "dist\%NOMBRE_PAQUETE%.zip" | findstr "%NOMBRE_PAQUETE%"
+) else (
+    echo [ERROR] No se pudo crear el ZIP
+)
+
+echo.
+echo Archivos incluidos:
+dir /s /b "dist\%NOMBRE_PAQUETE%" | find /c /v ""
+echo archivos en total
+
+echo.
+echo ========================================
+echo   Listo para distribuir
+echo ========================================
+echo.
+echo El paquete incluye:
+echo - Todo el código fuente
+echo - PHP portable configurado
+echo - Scripts de instalación
+echo - Documentación completa
+echo.
+echo NO incluye:
+echo - Base de datos (se crea en instalación)
+echo - Datos del desarrollador
+echo.
+pause
+========================================
+
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\exportar.bat
+Contenido:
+----------------------------------------
+@echo off
+setlocal enabledelayedexpansion
+
+REM Archivo de salida
+set OUTPUT=contenido_total.txt
+
+REM Limpiar archivo si ya existe
+if exist "%OUTPUT%" del "%OUTPUT%"
+
+REM Directorio actual
+set BASEDIR=%CD%
+
+echo Procesando archivos en: %BASEDIR%
+echo.
+
+REM Buscar archivos .bat y .php recursivamente
+for /r "%BASEDIR%" %%F in (*.bat *.php) do (
+    echo Ruta del archivo: %%F>>"%OUTPUT%"
+    echo Contenido:>>"%OUTPUT%"
+    echo ---------------------------------------->>"%OUTPUT%"
+
+    REM Copiar contenido del archivo
+    type "%%F">>"%OUTPUT%"
+
+    echo.>>"%OUTPUT%"
+    echo ========================================>>"%OUTPUT%"
+    echo.>>"%OUTPUT%"
+)
+
+echo.
+echo Proceso finalizado.
+echo Archivo generado: %OUTPUT%
+pause
+
+========================================
+
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\iniciar.bat
+Contenido:
+----------------------------------------
+@echo off
+
+cls
+echo ========================================
+echo   Sistema de Gestión - INICIANDO
+echo ========================================
+echo.
+
+:: Verificar si PHP existe
+if not exist "servidor\php\php.exe" (
+    echo [ERROR] PHP no encontrado. Ejecute primero instalador.bat
+    pause
+    exit /b
+)
+
+:: Buscar un puerto disponible
+set PORT=8080
+:check_port
+netstat -ano | findstr ":%PORT%" >nul
+if %errorlevel% equ 0 (
+    set /a PORT=%PORT%+1
+    goto check_port
+)
+
+echo [*] Puerto disponible: %PORT%
+echo [*] Iniciando servidor PHP...
+echo.
+
+:: Iniciar servidor PHP
+start /min cmd /c "servidor\php\php.exe -S localhost:%PORT% -t app > servidor\servidor.log 2>&1"
+
+:: Esperar a que el servidor inicie
+timeout /t 2 >nul
+
+:: Verificar que el servidor está corriendo
+netstat -ano | findstr ":%PORT%" >nul
+if %errorlevel% equ 0 (
+    echo [OK] Servidor iniciado correctamente
+    echo.
+    echo ========================================
+    echo   SISTEMA EN FUNCIONAMIENTO
+    echo ========================================
+    echo.
+    echo   URL: http://localhost:%PORT%
+    echo.
+    echo   Abriendo navegador...
+    echo.
+    echo   Para detener el sistema ejecute:
+    echo   detener.bat
+    echo ========================================
+    echo.
+    
+    :: Guardar el puerto para el script detener.bat
+    echo %PORT% > servidor\puerto.txt
+    
+    :: Abrir navegador automáticamente
+    start http://localhost:%PORT%
+    
+    echo El sistema está funcionando.
+    echo NO CIERRE ESTA VENTANA.
+    echo.
+    echo Para detener el sistema:
+    echo - Presione CTRL+C en esta ventana
+    echo - O ejecute detener.bat
+    echo.
+    
+    :: Mantener la ventana abierta
+    pause >nul
+) else (
+    echo [ERROR] No se pudo iniciar el servidor
+    pause
+    exit /b
+)
+========================================
+
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\instalador.bat
+Contenido:
+----------------------------------------
+@echo off
+
+echo ========================================
+echo   INSTALADOR - Sistema de Gestión
+echo ========================================
+echo.
+
+:: Verificar si ya existe la instalación
+if exist "servidor\php\php.exe" (
+    echo [OK] PHP ya está instalado
+) else (
+    echo [*] Descargando PHP portable...
+    echo.
+    echo NOTA: Este script requiere que descargues PHP manualmente.
+    echo.
+    echo Pasos:
+    echo 1. Ve a: https://windows.php.net/download/
+    echo 2. Descarga: PHP 8.2 Thread Safe x64 ZIP
+    echo 3. Extrae el contenido en la carpeta: servidor\php\
+    echo 4. Vuelve a ejecutar este instalador
+    echo.
+    pause
+    exit /b
+)
+
+:: Configurar PHP
+echo [*] Configurando PHP...
+if not exist "servidor\php\php.ini" (
+    copy "servidor\php\php.ini-development" "servidor\php\php.ini" >nul
+    
+    :: Habilitar extensiones necesarias
+    powershell -Command "(gc servidor\php\php.ini) -replace ';extension=pdo_sqlite', 'extension=pdo_sqlite' | Out-File -encoding ASCII servidor\php\php.ini"
+    powershell -Command "(gc servidor\php\php.ini) -replace ';extension=sqlite3', 'extension=sqlite3' | Out-File -encoding ASCII servidor\php\php.ini"
+    powershell -Command "(gc servidor\php\php.ini) -replace ';extension=mbstring', 'extension=mbstring' | Out-File -encoding ASCII servidor\php\php.ini"
+    
+    echo [OK] PHP configurado correctamente
+) else (
+    echo [OK] PHP ya configurado
+)
+
+:: Crear estructura de directorios
+echo [*] Creando estructura de directorios...
+if not exist "app\database" mkdir "app\database"
+if not exist "app\database\migrations" mkdir "app\database\migrations"
+if not exist "datos\backup" mkdir "datos\backup"
+echo [OK] Directorios creados
+
+:: Inicializar base de datos
+echo [*] Inicializando base de datos...
+servidor\php\php.exe -f app\index.php >nul 2>&1
+if exist "app\database\database.db" (
+    echo [OK] Base de datos inicializada
+) else (
+    echo [ERROR] No se pudo crear la base de datos
+    pause
+    exit /b
+)
+
+echo.
+echo ========================================
+echo   INSTALACIÓN COMPLETADA
+echo ========================================
+echo.
+echo Para iniciar el sistema ejecute: iniciar.bat
+echo.
+pause
+========================================
+
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\migrar.bat
+Contenido:
+----------------------------------------
+@echo off
+
+echo ========================================
+echo   Migrar Sistema a Nueva Estructura
+echo ========================================
+echo.
+echo ADVERTENCIA: Este proceso modificara la base de datos.
+echo Se recomienda hacer una copia de seguridad antes.
+echo.
+pause
+
+:: Hacer backup de la base de datos actual
+if exist "app\database\database.db" (
+    echo [*] Creando backup de la base de datos...
+    if not exist "datos\backup" mkdir "datos\backup"
+    set TIMESTAMP=%date:~-4,4%%date:~-10,2%%date:~-7,2%_%time:~0,2%%time:~3,2%%time:~6,2%
+    set TIMESTAMP=%TIMESTAMP: =0%
+    copy "app\database\database.db" "datos\backup\database_backup_%TIMESTAMP%.db"
+    echo [OK] Backup creado: datos\backup\database_backup_%TIMESTAMP%.db
+    echo.
+)
+
+:: Eliminar base de datos antigua
+echo [*] Eliminando base de datos antigua...
+if exist "app\database\database.db" (
+    del "app\database\database.db"
+    echo [OK] Base de datos antigua eliminada
+)
+
+:: Inicializar nueva base de datos
+echo [*] Inicializando nueva estructura de base de datos...
+servidor\php\php.exe -f app\index.php >nul 2>&1
+
+if exist "app\database\database.db" (
+    echo [OK] Nueva base de datos creada exitosamente
+    echo.
+    echo ========================================
+    echo   MIGRACION COMPLETADA
+    echo ========================================
+    echo.
+    echo La base de datos ha sido actualizada con la nueva estructura.
+    echo.
+    echo Nuevas tablas creadas:
+    echo - productos_padre
+    echo - variedades
+    echo - promociones
+    echo - pedidos y pedido_detalles
+    echo - ventas y venta_detalles (actualizadas)
+    echo.
+    echo Puede iniciar el sistema con: iniciar.bat
+) else (
+    echo [ERROR] No se pudo crear la base de datos
+)
+
+echo.
+pause
+========================================
+
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\index.php
+Contenido:
+----------------------------------------
+<?php
+// app/index.php - Router principal
+session_start();
+
+define('BASE_PATH', __DIR__);
+define('DB_PATH', BASE_PATH . '/database/database.db');
+
+spl_autoload_register(function ($class) {
+    $paths = [
+        BASE_PATH . '/models/' . $class . '.php',
+        BASE_PATH . '/controllers/' . $class . '.php',
+        BASE_PATH . '/helpers/' . $class . '.php'
+    ];
+    
+    foreach ($paths as $path) {
+        if (file_exists($path)) {
+            require_once $path;
+            return;
+        }
+    }
+});
+
+require_once BASE_PATH . '/config/database.php';
+Database::initialize();
+
+$controller = $_GET['c'] ?? 'variedad';
+$action = $_GET['a'] ?? 'index';
+$id = $_GET['id'] ?? null;
+
+$controllerName = ucfirst($controller) . 'Controller';
+
+if (class_exists($controllerName)) {
+    $controllerInstance = new $controllerName();
+    
+    if (method_exists($controllerInstance, $action)) {
+        $controllerInstance->$action($id);
+    } else {
+        header("HTTP/1.0 404 Not Found");
+        echo "Acción no encontrada";
+    }
+} else {
+    header("HTTP/1.0 404 Not Found");
+    echo "Controlador no encontrado";
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\config\database.php
+Contenido:
+----------------------------------------
+<?php
+// app/config/database.php
+class Database {
+    private static $instance = null;
+    private $conn;
+    
+    private function __construct() {
+        try {
+            $this->conn = new PDO('sqlite:' . DB_PATH);
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+        } catch(PDOException $e) {
+            die("Error de conexión: " . $e->getMessage());
+        }
+    }
+    
+    public static function getInstance() {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+    
+    public function getConnection() {
+        return $this->conn;
+    }
+    
+    public static function initialize() {
+        $dbDir = dirname(DB_PATH);
+        if (!is_dir($dbDir)) {
+            mkdir($dbDir, 0777, true);
+        }
+        
+        $db = self::getInstance()->getConnection();
+        
+        // Tabla de PRODUCTOS PADRE (categorías generales)
+        $sql = "CREATE TABLE IF NOT EXISTS productos_padre (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nombre VARCHAR(200) NOT NULL,
+            porcentaje_pack3_tarjeta DECIMAL(5,2) DEFAULT 100,
+            porcentaje_pack3_efectivo DECIMAL(5,2) DEFAULT 80,
+            porcentaje_unidad_tarjeta DECIMAL(5,2) DEFAULT 100,
+            porcentaje_unidad_efectivo DECIMAL(5,2) DEFAULT 80,
+            activo INTEGER DEFAULT 1,
+            fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP
+        )";
+        $db->exec($sql);
+        
+        // Tabla de VARIEDADES (productos hijos) - ACTUALIZADA CON 4 PRECIOS
+        $sql = "CREATE TABLE IF NOT EXISTS variedades (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            producto_padre_id INTEGER NOT NULL,
+            nombre VARCHAR(200) NOT NULL,
+            descripcion TEXT,
+            precio_compra_total DECIMAL(10,2) NOT NULL,
+            cantidad_comprada INTEGER NOT NULL,
+            precio_costo_unitario DECIMAL(10,2) NOT NULL,
+            precio_pack3_tarjeta DECIMAL(10,2) DEFAULT 0,
+            precio_pack3_efectivo DECIMAL(10,2) DEFAULT 0,
+            precio_unidad_tarjeta DECIMAL(10,2) DEFAULT 0,
+            precio_unidad_efectivo DECIMAL(10,2) DEFAULT 0,
+            precio_venta_unitario DECIMAL(10,2) NOT NULL,
+            stock INTEGER DEFAULT 0,
+            stock_minimo INTEGER DEFAULT 10,
+            activo INTEGER DEFAULT 1,
+            fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+            unidades_por_pack INTEGER DEFAULT 3,
+            FOREIGN KEY (producto_padre_id) REFERENCES productos_padre(id)
+        )";
+        $db->exec($sql);
+        
+        // Verificar si las columnas ya existen (para bases de datos existentes)
+        try {
+            $db->exec("SELECT precio_pack3_tarjeta FROM variedades LIMIT 1");
+        } catch(PDOException $e) {
+            // Si no existe, agregar las columnas
+            $db->exec("ALTER TABLE variedades ADD COLUMN precio_pack3_tarjeta DECIMAL(10,2) DEFAULT 0");
+            $db->exec("ALTER TABLE variedades ADD COLUMN precio_pack3_efectivo DECIMAL(10,2) DEFAULT 0");
+            $db->exec("ALTER TABLE variedades ADD COLUMN precio_unidad_tarjeta DECIMAL(10,2) DEFAULT 0");
+            $db->exec("ALTER TABLE variedades ADD COLUMN precio_unidad_efectivo DECIMAL(10,2) DEFAULT 0");
+        }
+        
+        try {
+            $db->exec("SELECT unidades_por_pack FROM variedades LIMIT 1");
+        } catch(PDOException $e) {
+            $db->exec("ALTER TABLE variedades ADD COLUMN unidades_por_pack INTEGER DEFAULT 3");
+        }
+
+        // Tabla de PROMOCIONES
+        $sql = "CREATE TABLE IF NOT EXISTS promociones (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            variedad_id INTEGER NOT NULL,
+            cantidad INTEGER NOT NULL,
+            precio_promocional DECIMAL(10,2) NOT NULL,
+            activo INTEGER DEFAULT 1,
+            fecha_inicio DATETIME DEFAULT CURRENT_TIMESTAMP,
+            fecha_fin DATETIME,
+            FOREIGN KEY (variedad_id) REFERENCES variedades(id)
+        )";
+        $db->exec($sql);
+        
+        // Tabla de VENTAS
+        $sql = "CREATE TABLE IF NOT EXISTS ventas (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            total DECIMAL(10,2) NOT NULL,
+            metodo_pago VARCHAR(20) NOT NULL,
+            descuento_aplicado DECIMAL(10,2) DEFAULT 0,
+            nombre_cliente VARCHAR(200),
+            estado VARCHAR(20) DEFAULT 'completada',
+            fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+            fecha_formalizacion DATETIME
+        )";
+        $db->exec($sql);
+
+        try {
+            $db->exec("SELECT nombre_cliente FROM ventas LIMIT 1");
+        } catch(PDOException $e) {
+            $db->exec("ALTER TABLE ventas ADD COLUMN nombre_cliente VARCHAR(200)");
+            $db->exec("ALTER TABLE ventas ADD COLUMN estado VARCHAR(20) DEFAULT 'completada'");
+            $db->exec("ALTER TABLE ventas ADD COLUMN fecha_formalizacion DATETIME");
+        }
+        
+        // Tabla de DETALLE DE VENTAS
+        $sql = "CREATE TABLE IF NOT EXISTS venta_detalles (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            venta_id INTEGER NOT NULL,
+            variedad_id INTEGER NOT NULL,
+            cantidad INTEGER NOT NULL,
+            precio_unitario DECIMAL(10,2) NOT NULL,
+            descuento_unitario DECIMAL(10,2) DEFAULT 0,
+            subtotal DECIMAL(10,2) NOT NULL,
+            FOREIGN KEY (venta_id) REFERENCES ventas(id),
+            FOREIGN KEY (variedad_id) REFERENCES variedades(id)
+        )";
+        $db->exec($sql);
+        
+        // Tabla de PEDIDOS
+        $sql = "CREATE TABLE IF NOT EXISTS pedidos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            estado VARCHAR(20) DEFAULT 'pendiente',
+            observaciones TEXT,
+            fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+            fecha_realizacion DATETIME
+        )";
+        $db->exec($sql);
+
+        $sql = "CREATE TABLE IF NOT EXISTS egresos (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                fecha DATE NOT NULL,
+                monto DECIMAL(10,2) NOT NULL,
+                descripcion TEXT NOT NULL,
+                categoria VARCHAR(100),
+                fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP
+            )";
+        $db->exec($sql);
+        
+        // Tabla de DETALLE DE PEDIDOS
+        $sql = "CREATE TABLE IF NOT EXISTS pedido_detalles (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            pedido_id INTEGER NOT NULL,
+            variedad_id INTEGER NOT NULL,
+            cantidad_solicitada INTEGER NOT NULL,
+            cantidad_recibida INTEGER DEFAULT 0,
+            precio_estimado DECIMAL(10,2),
+            observaciones TEXT,
+            FOREIGN KEY (pedido_id) REFERENCES pedidos(id),
+            FOREIGN KEY (variedad_id) REFERENCES variedades(id)
+        )";
+        $db->exec($sql);
+        
+        // Tabla de MIGRACIONES
+        $sql = "CREATE TABLE IF NOT EXISTS migraciones (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            version VARCHAR(50) NOT NULL,
+            fecha DATETIME DEFAULT CURRENT_TIMESTAMP
+        )";
+        $db->exec($sql);
+        
+        // Insertar datos iniciales de ejemplo
+        self::insertarDatosIniciales($db);
+    }
+    
+    private static function insertarDatosIniciales($db) {
+        // Verificar si ya hay datos
+        $count = $db->query("SELECT COUNT(*) FROM productos_padre")->fetchColumn();
+        if ($count > 0) return;
+        
+        // Productos padre de ejemplo
+        $db->exec("INSERT INTO productos_padre (nombre, porcentaje_pack3_tarjeta, porcentaje_pack3_efectivo, porcentaje_unidad_tarjeta, porcentaje_unidad_efectivo) VALUES 
+            ('Colaless/Vedetina/Culot', 100, 80, 100, 80),
+            ('Remera Básica', 100, 80, 100, 80),
+            ('Pantalón Jean', 100, 85, 100, 85)");
+        
+        // Variedades de ejemplo
+        $db->exec("INSERT INTO variedades (producto_padre_id, nombre, descripcion, precio_compra_total, cantidad_comprada, precio_costo_unitario, precio_pack3_tarjeta, precio_pack3_efectivo, precio_unidad_tarjeta, precio_unidad_efectivo, precio_venta_unitario, stock, stock_minimo) VALUES 
+            (1, 'Colaless VINTAGE Negro M', 'Colaless negra talle M', 100000, 10, 10000, 20000, 18000, 6666.67, 6000, 10000, 10, 5),
+            (2, 'Remera Básica Blanca L', 'Remera blanca talle L', 100000, 10, 10000, 20000, 18000, 6666.67, 6000, 12000, 8, 5),
+            (3, 'Jean Azul 32', 'Jean azul talle 32', 150000, 8, 18750, 37500, 34687.5, 12500, 11562.5, 22000, 8, 3)");
+    }
+    
+    public static function runMigration($version, $sql) {
+        $db = self::getInstance()->getConnection();
+        
+        $stmt = $db->prepare("SELECT COUNT(*) FROM migraciones WHERE version = ?");
+        $stmt->execute([$version]);
+        
+        if ($stmt->fetchColumn() == 0) {
+            $db->exec($sql);
+            $stmt = $db->prepare("INSERT INTO migraciones (version) VALUES (?)");
+            $stmt->execute([$version]);
+            return true;
+        }
+        return false;
+    }
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\controllers\ConfiguracionController.php
+Contenido:
+----------------------------------------
+<?php
+// app/controllers/ConfiguracionController.php
+class ConfiguracionController {
+    private $tamanoModel;
+    private $saborModel;
+    private $variedadSaladoModel;
+    private $tipoSaladoModel;
+    
+    public function __construct() {
+        $this->tamanoModel = new Tamano();
+        $this->saborModel = new Sabor();
+        $this->variedadSaladoModel = new VariedadSalado();
+        $this->tipoSaladoModel = new TipoSalado();
+    }
+    
+    public function index() {
+        $this->render('configuracion/index', [
+            'tamanos' => $this->tamanoModel->getAll(false),
+            'sabores' => $this->saborModel->getAll(false),
+            'variedades' => $this->variedadSaladoModel->getAll(false),
+            'tipos_salados' => $this->tipoSaladoModel->getAll()
+        ]);
+    }
+    
+    public function agregarTamano() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $nombre = $_POST['nombre'];
+            
+            if ($this->tamanoModel->crear($nombre)) {
+                $_SESSION['mensaje'] = 'Tamaño agregado exitosamente';
+                $_SESSION['tipo_mensaje'] = 'success';
+            } else {
+                $_SESSION['mensaje'] = 'Error al agregar tamaño';
+                $_SESSION['tipo_mensaje'] = 'error';
+            }
+        }
+        
+        header('Location: index.php?c=configuracion&a=index');
+        exit;
+    }
+    
+    public function agregarSabor() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $nombre = $_POST['nombre'];
+            
+            if ($this->saborModel->crear($nombre)) {
+                $_SESSION['mensaje'] = 'Sabor agregado exitosamente';
+                $_SESSION['tipo_mensaje'] = 'success';
+            } else {
+                $_SESSION['mensaje'] = 'Error al agregar sabor';
+                $_SESSION['tipo_mensaje'] = 'error';
+            }
+        }
+        
+        header('Location: index.php?c=configuracion&a=index');
+        exit;
+    }
+    
+    public function agregarVariedad() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $tipo_id = $_POST['tipo_salado_id'];
+            $nombre = $_POST['nombre'];
+            
+            if ($this->variedadSaladoModel->crear($tipo_id, $nombre)) {
+                $_SESSION['mensaje'] = 'Variedad agregada exitosamente';
+                $_SESSION['tipo_mensaje'] = 'success';
+            } else {
+                $_SESSION['mensaje'] = 'Error al agregar variedad';
+                $_SESSION['tipo_mensaje'] = 'error';
+            }
+        }
+        
+        header('Location: index.php?c=configuracion&a=index');
+        exit;
+    }
+    
+    public function eliminarTamano($id) {
+        if ($this->tamanoModel->eliminar($id)) {
+            $_SESSION['mensaje'] = 'Tamaño eliminado';
+            $_SESSION['tipo_mensaje'] = 'success';
+        }
+        header('Location: index.php?c=configuracion&a=index');
+        exit;
+    }
+    
+    public function eliminarSabor($id) {
+        if ($this->saborModel->eliminar($id)) {
+            $_SESSION['mensaje'] = 'Sabor eliminado';
+            $_SESSION['tipo_mensaje'] = 'success';
+        }
+        header('Location: index.php?c=configuracion&a=index');
+        exit;
+    }
+    
+    public function eliminarVariedad($id) {
+        if ($this->variedadSaladoModel->eliminar($id)) {
+            $_SESSION['mensaje'] = 'Variedad eliminada';
+            $_SESSION['tipo_mensaje'] = 'success';
+        }
+        header('Location: index.php?c=configuracion&a=index');
+        exit;
+    }
+    
+    private function render($view, $data = []) {
+        extract($data);
+        ob_start();
+        require BASE_PATH . '/views/' . $view . '.php';
+        $content = ob_get_clean();
+        require BASE_PATH . '/views/layout.php';
+    }
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\controllers\EgresoController.php
+Contenido:
+----------------------------------------
+<?php
+// app/controllers/EgresoController.php
+class EgresoController {
+    private $egresoModel;
+    
+    public function __construct() {
+        $this->egresoModel = new Egreso();
+    }
+    
+    public function index() {
+        // Obtener filtros con valores por defecto del mes actual
+        $filtros = [];
+        
+        if (empty($_GET['fecha_desde']) && empty($_GET['fecha_hasta']) && empty($_GET['categoria'])) {
+            $filtros['fecha_desde'] = date('Y-m-01');
+            $filtros['fecha_hasta'] = date('Y-m-t');
+        } else {
+            if (!empty($_GET['fecha_desde'])) {
+                $filtros['fecha_desde'] = $_GET['fecha_desde'];
+            }
+            if (!empty($_GET['fecha_hasta'])) {
+                $filtros['fecha_hasta'] = $_GET['fecha_hasta'];
+            }
+            if (!empty($_GET['categoria'])) {
+                $filtros['categoria'] = $_GET['categoria'];
+            }
+        }
+        
+        $egresos = $this->egresoModel->getAll($filtros);
+        $total_egresos = $this->egresoModel->getTotalEgresos($filtros);
+        $categorias = $this->egresoModel->getCategorias();
+        
+        $this->render('egresos/index', [
+            'egresos' => $egresos,
+            'total_egresos' => $total_egresos,
+            'categorias' => $categorias,
+            'filtros' => $filtros
+        ]);
+    }
+    
+    public function crear() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $datos = [
+                'fecha' => $_POST['fecha'],
+                'monto' => $_POST['monto'],
+                'descripcion' => $_POST['descripcion'],
+                'categoria' => !empty($_POST['categoria']) ? $_POST['categoria'] : null
+            ];
+            
+            if ($this->egresoModel->crear($datos)) {
+                $_SESSION['mensaje'] = 'Egreso registrado exitosamente';
+                $_SESSION['tipo_mensaje'] = 'success';
+                header('Location: index.php?c=egreso&a=index');
+                exit;
+            } else {
+                $_SESSION['mensaje'] = 'Error al registrar el egreso';
+                $_SESSION['tipo_mensaje'] = 'error';
+            }
+        }
+        
+        $categorias = $this->egresoModel->getCategorias();
+        
+        $this->render('egresos/crear', [
+            'categorias' => $categorias
+        ]);
+    }
+    
+    public function editar($id) {
+        $egreso = $this->egresoModel->getById($id);
+        
+        if (!$egreso) {
+            header('Location: index.php?c=egreso&a=index');
+            exit;
+        }
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $datos = [
+                'fecha' => $_POST['fecha'],
+                'monto' => $_POST['monto'],
+                'descripcion' => $_POST['descripcion'],
+                'categoria' => !empty($_POST['categoria']) ? $_POST['categoria'] : null
+            ];
+            
+            if ($this->egresoModel->actualizar($id, $datos)) {
+                $_SESSION['mensaje'] = 'Egreso actualizado exitosamente';
+                $_SESSION['tipo_mensaje'] = 'success';
+                header('Location: index.php?c=egreso&a=index');
+                exit;
+            } else {
+                $_SESSION['mensaje'] = 'Error al actualizar el egreso';
+                $_SESSION['tipo_mensaje'] = 'error';
+            }
+        }
+        
+        $categorias = $this->egresoModel->getCategorias();
+        
+        $this->render('egresos/editar', [
+            'egreso' => $egreso,
+            'categorias' => $categorias
+        ]);
+    }
+    
+    public function eliminar($id) {
+        if ($this->egresoModel->eliminar($id)) {
+            $_SESSION['mensaje'] = 'Egreso eliminado exitosamente';
+            $_SESSION['tipo_mensaje'] = 'success';
+        } else {
+            $_SESSION['mensaje'] = 'Error al eliminar el egreso';
+            $_SESSION['tipo_mensaje'] = 'error';
+        }
+        
+        header('Location: index.php?c=egreso&a=index');
+        exit;
+    }
+    
+    private function render($view, $data = []) {
+        extract($data);
+        ob_start();
+        require BASE_PATH . '/views/' . $view . '.php';
+        $content = ob_get_clean();
+        require BASE_PATH . '/views/layout.php';
+    }
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\controllers\PedidoController.php
+Contenido:
+----------------------------------------
+<?php
+// app/controllers/PedidoController.php
+class PedidoController {
+    private $pedidoModel;
+    private $variedadModel;
+    
+    public function __construct() {
+        $this->pedidoModel = new Pedido();
+        $this->variedadModel = new Variedad();
+    }
+    
+    public function index() {
+        $pedidos = $this->pedidoModel->getAll();
+        
+        $this->render('pedidos/index', [
+            'pedidos' => $pedidos
+        ]);
+    }
+    
+    public function nuevo() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $productos_pedido = json_decode($_POST['productos_json'], true);
+            $observaciones = $_POST['observaciones'] ?? '';
+            
+            $detalles = [];
+            foreach ($productos_pedido as $item) {
+                $variedad = $this->variedadModel->getById($item['variedad_id']);
+                
+                $detalles[] = [
+                    'variedad_id' => $item['variedad_id'],
+                    'cantidad_solicitada' => $item['cantidad'],
+                    'precio_estimado' => $variedad['precio_costo_unitario'] * $item['cantidad'],
+                    'observaciones' => $item['observaciones'] ?? ''
+                ];
+            }
+            
+            $pedido_id = $this->pedidoModel->crear($observaciones, $detalles);
+            
+            if ($pedido_id) {
+                $_SESSION['mensaje'] = 'Pedido creado exitosamente';
+                $_SESSION['tipo_mensaje'] = 'success';
+                header('Location: index.php?c=pedido&a=detalle&id=' . $pedido_id);
+                exit;
+            } else {
+                $_SESSION['mensaje'] = 'Error al crear el pedido';
+                $_SESSION['tipo_mensaje'] = 'error';
+            }
+        }
+        
+        $variedades = $this->variedadModel->getAll(true);
+        $variedades_stock_bajo = $this->variedadModel->getStockBajo();
+        
+        $this->render('pedidos/nuevo', [
+            'variedades' => $variedades,
+            'variedades_stock_bajo' => $variedades_stock_bajo
+        ]);
+    }
+    
+    public function detalle($id) {
+        $pedido = $this->pedidoModel->getById($id);
+        
+        if (!$pedido) {
+            header('Location: index.php?c=pedido&a=index');
+            exit;
+        }
+        
+        $detalles = $this->pedidoModel->getDetalles($id);
+        
+        $this->render('pedidos/detalle', [
+            'pedido' => $pedido,
+            'detalles' => $detalles
+        ]);
+    }
+    
+    public function marcarRealizado($id) {
+        if ($this->pedidoModel->marcarComoRealizado($id)) {
+            $_SESSION['mensaje'] = 'Pedido marcado como realizado';
+            $_SESSION['tipo_mensaje'] = 'success';
+        } else {
+            $_SESSION['mensaje'] = 'Error al actualizar el pedido';
+            $_SESSION['tipo_mensaje'] = 'error';
+        }
+        
+        header('Location: index.php?c=pedido&a=detalle&id=' . $id);
+        exit;
+    }
+    
+    public function marcarFaltante($id) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $observaciones = $_POST['observaciones'] ?? '';
+            
+            if ($this->pedidoModel->marcarComoFaltante($id, $observaciones)) {
+                $_SESSION['mensaje'] = 'Pedido marcado con faltantes';
+                $_SESSION['tipo_mensaje'] = 'success';
+            } else {
+                $_SESSION['mensaje'] = 'Error al actualizar el pedido';
+                $_SESSION['tipo_mensaje'] = 'error';
+            }
+        }
+        
+        header('Location: index.php?c=pedido&a=detalle&id=' . $id);
+        exit;
+    }
+    
+    public function actualizarDetalle($id) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $detalle_id = $_POST['detalle_id'];
+            $cantidad_recibida = $_POST['cantidad_recibida'];
+            $observaciones = $_POST['observaciones'] ?? '';
+            
+            if ($this->pedidoModel->actualizarDetalle($detalle_id, $cantidad_recibida, $observaciones)) {
+                $_SESSION['mensaje'] = 'Detalle actualizado correctamente';
+                $_SESSION['tipo_mensaje'] = 'success';
+            } else {
+                $_SESSION['mensaje'] = 'Error al actualizar el detalle';
+                $_SESSION['tipo_mensaje'] = 'error';
+            }
+        }
+        
+        header('Location: index.php?c=pedido&a=detalle&id=' . $id);
+        exit;
+    }
+    
+    public function eliminar($id) {
+        if ($this->pedidoModel->eliminar($id)) {
+            $_SESSION['mensaje'] = 'Pedido eliminado exitosamente';
+            $_SESSION['tipo_mensaje'] = 'success';
+        } else {
+            $_SESSION['mensaje'] = 'Error al eliminar el pedido';
+            $_SESSION['tipo_mensaje'] = 'error';
+        }
+        
+        header('Location: index.php?c=pedido&a=index');
+        exit;
+    }
+    
+    private function render($view, $data = []) {
+        extract($data);
+        ob_start();
+        require BASE_PATH . '/views/' . $view . '.php';
+        $content = ob_get_clean();
+        require BASE_PATH . '/views/layout.php';
+    }
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\controllers\ProductoPadreController.php
+Contenido:
+----------------------------------------
+<?php
+// app/controllers/ProductoPadreController.php
+class ProductoPadreController {
+    private $productoPadreModel;
+    
+    public function __construct() {
+        $this->productoPadreModel = new ProductoPadre();
+    }
+    
+    public function index() {
+        $productos = $this->productoPadreModel->getAll(true); // Cambiar false a true
+        
+        $this->render('productos_padre/index', [
+            'productos' => $productos
+        ]);
+    }
+    
+    public function crear() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $datos = [
+                'nombre' => $_POST['nombre'],
+                'porcentaje_pack3_tarjeta' => $_POST['porcentaje_pack3_tarjeta'] ?? 100,
+                'porcentaje_pack3_efectivo' => $_POST['porcentaje_pack3_efectivo'] ?? 80,
+                'porcentaje_unidad_tarjeta' => $_POST['porcentaje_unidad_tarjeta'] ?? 100,
+                'porcentaje_unidad_efectivo' => $_POST['porcentaje_unidad_efectivo'] ?? 80
+            ];
+            
+            if ($this->productoPadreModel->crear($datos)) {
+                $_SESSION['mensaje'] = 'Producto padre creado exitosamente';
+                $_SESSION['tipo_mensaje'] = 'success';
+                header('Location: index.php?c=productoPadre&a=index');
+                exit;
+            } else {
+                $_SESSION['mensaje'] = 'Error al crear el producto padre';
+                $_SESSION['tipo_mensaje'] = 'error';
+            }
+        }
+        
+        $this->render('productos_padre/crear', []);
+    }
+    
+    public function editar($id) {
+        $producto = $this->productoPadreModel->getById($id);
+        
+        if (!$producto) {
+            header('Location: index.php?c=productoPadre&a=index');
+            exit;
+        }
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $datos = [
+                'nombre' => $_POST['nombre'],
+                'porcentaje_pack3_tarjeta' => $_POST['porcentaje_pack3_tarjeta'] ?? 100,
+                'porcentaje_pack3_efectivo' => $_POST['porcentaje_pack3_efectivo'] ?? 80,
+                'porcentaje_unidad_tarjeta' => $_POST['porcentaje_unidad_tarjeta'] ?? 100,
+                'porcentaje_unidad_efectivo' => $_POST['porcentaje_unidad_efectivo'] ?? 80,
+                'activo' => isset($_POST['activo']) ? 1 : 0
+            ];
+            
+            if ($this->productoPadreModel->actualizar($id, $datos)) {
+                $_SESSION['mensaje'] = 'Producto padre actualizado exitosamente';
+                $_SESSION['tipo_mensaje'] = 'success';
+                header('Location: index.php?c=productoPadre&a=index');
+                exit;
+            } else {
+                $_SESSION['mensaje'] = 'Error al actualizar el producto padre';
+                $_SESSION['tipo_mensaje'] = 'error';
+            }
+        }
+        
+        $this->render('productos_padre/editar', ['producto' => $producto]);
+    }
+    
+    public function eliminar($id) {
+        if ($this->productoPadreModel->eliminar($id)) {
+            $_SESSION['mensaje'] = 'Producto padre eliminado exitosamente';
+            $_SESSION['tipo_mensaje'] = 'success';
+        } else {
+            $_SESSION['mensaje'] = 'Error al eliminar el producto padre';
+            $_SESSION['tipo_mensaje'] = 'error';
+        }
+        
+        header('Location: index.php?c=productoPadre&a=index');
+        exit;
+    }
+    
+    private function render($view, $data = []) {
+        extract($data);
+        ob_start();
+        require BASE_PATH . '/views/' . $view . '.php';
+        $content = ob_get_clean();
+        require BASE_PATH . '/views/layout.php';
+    }
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\controllers\PromocionController.php
+Contenido:
+----------------------------------------
+<?php
+// app/controllers/PromocionController.php
+class PromocionController {
+    private $promocionModel;
+    private $variedadModel;
+    
+    public function __construct() {
+        $this->promocionModel = new Promocion();
+        $this->variedadModel = new Variedad();
+    }
+    
+    public function index() {
+        $promociones = $this->promocionModel->getAll(true);
+        
+        $this->render('promociones/index', [
+            'promociones' => $promociones
+        ]);
+    }
+    
+    public function crear() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $datos = [
+                'variedad_id' => $_POST['variedad_id'],
+                'cantidad' => $_POST['cantidad'],
+                'precio_promocional' => $_POST['precio_promocional'],
+                'fecha_inicio' => $_POST['fecha_inicio'] ?? null,
+                'fecha_fin' => $_POST['fecha_fin'] ?? null
+            ];
+            
+            if ($this->promocionModel->crear($datos)) {
+                $_SESSION['mensaje'] = 'Promoción creada exitosamente';
+                $_SESSION['tipo_mensaje'] = 'success';
+                header('Location: index.php?c=promocion&a=index');
+                exit;
+            } else {
+                $_SESSION['mensaje'] = 'Error al crear la promoción';
+                $_SESSION['tipo_mensaje'] = 'error';
+            }
+        }
+        
+        $variedades = $this->variedadModel->getAll();
+        
+        $this->render('promociones/crear', [
+            'variedades' => $variedades
+        ]);
+    }
+    
+    public function editar($id) {
+        $promocion = $this->promocionModel->getById($id);
+        
+        if (!$promocion) {
+            header('Location: index.php?c=promocion&a=index');
+            exit;
+        }
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $datos = [
+                'cantidad' => $_POST['cantidad'],
+                'precio_promocional' => $_POST['precio_promocional'],
+                'fecha_inicio' => $_POST['fecha_inicio'] ?? null,
+                'fecha_fin' => $_POST['fecha_fin'] ?? null,
+                'activo' => isset($_POST['activo']) ? 1 : 0
+            ];
+            
+            if ($this->promocionModel->actualizar($id, $datos)) {
+                $_SESSION['mensaje'] = 'Promoción actualizada exitosamente';
+                $_SESSION['tipo_mensaje'] = 'success';
+                header('Location: index.php?c=promocion&a=index');
+                exit;
+            } else {
+                $_SESSION['mensaje'] = 'Error al actualizar la promoción';
+                $_SESSION['tipo_mensaje'] = 'error';
+            }
+        }
+        
+        $this->render('promociones/editar', ['promocion' => $promocion]);
+    }
+    
+    public function eliminar($id) {
+        if ($this->promocionModel->eliminar($id)) {
+            $_SESSION['mensaje'] = 'Promoción eliminada exitosamente';
+            $_SESSION['tipo_mensaje'] = 'success';
+        } else {
+            $_SESSION['mensaje'] = 'Error al eliminar la promoción';
+            $_SESSION['tipo_mensaje'] = 'error';
+        }
+        
+        header('Location: index.php?c=promocion&a=index');
+        exit;
+    }
+    
+    private function render($view, $data = []) {
+        extract($data);
+        ob_start();
+        require BASE_PATH . '/views/' . $view . '.php';
+        $content = ob_get_clean();
+        require BASE_PATH . '/views/layout.php';
+    }
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\controllers\VariedadController.php
+Contenido:
+----------------------------------------
+<?php
+// app/controllers/VariedadController.php
+class VariedadController {
+    private $variedadModel;
+    private $productoPadreModel;
+    private $promocionModel;
+    
+    public function __construct() {
+        $this->variedadModel = new Variedad();
+        $this->productoPadreModel = new ProductoPadre();
+        $this->promocionModel = new Promocion();
+    }
+    
+    public function index() {
+        // Obtener filtros
+        $filtros = [];
+        if (isset($_GET['stock_estado'])) {
+            $filtros['stock_estado'] = $_GET['stock_estado'];
+        }
+        if (isset($_GET['producto_padre_id']) && $_GET['producto_padre_id'] !== '') {
+            $filtros['producto_padre_id'] = $_GET['producto_padre_id'];
+        }
+        
+        $variedades = $this->variedadModel->getAllConFiltros($filtros);
+        $productos_padre = $this->productoPadreModel->getAll();
+        
+        $this->render('variedades/index', [
+            'variedades' => $variedades,
+            'productos_padre' => $productos_padre,
+            'filtros' => $filtros
+        ]);
+    }
+    
+    public function crear() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $precio_compra_total = $_POST['precio_compra_total'];
+            $cantidad_comprada = $_POST['cantidad_comprada'];
+            $precio_costo_unitario = $this->variedadModel->calcularPrecioCostoUnitario($precio_compra_total, $cantidad_comprada);
+            
+            $datos = [
+                'producto_padre_id' => $_POST['producto_padre_id'],
+                'nombre' => $_POST['nombre'],
+                'descripcion' => $_POST['descripcion'] ?? '',
+                'precio_compra_total' => $precio_compra_total,
+                'cantidad_comprada' => $cantidad_comprada,
+                'precio_costo_unitario' => $precio_costo_unitario,
+                'precio_pack3_tarjeta' => $_POST['precio_pack3_tarjeta'] ?? 0,
+                'precio_pack3_efectivo' => $_POST['precio_pack3_efectivo'] ?? 0,
+                'precio_unidad_tarjeta' => $_POST['precio_unidad_tarjeta'] ?? 0,
+                'precio_unidad_efectivo' => $_POST['precio_unidad_efectivo'] ?? 0,
+                'precio_venta_unitario' => $_POST['precio_venta_unitario'] ?? 0,
+                'stock' => $_POST['stock'] ?? $cantidad_comprada,
+                'stock_minimo' => $_POST['stock_minimo'] ?? 10,
+                'unidades_por_pack' => $_POST['unidades_por_pack'] ?? 3
+            ];
+            
+            $variedad_id = $this->variedadModel->crear($datos);
+            
+            if ($variedad_id) {
+                // Crear promoción si se configuró
+                if (!empty($_POST['promo_cantidad']) && !empty($_POST['promo_precio'])) {
+                    $promo_datos = [
+                        'variedad_id' => $variedad_id,
+                        'cantidad' => $_POST['promo_cantidad'],
+                        'precio_promocional' => $_POST['promo_precio']
+                    ];
+                    $this->promocionModel->crear($promo_datos);
+                }
+                
+                $_SESSION['mensaje'] = 'Variedad creada exitosamente';
+                $_SESSION['tipo_mensaje'] = 'success';
+                header('Location: index.php?c=variedad&a=index');
+                exit;
+            } else {
+                $_SESSION['mensaje'] = 'Error al crear la variedad';
+                $_SESSION['tipo_mensaje'] = 'error';
+            }
+        }
+        
+        $productos_padre = $this->productoPadreModel->getAll();
+        
+        $this->render('variedades/crear', [
+            'productos_padre' => $productos_padre
+        ]);
+    }
+    
+    public function editar($id) {
+        $variedad = $this->variedadModel->getById($id);
+        
+        if (!$variedad) {
+            header('Location: index.php?c=variedad&a=index');
+            exit;
+        }
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $precio_compra_total = $_POST['precio_compra_total'];
+            $cantidad_comprada = $_POST['cantidad_comprada'];
+            $precio_costo_unitario = $this->variedadModel->calcularPrecioCostoUnitario($precio_compra_total, $cantidad_comprada);
+            
+            $datos = [
+                'nombre' => $_POST['nombre'],
+                'descripcion' => $_POST['descripcion'] ?? '',
+                'precio_compra_total' => $precio_compra_total,
+                'cantidad_comprada' => $cantidad_comprada,
+                'precio_costo_unitario' => $precio_costo_unitario,
+                'precio_pack3_tarjeta' => $_POST['precio_pack3_tarjeta'] ?? 0,
+                'precio_pack3_efectivo' => $_POST['precio_pack3_efectivo'] ?? 0,
+                'precio_unidad_tarjeta' => $_POST['precio_unidad_tarjeta'] ?? 0,
+                'precio_unidad_efectivo' => $_POST['precio_unidad_efectivo'] ?? 0,
+                'precio_venta_unitario' => $_POST['precio_venta_unitario'] ?? 0,
+                'stock' => $_POST['stock'],
+                'stock_minimo' => $_POST['stock_minimo'] ?? 10,
+                'activo' => isset($_POST['activo']) ? 1 : 0,
+                'unidades_por_pack' => $_POST['unidades_por_pack'] ?? 3
+            ];
+            
+            if ($this->variedadModel->actualizar($id, $datos)) {
+                $_SESSION['mensaje'] = 'Variedad actualizada exitosamente';
+                $_SESSION['tipo_mensaje'] = 'success';
+                header('Location: index.php?c=variedad&a=index');
+                exit;
+            } else {
+                $_SESSION['mensaje'] = 'Error al actualizar la variedad';
+                $_SESSION['tipo_mensaje'] = 'error';
+            }
+        }
+        
+        $promociones = $this->promocionModel->getByVariedad($id);
+        
+        $this->render('variedades/editar', [
+            'variedad' => $variedad,
+            'promociones' => $promociones
+        ]);
+    }
+    
+    public function eliminar($id) {
+        if ($this->variedadModel->eliminar($id)) {
+            $_SESSION['mensaje'] = 'Variedad eliminada exitosamente';
+            $_SESSION['tipo_mensaje'] = 'success';
+        } else {
+            $_SESSION['mensaje'] = 'Error al eliminar la variedad';
+            $_SESSION['tipo_mensaje'] = 'error';
+        }
+        
+        header('Location: index.php?c=variedad&a=index');
+        exit;
+    }
+    
+    public function calcularPrecioCosto() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $precio_total = floatval($_POST['precio_total']);
+            $cantidad = intval($_POST['cantidad']);
+            
+            $precio_unitario = $this->variedadModel->calcularPrecioCostoUnitario($precio_total, $cantidad);
+            
+            echo json_encode(['precio_unitario' => $precio_unitario]);
+            exit;
+        }
+    }
+    
+    public function calcularPreciosVenta() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $costo_unitario = floatval($_POST['costo_unitario']);
+            $producto_padre_id = intval($_POST['producto_padre_id']);
+            
+            $precios = $this->variedadModel->calcularPreciosVenta($costo_unitario, $producto_padre_id);
+            
+            echo json_encode($precios);
+            exit;
+        }
+    }
+    
+    private function render($view, $data = []) {
+        extract($data);
+        ob_start();
+        require BASE_PATH . '/views/' . $view . '.php';
+        $content = ob_get_clean();
+        require BASE_PATH . '/views/layout.php';
+    }
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\controllers\VentaController.php
+Contenido:
+----------------------------------------
+<?php
+// app/controllers/VentaController.php
+class VentaController {
+    private $ventaModel;
+    private $variedadModel;
+    private $productoPadreModel;
+    private $promocionModel;
+    
+    public function __construct() {
+        $this->ventaModel = new Venta();
+        $this->variedadModel = new Variedad();
+        $this->productoPadreModel = new ProductoPadre();
+        $this->promocionModel = new Promocion();
+    }
+    
+public function index() {
+    // Obtener filtros con valores por defecto del mes actual
+    $filtros = [];
+    
+    // Si no hay filtros en GET, usar mes actual por defecto
+    if (empty($_GET['fecha_desde']) && empty($_GET['fecha_hasta']) && empty($_GET['metodo_pago']) && empty($_GET['estado'])) {
+        $filtros['fecha_desde'] = date('Y-m-01'); // Primer día del mes
+        $filtros['fecha_hasta'] = date('Y-m-t');   // Último día del mes
+    } else {
+        if (!empty($_GET['fecha_desde'])) {
+            $filtros['fecha_desde'] = $_GET['fecha_desde'];
+        }
+        if (!empty($_GET['fecha_hasta'])) {
+            $filtros['fecha_hasta'] = $_GET['fecha_hasta'];
+        }
+        if (!empty($_GET['metodo_pago'])) {
+            $filtros['metodo_pago'] = $_GET['metodo_pago'];
+        }
+        if (!empty($_GET['estado'])) {
+            $filtros['estado'] = $_GET['estado'];
+        }
+    }
+    
+    $ventas = $this->ventaModel->getAll($filtros);
+    $total_ventas = $this->ventaModel->getTotalVentas($filtros);
+    $estadisticas = $this->ventaModel->getEstadisticas(
+        $filtros['fecha_desde'] ?? null,
+        $filtros['fecha_hasta'] ?? null
+    );
+    
+    // Calcular total stock disponible
+    $total_stock_disponible = $this->variedadModel->getTotalStockDisponible();
+    
+    // NUEVO: Calcular total de egresos en el mismo período
+    $egresoModel = new Egreso();
+    $filtros_egresos = [];
+    if (!empty($filtros['fecha_desde'])) {
+        $filtros_egresos['fecha_desde'] = $filtros['fecha_desde'];
+    }
+    if (!empty($filtros['fecha_hasta'])) {
+        $filtros_egresos['fecha_hasta'] = $filtros['fecha_hasta'];
+    }
+    $total_egresos = $egresoModel->getTotalEgresos($filtros_egresos);
+    
+    // NUEVO: Calcular balance (ingresos - egresos)
+    $balance = ($estadisticas['total_vendido'] ?? 0) - $total_egresos;
+    
+    $this->render('ventas/index', [
+        'ventas' => $ventas,
+        'total_ventas' => $total_ventas,
+        'estadisticas' => $estadisticas,
+        'total_stock_disponible' => $total_stock_disponible,
+        'total_egresos' => $total_egresos,
+        'balance' => $balance,
+        'filtros' => $filtros
+    ]);
+}
+    
+public function nueva() {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $productos_venta = json_decode($_POST['productos_json'], true);
+        $nombre_cliente = !empty($_POST['nombre_cliente']) ? trim($_POST['nombre_cliente']) : null;
+        $es_preventa = isset($_POST['es_preventa']) && $_POST['es_preventa'] == '1';
+        
+        $total = 0;
+        $descuento_total = 0;
+        
+        $detalles = [];
+        foreach ($productos_venta as $item) {
+            $variedad = $this->variedadModel->getById($item['variedad_id']);
+            
+            // Verificar stock
+            if ($variedad['stock'] < $item['cantidad']) {
+                $_SESSION['mensaje'] = 'Stock insuficiente para: ' . $variedad['nombre'];
+                $_SESSION['tipo_mensaje'] = 'error';
+                header('Location: index.php?c=venta&a=nueva');
+                exit;
+            }
+            
+            // El precio ya viene calculado desde el frontend según los 4 precios guardados
+            $precio_unitario = floatval($item['precio_unitario']);
+            $subtotal = $precio_unitario;
+            $total += $subtotal;
+            
+            $detalles[] = [
+                'variedad_id' => $item['variedad_id'],
+                'cantidad' => $item['cantidad'],
+                'precio_unitario' => $precio_unitario,
+                'descuento_unitario' => 0,
+                'subtotal' => $subtotal
+            ];
+        }
+        
+        // El método de pago se toma del primer producto (todos deberían tener el mismo)
+        $metodo_pago = $productos_venta[0]['metodo_pago'] ?? 'efectivo';
+        
+        $venta_id = $this->ventaModel->crear($total, $metodo_pago, $descuento_total, $detalles, $nombre_cliente, $es_preventa);
+        
+        if ($venta_id) {
+            if ($es_preventa) {
+                $_SESSION['mensaje'] = '⏳ Pre-venta guardada exitosamente. Total: ' . FormatHelper::precio($total);
+                $_SESSION['tipo_mensaje'] = 'success';
+            } else {
+                $_SESSION['mensaje'] = '✅ Venta registrada exitosamente. Total: ' . FormatHelper::precio($total);
+                $_SESSION['tipo_mensaje'] = 'success';
+            }
+            header('Location: index.php?c=venta&a=detalle&id=' . $venta_id);
+            exit;
+        } else {
+            $_SESSION['mensaje'] = 'Error al registrar la venta';
+            $_SESSION['tipo_mensaje'] = 'error';
+        }
+    }
+    
+    $variedades = $this->variedadModel->getAll(true);
+    
+    $this->render('ventas/nueva', [
+        'variedades' => $variedades
+    ]);
+}
+    
+    public function detalle($id) {
+        $venta = $this->ventaModel->getById($id);
+        
+        if (!$venta) {
+            header('Location: index.php?c=venta&a=index');
+            exit;
+        }
+        
+        $detalles = $this->ventaModel->getDetalles($id);
+        
+        $this->render('ventas/detalle', [
+            'venta' => $venta,
+            'detalles' => $detalles
+        ]);
+    }
+    
+    private function render($view, $data = []) {
+        extract($data);
+        ob_start();
+        require BASE_PATH . '/views/' . $view . '.php';
+        $content = ob_get_clean();
+        require BASE_PATH . '/views/layout.php';
+    }
+
+// public function exportarExcel() {
+//     // Obtener los mismos filtros que en index
+//     $filtros = [];
+//     if (!empty($_GET['fecha_desde'])) {
+//         $filtros['fecha_desde'] = $_GET['fecha_desde'];
+//     }
+//     if (!empty($_GET['fecha_hasta'])) {
+//         $filtros['fecha_hasta'] = $_GET['fecha_hasta'];
+//     }
+//     if (!empty($_GET['metodo_pago'])) {
+//         $filtros['metodo_pago'] = $_GET['metodo_pago'];
+//     }
+    
+//     $ventas = $this->ventaModel->getAll($filtros);
+//     $estadisticas = $this->ventaModel->getEstadisticas(
+//         $filtros['fecha_desde'] ?? null,
+//         $filtros['fecha_hasta'] ?? null
+//     );
+    
+//     // Generar nombre del archivo
+//     $fecha = date('Y-m-d_H-i-s');
+//     $filename = "ventas_export_{$fecha}.csv";
+    
+//     // Headers para descarga
+//     header('Content-Type: text/csv; charset=utf-8');
+//     header('Content-Disposition: attachment; filename="' . $filename . '"');
+//     header('Pragma: no-cache');
+//     header('Expires: 0');
+    
+//     // Crear archivo CSV
+//     $output = fopen('php://output', 'w');
+    
+//     // BOM para Excel UTF-8
+//     fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
+    
+//     // Encabezados
+//     fputcsv($output, ['ID', 'Fecha', 'Método de Pago', 'Total', 'Descuento Aplicado']);
+    
+//     // Datos
+//     foreach ($ventas as $venta) {
+//         fputcsv($output, [
+//             $venta['id'],
+//             date('d/m/Y H:i', strtotime($venta['fecha'])),
+//             ucfirst($venta['metodo_pago']),
+//             number_format($venta['total'], 2),
+//             number_format($venta['descuento_aplicado'], 2)
+//         ]);
+//     }
+    
+//     // Línea en blanco
+//     fputcsv($output, []);
+    
+//     // Totales
+//     fputcsv($output, ['ESTADÍSTICAS']);
+//     fputcsv($output, ['Total Ventas', number_format($estadisticas['total_vendido'] ?? 0, 2)]);
+//     fputcsv($output, ['Cantidad de Ventas', $estadisticas['total_ventas'] ?? 0]);
+//     fputcsv($output, ['Promedio por Venta', number_format($estadisticas['promedio_venta'] ?? 0, 2)]);
+//     fputcsv($output, ['Total Efectivo', number_format($estadisticas['total_efectivo'] ?? 0, 2)]);
+//     fputcsv($output, ['Total Tarjeta/Transferencia', number_format($estadisticas['total_tarjeta_combinado'] ?? 0, 2)]);
+    
+//     fclose($output);
+//     exit;
+// }
+
+public function formalizarPreventa($id) {
+    $venta = $this->ventaModel->getById($id);
+    
+    if (!$venta || $venta['estado'] != 'preventa') {
+        $_SESSION['mensaje'] = 'Esta venta no es una pre-venta válida';
+        $_SESSION['tipo_mensaje'] = 'error';
+        header('Location: index.php?c=venta&a=index');
+        exit;
+    }
+    
+    if ($this->ventaModel->formalizarPreventa($id)) {
+        $_SESSION['mensaje'] = '✅ Pre-venta formalizada exitosamente. Total: ' . FormatHelper::precio($venta['total']);
+        $_SESSION['tipo_mensaje'] = 'success';
+    } else {
+        $_SESSION['mensaje'] = 'Error al formalizar la pre-venta';
+        $_SESSION['tipo_mensaje'] = 'error';
+    }
+    
+    header('Location: index.php?c=venta&a=detalle&id=' . $id);
+    exit;
+}
+
+public function cancelarPreventa($id) {
+    $venta = $this->ventaModel->getById($id);
+    
+    if (!$venta || $venta['estado'] != 'preventa') {
+        $_SESSION['mensaje'] = 'Esta venta no es una pre-venta válida';
+        $_SESSION['tipo_mensaje'] = 'error';
+        header('Location: index.php?c=venta&a=index');
+        exit;
+    }
+    
+    if (!empty($_POST['confirmar_cancelacion'])) {
+        if ($this->ventaModel->cancelarPreventa($id)) {
+            $_SESSION['mensaje'] = '🔄 Pre-venta cancelada. El stock fue devuelto.';
+            $_SESSION['tipo_mensaje'] = 'success';
+            header('Location: index.php?c=venta&a=index');
+            exit;
+        } else {
+            $_SESSION['mensaje'] = 'Error al cancelar la pre-venta';
+            $_SESSION['tipo_mensaje'] = 'error';
+        }
+    }
+    
+    header('Location: index.php?c=venta&a=detalle&id=' . $id);
+    exit;
+}
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\database\migrations\migrar.php
+Contenido:
+----------------------------------------
+<?php
+// app/database/migrations/migrar.php
+// Ejecutar: servidor\php\php.exe -f app\database\migrations\migrar.php
+
+define('BASE_PATH', dirname(__DIR__));
+define('DB_PATH', BASE_PATH . '/database/database.db');
+
+require_once BASE_PATH . '/config/database.php';
+
+echo "===========================================\n";
+echo "  Sistema de Migraciones\n";
+echo "===========================================\n\n";
+
+// Cargar todas las migraciones del directorio
+$migracionesDir = __DIR__;
+$archivos = glob($migracionesDir . '/migration_*.php');
+
+if (empty($archivos)) {
+    echo "[!] No se encontraron archivos de migración\n";
+    exit;
+}
+
+sort($archivos);
+
+echo "[*] Migraciones encontradas: " . count($archivos) . "\n\n";
+
+foreach ($archivos as $archivo) {
+    $nombreArchivo = basename($archivo);
+    echo "[*] Procesando: $nombreArchivo\n";
+    
+    // Incluir el archivo de migración
+    $migracion = require $archivo;
+    
+    if (!isset($migracion['version']) || !isset($migracion['sql'])) {
+        echo "    [ERROR] Formato de migración inválido\n";
+        continue;
+    }
+    
+    $version = $migracion['version'];
+    $sql = $migracion['sql'];
+    $descripcion = $migracion['descripcion'] ?? 'Sin descripción';
+    
+    // Ejecutar migración
+    if (Database::runMigration($version, $sql)) {
+        echo "    [OK] Migración $version aplicada: $descripcion\n";
+    } else {
+        echo "    [SKIP] Migración $version ya fue aplicada\n";
+    }
+}
+
+echo "\n[✓] Proceso de migraciones completado\n\n";
+
+// Mostrar versión actual
+$db = Database::getInstance()->getConnection();
+$stmt = $db->query("SELECT version, fecha FROM migraciones ORDER BY fecha DESC LIMIT 5");
+$versiones = $stmt->fetchAll();
+
+if ($versiones) {
+    echo "Últimas migraciones aplicadas:\n";
+    foreach ($versiones as $v) {
+        echo "  - {$v['version']} ({$v['fecha']})\n";
+    }
+}
+
+echo "\n";
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\database\migrations\migration_001_agregar_categorias.php
+Contenido:
+----------------------------------------
+<?php
+// app/database/migrations/migration_001_agregar_categorias.php
+// Ejemplo de cómo crear una migración
+
+return [
+    'version' => '001_agregar_categorias',
+    'descripcion' => 'Agregar tabla de categorías y relación con artículos',
+    'sql' => "
+        -- Crear tabla categorias
+        CREATE TABLE IF NOT EXISTS categorias (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nombre VARCHAR(100) NOT NULL,
+            descripcion TEXT,
+            activo INTEGER DEFAULT 1,
+            fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+        
+        -- Agregar columna categoria_id a articulos
+        ALTER TABLE articulos ADD COLUMN categoria_id INTEGER;
+        
+        -- Insertar categorías por defecto
+        INSERT INTO categorias (nombre, descripcion) VALUES 
+            ('General', 'Categoría general'),
+            ('Electrónica', 'Productos electrónicos'),
+            ('Hogar', 'Artículos para el hogar');
+    "
+];
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\helpers\FormatHelper.php
+Contenido:
+----------------------------------------
+<?php
+// app/helpers/FormatHelper.php
+class FormatHelper {
+    /**
+     * Formatea un número como precio con separador de miles y 2 decimales
+     * Ejemplo: 1234.56 -> $1.234,56
+     */
+    public static function precio($valor) {
+        return '$' . number_format($valor, 2, ',', '.');
+    }
+    
+    /**
+     * Formatea un número sin el símbolo de peso
+     * Ejemplo: 1234.56 -> 1.234,56
+     */
+    public static function numero($valor) {
+        return number_format($valor, 2, ',', '.');
+    }
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\models\Egreso.php
+Contenido:
+----------------------------------------
+<?php
+// app/models/Egreso.php
+class Egreso {
+    private $db;
+    
+    public function __construct() {
+        $this->db = Database::getInstance()->getConnection();
+    }
+    
+    public function getAll($filtros = []) {
+        $sql = "SELECT * FROM egresos WHERE 1=1";
+        $params = [];
+        
+        // Filtro por fecha
+        if (!empty($filtros['fecha_desde'])) {
+            $sql .= " AND fecha >= ?";
+            $params[] = $filtros['fecha_desde'];
+        }
+        
+        if (!empty($filtros['fecha_hasta'])) {
+            $sql .= " AND fecha <= ?";
+            $params[] = $filtros['fecha_hasta'];
+        }
+        
+        // Filtro por categoría
+        if (!empty($filtros['categoria'])) {
+            $sql .= " AND categoria = ?";
+            $params[] = $filtros['categoria'];
+        }
+        
+        $sql .= " ORDER BY fecha DESC, fecha_creacion DESC";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll();
+    }
+    
+    public function getById($id) {
+        $stmt = $this->db->prepare("SELECT * FROM egresos WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    }
+    
+    public function crear($datos) {
+        try {
+            $sql = "INSERT INTO egresos (fecha, monto, descripcion, categoria) VALUES (?, ?, ?, ?)";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([
+                $datos['fecha'],
+                $datos['monto'],
+                $datos['descripcion'],
+                $datos['categoria'] ?? null
+            ]);
+            return $this->db->lastInsertId();
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+    
+    public function actualizar($id, $datos) {
+        try {
+            $sql = "UPDATE egresos SET fecha = ?, monto = ?, descripcion = ?, categoria = ? WHERE id = ?";
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute([
+                $datos['fecha'],
+                $datos['monto'],
+                $datos['descripcion'],
+                $datos['categoria'] ?? null,
+                $id
+            ]);
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+    
+    public function eliminar($id) {
+        try {
+            $stmt = $this->db->prepare("DELETE FROM egresos WHERE id = ?");
+            return $stmt->execute([$id]);
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+    
+    public function getTotalEgresos($filtros = []) {
+        $sql = "SELECT SUM(monto) as total FROM egresos WHERE 1=1";
+        $params = [];
+        
+        if (!empty($filtros['fecha_desde'])) {
+            $sql .= " AND fecha >= ?";
+            $params[] = $filtros['fecha_desde'];
+        }
+        
+        if (!empty($filtros['fecha_hasta'])) {
+            $sql .= " AND fecha <= ?";
+            $params[] = $filtros['fecha_hasta'];
+        }
+        
+        if (!empty($filtros['categoria'])) {
+            $sql .= " AND categoria = ?";
+            $params[] = $filtros['categoria'];
+        }
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        $result = $stmt->fetch();
+        
+        return $result['total'] ?? 0;
+    }
+    
+    public function getCategorias() {
+        $sql = "SELECT DISTINCT categoria FROM egresos WHERE categoria IS NOT NULL AND categoria != '' ORDER BY categoria";
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\models\Pedido.php
+Contenido:
+----------------------------------------
+<?php
+// app/models/Pedido.php
+class Pedido {
+    private $db;
+    
+    public function __construct() {
+        $this->db = Database::getInstance()->getConnection();
+    }
+    
+    public function getAll() {
+        $sql = "SELECT p.*, 
+                COUNT(pd.id) as cantidad_items,
+                SUM(pd.cantidad_solicitada) as total_unidades
+                FROM pedidos p
+                LEFT JOIN pedido_detalles pd ON p.id = pd.pedido_id
+                GROUP BY p.id
+                ORDER BY p.fecha_creacion DESC";
+        
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchAll();
+    }
+    
+    public function getById($id) {
+        $stmt = $this->db->prepare("SELECT * FROM pedidos WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    }
+    
+    public function getDetalles($pedido_id) {
+        $sql = "SELECT pd.*, v.nombre as variedad_nombre, v.stock, v.stock_minimo,
+                p.nombre as producto_padre_nombre
+                FROM pedido_detalles pd
+                JOIN variedades v ON pd.variedad_id = v.id
+                JOIN productos_padre p ON v.producto_padre_id = p.id
+                WHERE pd.pedido_id = ?
+                ORDER BY p.nombre, v.nombre";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$pedido_id]);
+        return $stmt->fetchAll();
+    }
+    
+    public function crear($observaciones, $detalles) {
+        try {
+            $this->db->beginTransaction();
+            
+            // Crear pedido
+            $stmt = $this->db->prepare("INSERT INTO pedidos (observaciones) VALUES (?)");
+            $stmt->execute([$observaciones]);
+            $pedido_id = $this->db->lastInsertId();
+            
+            // Insertar detalles
+            $stmtDetalle = $this->db->prepare(
+                "INSERT INTO pedido_detalles (pedido_id, variedad_id, cantidad_solicitada, precio_estimado, observaciones) 
+                VALUES (?, ?, ?, ?, ?)"
+            );
+            
+            foreach ($detalles as $detalle) {
+                $stmtDetalle->execute([
+                    $pedido_id,
+                    $detalle['variedad_id'],
+                    $detalle['cantidad_solicitada'],
+                    $detalle['precio_estimado'] ?? null,
+                    $detalle['observaciones'] ?? ''
+                ]);
+            }
+            
+            $this->db->commit();
+            return $pedido_id;
+        } catch (PDOException $e) {
+            $this->db->rollBack();
+            return false;
+        }
+    }
+    
+    public function actualizar($id, $datos) {
+        try {
+            $sql = "UPDATE pedidos SET 
+                estado = ?,
+                observaciones = ?,
+                fecha_realizacion = ?
+                WHERE id = ?";
+            
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute([
+                $datos['estado'],
+                $datos['observaciones'] ?? '',
+                $datos['estado'] == 'realizado' ? date('Y-m-d H:i:s') : null,
+                $id
+            ]);
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+    
+    public function actualizarDetalle($detalle_id, $cantidad_recibida, $observaciones = '') {
+        try {
+            $this->db->beginTransaction();
+            
+            // Actualizar detalle del pedido
+            $stmt = $this->db->prepare(
+                "UPDATE pedido_detalles SET cantidad_recibida = ?, observaciones = ? WHERE id = ?"
+            );
+            $stmt->execute([$cantidad_recibida, $observaciones, $detalle_id]);
+            
+            // Obtener variedad_id y actualizar stock si se recibió mercadería
+            if ($cantidad_recibida > 0) {
+                $stmt = $this->db->prepare("SELECT variedad_id FROM pedido_detalles WHERE id = ?");
+                $stmt->execute([$detalle_id]);
+                $detalle = $stmt->fetch();
+                
+                if ($detalle) {
+                    $stmt = $this->db->prepare("UPDATE variedades SET stock = stock + ? WHERE id = ?");
+                    $stmt->execute([$cantidad_recibida, $detalle['variedad_id']]);
+                }
+            }
+            
+            $this->db->commit();
+            return true;
+        } catch (PDOException $e) {
+            $this->db->rollBack();
+            return false;
+        }
+    }
+    
+    public function marcarComoRealizado($id) {
+        $stmt = $this->db->prepare(
+            "UPDATE pedidos SET estado = 'realizado', fecha_realizacion = ? WHERE id = ?"
+        );
+        return $stmt->execute([date('Y-m-d H:i:s'), $id]);
+    }
+    
+    public function marcarComoFaltante($id, $observaciones = '') {
+        $stmt = $this->db->prepare(
+            "UPDATE pedidos SET estado = 'faltante', observaciones = ? WHERE id = ?"
+        );
+        return $stmt->execute([$observaciones, $id]);
+    }
+    
+    public function eliminar($id) {
+        try {
+            $this->db->beginTransaction();
+            
+            // Eliminar detalles
+            $stmt = $this->db->prepare("DELETE FROM pedido_detalles WHERE pedido_id = ?");
+            $stmt->execute([$id]);
+            
+            // Eliminar pedido
+            $stmt = $this->db->prepare("DELETE FROM pedidos WHERE id = ?");
+            $stmt->execute([$id]);
+            
+            $this->db->commit();
+            return true;
+        } catch (PDOException $e) {
+            $this->db->rollBack();
+            return false;
+        }
+    }
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\models\ProductoPadre.php
+Contenido:
+----------------------------------------
+<?php
+// app/models/ProductoPadre.php
+class ProductoPadre {
+    private $db;
+    
+    public function __construct() {
+        $this->db = Database::getInstance()->getConnection();
+    }
+    
+    public function getAll($soloActivos = true) {
+        $sql = "SELECT * FROM productos_padre";
+        if ($soloActivos) $sql .= " WHERE activo = 1";
+        $sql .= " ORDER BY nombre";
+        
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchAll();
+    }
+    
+    public function getById($id) {
+        $stmt = $this->db->prepare("SELECT * FROM productos_padre WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    }
+    
+    public function crear($datos) {
+        try {
+            $sql = "INSERT INTO productos_padre (
+                nombre, 
+                porcentaje_pack3_tarjeta, 
+                porcentaje_pack3_efectivo,
+                porcentaje_unidad_tarjeta,
+                porcentaje_unidad_efectivo
+            ) VALUES (?, ?, ?, ?, ?)";
+            
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([
+                $datos['nombre'],
+                $datos['porcentaje_pack3_tarjeta'] ?? 100,
+                $datos['porcentaje_pack3_efectivo'] ?? 80,
+                $datos['porcentaje_unidad_tarjeta'] ?? 100,
+                $datos['porcentaje_unidad_efectivo'] ?? 80
+            ]);
+            
+            return $this->db->lastInsertId();
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+    
+    public function actualizar($id, $datos) {
+        try {
+            $sql = "UPDATE productos_padre SET 
+                nombre = ?,
+                porcentaje_pack3_tarjeta = ?,
+                porcentaje_pack3_efectivo = ?,
+                porcentaje_unidad_tarjeta = ?,
+                porcentaje_unidad_efectivo = ?,
+                activo = ?
+                WHERE id = ?";
+            
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute([
+                $datos['nombre'],
+                $datos['porcentaje_pack3_tarjeta'] ?? 100,
+                $datos['porcentaje_pack3_efectivo'] ?? 80,
+                $datos['porcentaje_unidad_tarjeta'] ?? 100,
+                $datos['porcentaje_unidad_efectivo'] ?? 80,
+                $datos['activo'] ?? 1,
+                $id
+            ]);
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+    
+    public function eliminar($id) {
+        $stmt = $this->db->prepare("UPDATE productos_padre SET activo = 0 WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
+    
+    public function calcularPrecioVenta($costo, $cantidad, $metodoPago, $producto_padre_id) {
+        $producto = $this->getById($producto_padre_id);
+        if (!$producto) return $costo;
+        
+        $porcentaje = 100;
+        
+        if ($cantidad == 3) {
+            // Pack x3
+            $porcentaje = $metodoPago == 'efectivo' 
+                ? $producto['porcentaje_pack3_efectivo'] 
+                : $producto['porcentaje_pack3_tarjeta'];
+        } else {
+            // Por unidad
+            $porcentaje = $metodoPago == 'efectivo' 
+                ? $producto['porcentaje_unidad_efectivo'] 
+                : $producto['porcentaje_unidad_tarjeta'];
+        }
+        
+        // Calcular precio: costo + (costo * porcentaje / 100)
+        $precioFinal = $costo + ($costo * $porcentaje / 100);
+        
+        return round($precioFinal, 2);
+    }
+    
+    public function cantidadVariedades($id) {
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM variedades WHERE producto_padre_id = ? AND activo = 1");
+        $stmt->execute([$id]);
+        return $stmt->fetchColumn();
+    }
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\models\Promocion.php
+Contenido:
+----------------------------------------
+<?php
+// app/models/Promocion.php
+class Promocion {
+    private $db;
+    
+    public function __construct() {
+        $this->db = Database::getInstance()->getConnection();
+    }
+    
+    public function getAll($soloActivos = true) {
+        $sql = "SELECT pr.*, v.nombre as variedad_nombre, p.nombre as producto_padre_nombre
+                FROM promociones pr
+                JOIN variedades v ON pr.variedad_id = v.id
+                JOIN productos_padre p ON v.producto_padre_id = p.id";
+        if ($soloActivos) $sql .= " WHERE pr.activo = 1";
+        $sql .= " ORDER BY p.nombre, v.nombre";
+        
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchAll();
+    }
+    
+    public function getById($id) {
+        $sql = "SELECT pr.*, v.nombre as variedad_nombre, p.nombre as producto_padre_nombre
+                FROM promociones pr
+                JOIN variedades v ON pr.variedad_id = v.id
+                JOIN productos_padre p ON v.producto_padre_id = p.id
+                WHERE pr.id = ?";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    }
+    
+    public function getByVariedad($variedad_id, $soloActivos = true) {
+        $sql = "SELECT * FROM promociones WHERE variedad_id = ?";
+        if ($soloActivos) $sql .= " AND activo = 1";
+        $sql .= " ORDER BY cantidad";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$variedad_id]);
+        return $stmt->fetchAll();
+    }
+    
+    public function crear($datos) {
+        try {
+            $sql = "INSERT INTO promociones (
+                variedad_id,
+                cantidad,
+                precio_promocional,
+                fecha_inicio,
+                fecha_fin
+            ) VALUES (?, ?, ?, ?, ?)";
+            
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([
+                $datos['variedad_id'],
+                $datos['cantidad'],
+                $datos['precio_promocional'],
+                $datos['fecha_inicio'] ?? date('Y-m-d H:i:s'),
+                $datos['fecha_fin'] ?? null
+            ]);
+            
+            return $this->db->lastInsertId();
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+    
+    public function actualizar($id, $datos) {
+        try {
+            $sql = "UPDATE promociones SET 
+                cantidad = ?,
+                precio_promocional = ?,
+                fecha_inicio = ?,
+                fecha_fin = ?,
+                activo = ?
+                WHERE id = ?";
+            
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute([
+                $datos['cantidad'],
+                $datos['precio_promocional'],
+                $datos['fecha_inicio'] ?? date('Y-m-d H:i:s'),
+                $datos['fecha_fin'] ?? null,
+                $datos['activo'] ?? 1,
+                $id
+            ]);
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+    
+    public function eliminar($id) {
+        $stmt = $this->db->prepare("UPDATE promociones SET activo = 0 WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
+    
+    public function aplicarPromocion($variedad_id, $cantidad) {
+        // Buscar la mejor promoción aplicable
+        $sql = "SELECT * FROM promociones 
+                WHERE variedad_id = ? AND activo = 1 AND cantidad <= ?
+                ORDER BY cantidad DESC LIMIT 1";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$variedad_id, $cantidad]);
+        $promo = $stmt->fetch();
+        
+        if ($promo) {
+            $cantidadPromos = floor($cantidad / $promo['cantidad']);
+            $sobrante = $cantidad % $promo['cantidad'];
+            
+            return [
+                'aplica' => true,
+                'cantidad_promos' => $cantidadPromos,
+                'sobrante' => $sobrante,
+                'precio_promo' => $promo['precio_promocional'],
+                'cantidad_promo' => $promo['cantidad']
+            ];
+        }
+        
+        return ['aplica' => false];
+    }
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\models\Variedad.php
+Contenido:
+----------------------------------------
+<?php
+// app/models/Variedad.php
+class Variedad {
+    private $db;
+    
+    public function __construct() {
+        $this->db = Database::getInstance()->getConnection();
+    }
+    
+    public function getAll($soloActivos = true) {
+        $sql = "SELECT v.*, p.nombre as producto_padre_nombre
+                FROM variedades v
+                JOIN productos_padre p ON v.producto_padre_id = p.id";
+        if ($soloActivos) $sql .= " WHERE v.activo = 1";
+        $sql .= " ORDER BY p.nombre, v.nombre";
+        
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchAll();
+    }
+    
+    public function getAllConFiltros($filtros = []) {
+        $sql = "SELECT v.*, p.nombre as producto_padre_nombre
+                FROM variedades v
+                JOIN productos_padre p ON v.producto_padre_id = p.id
+                WHERE v.activo = 1";
+        
+        $params = [];
+        
+        // Filtro por estado de stock
+        if (!empty($filtros['stock_estado'])) {
+            switch ($filtros['stock_estado']) {
+                case 'bajo':
+                    $sql .= " AND v.stock <= v.stock_minimo";
+                    break;
+                case 'normal':
+                    $sql .= " AND v.stock > v.stock_minimo AND v.stock <= (v.stock_minimo * 2)";
+                    break;
+                case 'alto':
+                    $sql .= " AND v.stock > (v.stock_minimo * 2)";
+                    break;
+                case 'sin_stock':
+                    $sql .= " AND v.stock = 0";
+                    break;
+            }
+        }
+        
+        // Filtro por producto padre
+        if (!empty($filtros['producto_padre_id'])) {
+            $sql .= " AND v.producto_padre_id = ?";
+            $params[] = $filtros['producto_padre_id'];
+        }
+        
+        $sql .= " ORDER BY p.nombre, v.nombre";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll();
+    }
+    
+    public function getById($id) {
+        $sql = "SELECT v.*, p.nombre as producto_padre_nombre
+                FROM variedades v
+                JOIN productos_padre p ON v.producto_padre_id = p.id
+                WHERE v.id = ?";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    }
+    
+    public function getByProductoPadre($producto_padre_id, $soloActivos = true) {
+        $sql = "SELECT * FROM variedades WHERE producto_padre_id = ?";
+        if ($soloActivos) $sql .= " AND activo = 1";
+        $sql .= " ORDER BY nombre";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$producto_padre_id]);
+        return $stmt->fetchAll();
+    }
+    
+    public function getStockBajo() {
+        $sql = "SELECT v.*, p.nombre as producto_padre_nombre
+                FROM variedades v
+                JOIN productos_padre p ON v.producto_padre_id = p.id
+                WHERE v.stock <= v.stock_minimo AND v.activo = 1
+                ORDER BY v.stock ASC";
+        
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchAll();
+    }
+    
+    public function crear($datos) {
+        try {
+            $sql = "INSERT INTO variedades (
+                producto_padre_id,
+                nombre,
+                descripcion,
+                precio_compra_total,
+                cantidad_comprada,
+                precio_costo_unitario,
+                precio_pack3_tarjeta,
+                precio_pack3_efectivo,
+                precio_unidad_tarjeta,
+                precio_unidad_efectivo,
+                precio_venta_unitario,
+                stock,
+                stock_minimo,
+                unidades_por_pack
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([
+                $datos['producto_padre_id'],
+                $datos['nombre'],
+                $datos['descripcion'] ?? '',
+                $datos['precio_compra_total'],
+                $datos['cantidad_comprada'],
+                $datos['precio_costo_unitario'],
+                $datos['precio_pack3_tarjeta'] ?? 0,
+                $datos['precio_pack3_efectivo'] ?? 0,
+                $datos['precio_unidad_tarjeta'] ?? 0,
+                $datos['precio_unidad_efectivo'] ?? 0,
+                $datos['precio_venta_unitario'],
+                $datos['stock'] ?? $datos['cantidad_comprada'],
+                $datos['stock_minimo'] ?? 10,
+                $datos['unidades_por_pack'] ?? 3,
+            ]);
+            
+            return $this->db->lastInsertId();
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+    
+    public function actualizar($id, $datos) {
+        try {
+            $sql = "UPDATE variedades SET 
+                nombre = ?,
+                descripcion = ?,
+                precio_compra_total = ?,
+                cantidad_comprada = ?,
+                precio_costo_unitario = ?,
+                precio_pack3_tarjeta = ?,
+                precio_pack3_efectivo = ?,
+                precio_unidad_tarjeta = ?,
+                precio_unidad_efectivo = ?,
+                precio_venta_unitario = ?,
+                stock = ?,
+                stock_minimo = ?,
+                activo = ?,
+                unidades_por_pack = ?
+                WHERE id = ?";
+            
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute([
+                $datos['nombre'],
+                $datos['descripcion'] ?? '',
+                $datos['precio_compra_total'],
+                $datos['cantidad_comprada'],
+                $datos['precio_costo_unitario'],
+                $datos['precio_pack3_tarjeta'] ?? 0,
+                $datos['precio_pack3_efectivo'] ?? 0,
+                $datos['precio_unidad_tarjeta'] ?? 0,
+                $datos['precio_unidad_efectivo'] ?? 0,
+                $datos['precio_venta_unitario'],
+                $datos['stock'],
+                $datos['stock_minimo'] ?? 10,
+                $datos['activo'] ?? 1,
+                $datos['unidades_por_pack'] ?? 3,
+                $id
+            ]);
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+    
+    public function actualizarStock($id, $cantidad) {
+        $stmt = $this->db->prepare("UPDATE variedades SET stock = stock + ? WHERE id = ?");
+        return $stmt->execute([$cantidad, $id]);
+    }
+    
+    public function eliminar($id) {
+        $stmt = $this->db->prepare("UPDATE variedades SET activo = 0 WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
+    
+    public function calcularPrecioCostoUnitario($precioTotal, $cantidad) {
+        if ($cantidad == 0) return 0;
+        return round($precioTotal / $cantidad, 2);
+    }
+    
+public function calcularPreciosVenta($costo_unitario, $producto_padre_id) {
+    $productoPadreModel = new ProductoPadre();
+    $producto_padre = $productoPadreModel->getById($producto_padre_id);
+    
+    if (!$producto_padre) {
+        return [
+            'precio_pack3_tarjeta' => 0,
+            'precio_pack3_efectivo' => 0,
+            'precio_unidad_tarjeta' => 0,
+            'precio_unidad_efectivo' => 0
+        ];
+    }
+    
+    // PRECIOS PACK x3 (sobre el costo total: costo_unitario × 3)
+    $costo_pack = $costo_unitario * 3;
+    $precio_pack3_tarjeta = $costo_pack + ($costo_pack * $producto_padre['porcentaje_pack3_tarjeta'] / 100);
+    $precio_pack3_efectivo = $costo_pack + ($costo_pack * $producto_padre['porcentaje_pack3_efectivo'] / 100);
+    
+    // PRECIOS POR UNIDAD (sobre costo unitario)
+    $precio_unidad_tarjeta = $costo_unitario + ($costo_unitario * $producto_padre['porcentaje_unidad_tarjeta'] / 100);
+    $precio_unidad_efectivo = $costo_unitario + ($costo_unitario * $producto_padre['porcentaje_unidad_efectivo'] / 100);
+    
+    return [
+        'precio_pack3_tarjeta' => round($precio_pack3_tarjeta, 2),
+        'precio_pack3_efectivo' => round($precio_pack3_efectivo, 2),
+        'precio_unidad_tarjeta' => round($precio_unidad_tarjeta, 2),
+        'precio_unidad_efectivo' => round($precio_unidad_efectivo, 2)
+    ];
+}
+
+/**
+ * NUEVA FUNCIÓN: Calcula precios con contexto completo
+ * Esta es la que se debe usar desde AJAX para recalcular precios
+ */
+public function calcularPreciosVentaCompleto($precio_compra_total, $cantidad_comprada, $producto_padre_id) {
+    $productoPadreModel = new ProductoPadre();
+    $producto_padre = $productoPadreModel->getById($producto_padre_id);
+    
+    if (!$producto_padre) {
+        return [
+            'costo_unitario' => 0,
+            'precio_pack3_tarjeta' => 0,
+            'precio_pack3_efectivo' => 0,
+            'precio_unidad_tarjeta' => 0,
+            'precio_unidad_efectivo' => 0
+        ];
+    }
+    
+    // 1. COSTO UNITARIO
+    $costo_unitario = $cantidad_comprada > 0 ? ($precio_compra_total / $cantidad_comprada) : 0;
+    
+    // 2. PRECIOS PACK x3 (sobre el precio de compra total)
+    // Fórmula: PrecioCompraTotal + (PrecioCompraTotal × Porcentaje/100)
+    $precio_pack3_tarjeta = $precio_compra_total + ($precio_compra_total * $producto_padre['porcentaje_pack3_tarjeta'] / 100);
+    $precio_pack3_efectivo = $precio_compra_total + ($precio_compra_total * $producto_padre['porcentaje_pack3_efectivo'] / 100);
+    
+    // 3. PRECIOS POR UNIDAD (sobre el costo unitario)
+    // Fórmula: CostoUnitario + (CostoUnitario × Porcentaje/100)
+    $precio_unidad_tarjeta = $costo_unitario + ($costo_unitario * $producto_padre['porcentaje_unidad_tarjeta'] / 100);
+    $precio_unidad_efectivo = $costo_unitario + ($costo_unitario * $producto_padre['porcentaje_unidad_efectivo'] / 100);
+    
+    return [
+        'costo_unitario' => round($costo_unitario, 2),
+        'precio_pack3_tarjeta' => round($precio_pack3_tarjeta, 2),
+        'precio_pack3_efectivo' => round($precio_pack3_efectivo, 2),
+        'precio_unidad_tarjeta' => round($precio_unidad_tarjeta, 2),
+        'precio_unidad_efectivo' => round($precio_unidad_efectivo, 2)
+    ];
+}
+
+public function getTotalStockDisponible() {
+    $sql = "SELECT SUM(precio_compra_total) as total FROM variedades WHERE activo = 1";
+    $stmt = $this->db->query($sql);
+    $result = $stmt->fetch();
+    return $result['total'] ?? 0;
+}
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\models\Venta.php
+Contenido:
+----------------------------------------
+<?php
+// app/models/Venta.php
+class Venta {
+    private $db;
+    
+    public function __construct() {
+        $this->db = Database::getInstance()->getConnection();
+    }
+    
+    public function getAll($filtros = []) {
+        $sql = "SELECT * FROM ventas WHERE 1=1";
+        $params = [];
+        
+        // Filtro por fecha
+        if (!empty($filtros['fecha_desde'])) {
+            $sql .= " AND DATE(fecha) >= ?";
+            $params[] = $filtros['fecha_desde'];
+        }
+        
+        if (!empty($filtros['fecha_hasta'])) {
+            $sql .= " AND DATE(fecha) <= ?";
+            $params[] = $filtros['fecha_hasta'];
+        }
+        
+        // Filtro por método de pago
+        if (!empty($filtros['metodo_pago'])) {
+            $sql .= " AND metodo_pago = ?";
+            $params[] = $filtros['metodo_pago'];
+        }
+        
+        // Filtro por estado
+        if (!empty($filtros['estado'])) {
+            $sql .= " AND estado = ?";
+            $params[] = $filtros['estado'];
+        } else {
+            // Por defecto no mostrar canceladas
+            $sql .= " AND estado != 'cancelada'";
+        }
+        
+        $sql .= " ORDER BY fecha DESC";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll();
+    }
+    
+    public function getById($id) {
+        $stmt = $this->db->prepare("SELECT * FROM ventas WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    }
+    
+    public function getDetalles($venta_id) {
+        $sql = "SELECT vd.*, v.nombre as variedad_nombre, p.nombre as producto_padre_nombre
+                FROM venta_detalles vd
+                JOIN variedades v ON vd.variedad_id = v.id
+                JOIN productos_padre p ON v.producto_padre_id = p.id
+                WHERE vd.venta_id = ?";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$venta_id]);
+        return $stmt->fetchAll();
+    }
+    
+    public function getVentasPorProducto($variedad_id, $fecha_desde = null, $fecha_hasta = null) {
+        $sql = "SELECT SUM(vd.cantidad) as total_vendido, COUNT(DISTINCT vd.venta_id) as cantidad_ventas
+                FROM venta_detalles vd
+                JOIN ventas v ON vd.venta_id = v.id
+                WHERE vd.variedad_id = ? AND v.estado != 'cancelada'";
+        
+        $params = [$variedad_id];
+        
+        if ($fecha_desde) {
+            $sql .= " AND DATE(v.fecha) >= ?";
+            $params[] = $fecha_desde;
+        }
+        
+        if ($fecha_hasta) {
+            $sql .= " AND DATE(v.fecha) <= ?";
+            $params[] = $fecha_hasta;
+        }
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetch();
+    }
+    
+    public function crear($total, $metodo_pago, $descuento_aplicado, $detalles, $nombre_cliente = null, $es_preventa = false) {
+        try {
+            $this->db->beginTransaction();
+            
+            // Determinar estado inicial
+            $estado = $es_preventa ? 'preventa' : 'completada';
+            $fecha_formalizacion = $es_preventa ? null : date('Y-m-d H:i:s');
+            
+            // Crear venta
+            $stmt = $this->db->prepare("INSERT INTO ventas (total, metodo_pago, descuento_aplicado, nombre_cliente, estado, fecha_formalizacion) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$total, $metodo_pago, $descuento_aplicado, $nombre_cliente, $estado, $fecha_formalizacion]);
+            $venta_id = $this->db->lastInsertId();
+            
+            // Insertar detalles y actualizar stock
+            $stmtDetalle = $this->db->prepare(
+                "INSERT INTO venta_detalles (venta_id, variedad_id, cantidad, precio_unitario, descuento_unitario, subtotal) VALUES (?, ?, ?, ?, ?, ?)"
+            );
+            
+            $stmtStock = $this->db->prepare("UPDATE variedades SET stock = stock - ? WHERE id = ?");
+            
+            foreach ($detalles as $detalle) {
+                $stmtDetalle->execute([
+                    $venta_id,
+                    $detalle['variedad_id'],
+                    $detalle['cantidad'],
+                    $detalle['precio_unitario'],
+                    $detalle['descuento_unitario'] ?? 0,
+                    $detalle['subtotal']
+                ]);
+                
+                // Descontar stock (tanto para venta completa como pre-venta)
+                $stmtStock->execute([
+                    $detalle['cantidad'],
+                    $detalle['variedad_id']
+                ]);
+            }
+            
+            $this->db->commit();
+            return $venta_id;
+        } catch (PDOException $e) {
+            $this->db->rollBack();
+            return false;
+        }
+    }
+    
+    public function formalizarPreventa($id) {
+        try {
+            $stmt = $this->db->prepare(
+                "UPDATE ventas SET estado = 'completada', fecha_formalizacion = ? WHERE id = ? AND estado = 'preventa'"
+            );
+            return $stmt->execute([date('Y-m-d H:i:s'), $id]);
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+    
+    public function cancelarPreventa($id) {
+        try {
+            $this->db->beginTransaction();
+            
+            // Obtener detalles de la venta
+            $detalles = $this->getDetalles($id);
+            
+            // Devolver stock
+            $stmtStock = $this->db->prepare("UPDATE variedades SET stock = stock + ? WHERE id = ?");
+            foreach ($detalles as $detalle) {
+                $stmtStock->execute([$detalle['cantidad'], $detalle['variedad_id']]);
+            }
+            
+            // Marcar venta como cancelada
+            $stmt = $this->db->prepare(
+                "UPDATE ventas SET estado = 'cancelada' WHERE id = ? AND estado = 'preventa'"
+            );
+            $stmt->execute([$id]);
+            
+            $this->db->commit();
+            return true;
+        } catch (PDOException $e) {
+            $this->db->rollBack();
+            return false;
+        }
+    }
+    
+    public function getTotalVentas($filtros = []) {
+        $sql = "SELECT SUM(total) as total FROM ventas WHERE estado != 'cancelada'";
+        $params = [];
+        
+        if (!empty($filtros['fecha_desde'])) {
+            $sql .= " AND DATE(fecha) >= ?";
+            $params[] = $filtros['fecha_desde'];
+        }
+        
+        if (!empty($filtros['fecha_hasta'])) {
+            $sql .= " AND DATE(fecha) <= ?";
+            $params[] = $filtros['fecha_hasta'];
+        }
+        
+        if (!empty($filtros['metodo_pago'])) {
+            $sql .= " AND metodo_pago = ?";
+            $params[] = $filtros['metodo_pago'];
+        }
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        $result = $stmt->fetch();
+        
+        return $result['total'] ?? 0;
+    }
+    
+    public function getEstadisticas($fecha_desde = null, $fecha_hasta = null) {
+        $sql = "SELECT 
+                COUNT(*) as total_ventas,
+                SUM(total) as total_vendido,
+                AVG(total) as promedio_venta,
+                SUM(CASE WHEN metodo_pago = 'efectivo' THEN total ELSE 0 END) as total_efectivo,
+                SUM(CASE WHEN metodo_pago = 'tarjeta' THEN total ELSE 0 END) as total_tarjeta,
+                SUM(CASE WHEN metodo_pago = 'transferencia' THEN total ELSE 0 END) as total_transferencia
+                FROM ventas WHERE estado = 'completada'";
+        
+        $params = [];
+        
+        if ($fecha_desde) {
+            $sql .= " AND DATE(fecha) >= ?";
+            $params[] = $fecha_desde;
+        }
+        
+        if ($fecha_hasta) {
+            $sql .= " AND DATE(fecha) <= ?";
+            $params[] = $fecha_hasta;
+        }
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        $result = $stmt->fetch();
+        
+        // Combinar tarjeta y transferencia en un solo campo para compatibilidad
+        if ($result) {
+            $result['total_tarjeta_combinado'] = ($result['total_tarjeta'] ?? 0) + ($result['total_transferencia'] ?? 0);
+        }
+        
+        return $result;
+    }
+}
+?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\layout.php
+Contenido:
+----------------------------------------
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; }
+        .header { background: #9c3b9e; color: white; padding: 15px 0; margin-bottom: 20px; }
+        .header .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .header h1 { font-size: 24px; margin-bottom: 10px; }
+        .nav { display: flex; gap: 10px; flex-wrap: wrap; }
+        .nav a { color: white; text-decoration: none; padding: 8px 15px; background: rgba(255,255,255,0.2); border-radius: 4px; font-size: 14px; }
+        .nav a:hover { background: rgba(255,255,255,0.3); }
+        .nav a.active { background: rgba(255,255,255,0.4); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .content { background: white; padding: 20px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .btn { display: inline-block; padding: 10px 20px; text-decoration: none; border-radius: 4px; cursor: pointer; border: none; font-size: 14px; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-success { background: #27ae60; color: white; }
+        .btn-success:hover { background: #229954; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-danger:hover { background: #c0392b; }
+        .btn-secondary { background: #95a5a6; color: white; }
+        .btn-secondary:hover { background: #7f8c8d; }
+        .btn-warning { background: #f39c12; color: white; }
+        .btn-warning:hover { background: #e67e22; }
+        .btn-info { background: #16a085; color: white; }
+        .btn-info:hover { background: #138d75; }
+        .alert { padding: 15px; margin-bottom: 20px; border-radius: 4px; }
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        table th, table td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        table th { background: #55345e; color: white; }
+        table tr:hover { background: #f5f5f5; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        .form-group textarea { min-height: 100px; }
+        .form-actions { margin-top: 20px; }
+        .checkbox-group { display: flex; align-items: center; }
+        .checkbox-group input { width: auto; margin-right: 8px; }
+        .badge { padding: 5px 10px; border-radius: 3px; font-size: 12px; color: white; }
+        .badge-activo { background: #27ae60; }
+        .badge-inactivo { background: #95a5a6; }
+        .badge-stock-bajo { background: #e74c3c; }
+        .badge-stock-ok { background: #27ae60; }
+        .badge-pendiente { background: #f39c12; }
+        .badge-realizado { background: #27ae60; }
+        .badge-faltante { background: #e74c3c; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+        .card { background: #ecf0f1; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
+        .filtros { background: #ecf0f1; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .filtros form { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }
+        .filtros .form-group { margin-bottom: 0; flex: 1; min-width: 150px; }
+        .precio-input {text-align: right; font-family: 'Courier New', monospace; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>📦 Sistema de Gestión</h1>
+            <div class="nav">
+                <a href="index.php?c=productoPadre&a=index">📁 Productos Padre</a>
+                <a href="index.php?c=variedad&a=index">🏷️ Variedades</a>
+                <!-- <a href="index.php?c=promocion&a=index">🎁 Promociones</a> -->
+                <a href="index.php?c=venta&a=index">💰 Ventas</a>
+                <a href="index.php?c=venta&a=nueva">➕ Nueva Venta</a>
+                <a href="index.php?c=pedido&a=index">📋 Pedidos</a>
+                <a href="index.php?c=pedido&a=nuevo">🛒 Nuevo Pedido</a>
+                <a href="index.php?c=egreso&a=index">💸 Egresos</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="content">
+            <?php if (isset($_SESSION['mensaje'])): ?>
+                <div class="alert alert-<?= $_SESSION['tipo_mensaje'] ?>">
+                    <?= htmlspecialchars($_SESSION['mensaje']) ?>
+                </div>
+                <?php unset($_SESSION['mensaje'], $_SESSION['tipo_mensaje']); ?>
+            <?php endif; ?>
+            
+            <?= $content ?>
+        </div>
+    </div>
+</body>
+</html>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\configuracion\index.php
+Contenido:
+----------------------------------------

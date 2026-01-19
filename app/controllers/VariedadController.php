@@ -50,7 +50,8 @@ class VariedadController {
                 'precio_unidad_efectivo' => $_POST['precio_unidad_efectivo'] ?? 0,
                 'precio_venta_unitario' => $_POST['precio_venta_unitario'] ?? 0,
                 'stock' => $_POST['stock'] ?? $cantidad_comprada,
-                'stock_minimo' => $_POST['stock_minimo'] ?? 10
+                'stock_minimo' => $_POST['stock_minimo'] ?? 10,
+                'unidades_por_pack' => $_POST['unidades_por_pack'] ?? 3
             ];
             
             $variedad_id = $this->variedadModel->crear($datos);
@@ -106,10 +107,11 @@ class VariedadController {
                 'precio_pack3_efectivo' => $_POST['precio_pack3_efectivo'] ?? 0,
                 'precio_unidad_tarjeta' => $_POST['precio_unidad_tarjeta'] ?? 0,
                 'precio_unidad_efectivo' => $_POST['precio_unidad_efectivo'] ?? 0,
-                'precio_venta_unitario' => $_POST['precio_venta_unitario'],
+                'precio_venta_unitario' => $_POST['precio_venta_unitario'] ?? 0,
                 'stock' => $_POST['stock'],
                 'stock_minimo' => $_POST['stock_minimo'] ?? 10,
-                'activo' => isset($_POST['activo']) ? 1 : 0
+                'activo' => isset($_POST['activo']) ? 1 : 0,
+                'unidades_por_pack' => $_POST['unidades_por_pack'] ?? 3
             ];
             
             if ($this->variedadModel->actualizar($id, $datos)) {

@@ -36,6 +36,15 @@
                 <input type="text" id="costo_unitario_display" readonly style="background: #ecf0f1; font-weight: bold;" value="$<?= number_format($variedad['precio_costo_unitario'], 2) ?>">
             </div>
         </div>
+        <div style="margin-top: 15px; padding: 15px; background: #fff3cd; border-radius: 4px;">
+    <div style="display: flex; align-items: center; gap: 15px;">
+        <label for="unidades_por_pack" style="margin: 0; font-weight: bold;">📦 Unidades por Pack:</label>
+        <select id="unidades_por_pack" name="unidades_por_pack" style="padding: 8px;">
+            <option value="2" <?= $variedad['unidades_por_pack'] == 2 ? 'selected' : '' ?>>x2</option>
+            <option value="3" <?= $variedad['unidades_por_pack'] == 3 ? 'selected' : '' ?>>x3</option>
+        </select>
+    </div>
+</div>
     </div>
     
     <div class="card" style="background: #e8f5e9;">

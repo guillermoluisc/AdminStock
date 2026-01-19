@@ -40,25 +40,17 @@
                 <span class="badge" style="background: #3498db;">💳 Tarjeta</span>
             <?php endif; ?>
         </div>
-        <div>
-            <strong>Descuento Aplicado:</strong><br>
-            <?php if ($venta['descuento_aplicado'] > 0): ?>
-                <span style="color: #e74c3c; font-size: 18px;"><?= FormatHelper::precio($venta['descuento_aplicado']) ?></span>
-            <?php else: ?>
-                <span style="color: #95a5a6;">Sin descuento</span>
-            <?php endif; ?>
+        <?php if ($venta['fecha_formalizacion']): ?>
+        <div style="margin-top: 15px; padding: 10px; background: #e8f5e9; border-radius: 4px;">
+            <strong>Fecha de Formalización:</strong> <?= date('d/m/Y H:i', strtotime($venta['fecha_formalizacion'])) ?>
         </div>
+        <?php endif; ?>
         <div>
             <strong>Total:</strong><br>
             <span style="color: #27ae60; font-size: 24px; font-weight: bold;"><?= FormatHelper::precio($venta['total']) ?></span>
         </div>
     </div>
     
-    <?php if ($venta['fecha_formalizacion']): ?>
-    <div style="margin-top: 15px; padding: 10px; background: #e8f5e9; border-radius: 4px;">
-        <strong>Fecha de Formalización:</strong> <?= date('d/m/Y H:i', strtotime($venta['fecha_formalizacion'])) ?>
-    </div>
-    <?php endif; ?>
 </div>
 
 <!-- Acciones para PRE-VENTAS -->

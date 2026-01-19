@@ -12,6 +12,7 @@
                 <option value="<?= $var['id'] ?>" 
                         data-nombre="<?= htmlspecialchars($var['producto_padre_nombre'] . ' - ' . $var['nombre']) ?>"
                         data-stock="<?= $var['stock'] ?>"
+                        data-unidades-pack="<?= $var['unidades_por_pack'] ?? 3 ?>"
                         data-pack3-tarjeta="<?= $var['precio_pack3_tarjeta'] ?>"
                         data-pack3-efectivo="<?= $var['precio_pack3_efectivo'] ?>"
                         data-unidad-tarjeta="<?= $var['precio_unidad_tarjeta'] ?>"
@@ -32,7 +33,7 @@
         <div class="form-group">
             <label for="tipo_venta">Tipo de Venta</label>
             <select id="tipo_venta" style="width: 100%; padding: 8px;" onchange="actualizarPrecioVenta()">
-                <option value="pack3">Pack x3</option>
+                <option value="pack">Pack (x<span id="pack_cantidad">2</span>)(x<span id="pack_cantidad">3</span>)</option>
                 <option value="unidad">Por Unidad</option>
             </select>
         </div>
@@ -141,30 +142,29 @@ function actualizarPrecioVenta() {
         return;
     }
     
-    const cantidad = parseInt(document.getElementById('cantidad_venta').value) || 1;
+    const unidadesPorPack = parseInt(option.dataset.unidadesPack) || 3;
+    let cantidad = parseInt(document.getElementById('cantidad_venta').value) || 1;
     const tipoVenta = document.getElementById('tipo_venta').value;
     const metodoPago = document.getElementById('metodo_pago_item').value;
     
     let precioUnitario = 0;
     
-    // Seleccionar el precio según tipo de venta y método de pago
-    if (tipoVenta === 'pack3') {
-        if (metodoPago === 'efectivo') {
-            precioUnitario = parseFloat(option.dataset.pack3Efectivo) || 0;
-        } else {
-            precioUnitario = parseFloat(option.dataset.pack3Tarjeta) || 0;
-        }
-        // Forzar cantidad a 3 para pack
-        document.getElementById('cantidad_venta').value = 3;
+    if (tipoVenta === 'pack') {
+        // Usar el precio del pack guardado (que ya es el precio total)
+        precioUnitario = metodoPago === 'efectivo' 
+            ? parseFloat(option.dataset.pack3Efectivo) 
+            : parseFloat(option.dataset.pack3Tarjeta);
+        
+        // Forzar cantidad según las unidades del pack
+        cantidad = unidadesPorPack;
+        document.getElementById('cantidad_venta').value = cantidad;
     } else {
-        if (metodoPago === 'efectivo') {
-            precioUnitario = parseFloat(option.dataset.unidadEfectivo) || 0;
-        } else {
-            precioUnitario = parseFloat(option.dataset.unidadTarjeta) || 0;
-        }
+        precioUnitario = metodoPago === 'efectivo' 
+            ? parseFloat(option.dataset.unidadEfectivo) 
+            : parseFloat(option.dataset.unidadTarjeta);
     }
     
-    const subtotal = precioUnitario * cantidad;
+    const subtotal = precioUnitario * (tipoVenta === 'pack' ? 1 : cantidad);
     
     // Mostrar información
     document.getElementById('precio_unitario_display').textContent = '$' + precioUnitario.toFixed(2);
@@ -189,19 +189,22 @@ function agregarProducto() {
     const variedadId = option.value;
     const nombre = option.dataset.nombre;
     const stock = parseInt(option.dataset.stock);
+    const unidadesPorPack = parseInt(option.dataset.unidadesPack) || 3;
     const tipoVenta = document.getElementById('tipo_venta').value;
     const metodoPago = document.getElementById('metodo_pago_item').value;
     
     let cantidad = parseInt(document.getElementById('cantidad_venta').value) || 1;
     let precioUnitario = 0;
+    let tipoVentaTexto = '';
     
-    // Determinar precio según configuración
-    if (tipoVenta === 'pack3') {
-        cantidad = 3; // Forzar cantidad a 3
+    if (tipoVenta === 'pack') {
+        cantidad = unidadesPorPack;
+        tipoVentaTexto = `Pack x${unidadesPorPack}`;
         precioUnitario = metodoPago === 'efectivo' 
             ? parseFloat(option.dataset.pack3Efectivo) 
             : parseFloat(option.dataset.pack3Tarjeta);
     } else {
+        tipoVentaTexto = 'Por Unidad';
         precioUnitario = metodoPago === 'efectivo' 
             ? parseFloat(option.dataset.unidadEfectivo) 
             : parseFloat(option.dataset.unidadTarjeta);
@@ -213,20 +216,19 @@ function agregarProducto() {
         return;
     }
     
-    // Validar que tenga precio
     if (precioUnitario <= 0) {
         alert('Este producto no tiene precio configurado para la opción seleccionada.');
         return;
     }
     
-    const subtotal = precioUnitario;
+    // El subtotal es diferente según el tipo
+    const subtotal = tipoVenta === 'pack' ? precioUnitario : (precioUnitario * cantidad);
     
-    // Agregar producto
     productosVenta.push({
         variedad_id: variedadId,
         nombre: nombre,
         cantidad: cantidad,
-        tipo_venta: tipoVenta === 'pack3' ? 'Pack x3' : 'Por Unidad',
+        tipo_venta: tipoVentaTexto,
         metodo_pago: metodoPago,
         precio_unitario: precioUnitario,
         subtotal: subtotal
@@ -234,7 +236,6 @@ function agregarProducto() {
     
     actualizarTablaVenta();
     
-    // Limpiar selección
     select.selectedIndex = 0;
     document.getElementById('cantidad_venta').value = 1;
     document.getElementById('info_precio').style.display = 'none';

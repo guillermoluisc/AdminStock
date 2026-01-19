@@ -104,8 +104,9 @@ class Variedad {
                 precio_unidad_efectivo,
                 precio_venta_unitario,
                 stock,
-                stock_minimo
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                stock_minimo,
+                unidades_por_pack
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             
             $stmt = $this->db->prepare($sql);
             $stmt->execute([
@@ -121,7 +122,8 @@ class Variedad {
                 $datos['precio_unidad_efectivo'] ?? 0,
                 $datos['precio_venta_unitario'],
                 $datos['stock'] ?? $datos['cantidad_comprada'],
-                $datos['stock_minimo'] ?? 10
+                $datos['stock_minimo'] ?? 10,
+                $datos['unidades_por_pack'] ?? 3,
             ]);
             
             return $this->db->lastInsertId();
@@ -145,7 +147,8 @@ class Variedad {
                 precio_venta_unitario = ?,
                 stock = ?,
                 stock_minimo = ?,
-                activo = ?
+                activo = ?,
+                unidades_por_pack = ?
                 WHERE id = ?";
             
             $stmt = $this->db->prepare($sql);
@@ -163,6 +166,7 @@ class Variedad {
                 $datos['stock'],
                 $datos['stock_minimo'] ?? 10,
                 $datos['activo'] ?? 1,
+                $datos['unidades_por_pack'] ?? 3,
                 $id
             ]);
         } catch (PDOException $e) {

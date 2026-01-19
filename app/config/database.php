@@ -64,6 +64,7 @@ class Database {
             stock_minimo INTEGER DEFAULT 10,
             activo INTEGER DEFAULT 1,
             fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+            unidades_por_pack INTEGER DEFAULT 3,
             FOREIGN KEY (producto_padre_id) REFERENCES productos_padre(id)
         )";
         $db->exec($sql);
@@ -79,6 +80,12 @@ class Database {
             $db->exec("ALTER TABLE variedades ADD COLUMN precio_unidad_efectivo DECIMAL(10,2) DEFAULT 0");
         }
         
+        try {
+            $db->exec("SELECT unidades_por_pack FROM variedades LIMIT 1");
+        } catch(PDOException $e) {
+            $db->exec("ALTER TABLE variedades ADD COLUMN unidades_por_pack INTEGER DEFAULT 3");
+        }
+
         // Tabla de PROMOCIONES
         $sql = "CREATE TABLE IF NOT EXISTS promociones (
             id INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -3063,3 +3063,2605 @@ Contenido:
 Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\configuracion\index.php
 Contenido:
 ----------------------------------------
+<!-- app/views/configuracion/index.php -->
+<h2>Configuración del Sistema</h2>
+
+<div class="grid-2" style="margin-top: 20px;">
+    <!-- TAMAÑOS -->
+    <div class="card">
+        <h3 style="margin-bottom: 15px;">🍯 Tamaños (Dulces)</h3>
+        
+        <form method="POST" action="index.php?c=configuracion&a=agregarTamano" style="margin-bottom: 15px;">
+            <div style="display: flex; gap: 10px;">
+                <input type="text" name="nombre" placeholder="Ej: 500g" required style="flex: 1; padding: 8px;">
+                <button type="submit" class="btn btn-success">Agregar</button>
+            </div>
+        </form>
+        
+        <div style="max-height: 300px; overflow-y: auto;">
+            <?php foreach ($tamanos as $t): ?>
+                <div style="display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #ddd; <?= !$t['activo'] ? 'opacity: 0.5;' : '' ?>">
+                    <span><?= htmlspecialchars($t['nombre']) ?></span>
+                    <?php if ($t['activo']): ?>
+                        <a href="index.php?c=configuracion&a=eliminarTamano&id=<?= $t['id'] ?>" 
+                           class="btn btn-danger" style="padding: 3px 8px; font-size: 12px;"
+                           onclick="return confirm('¿Eliminar?')">✕</a>
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    
+    <!-- SABORES -->
+    <div class="card">
+        <h3 style="margin-bottom: 15px;">🍫 Sabores (Dulces)</h3>
+        
+        <form method="POST" action="index.php?c=configuracion&a=agregarSabor" style="margin-bottom: 15px;">
+            <div style="display: flex; gap: 10px;">
+                <input type="text" name="nombre" placeholder="Ej: Frutilla" required style="flex: 1; padding: 8px;">
+                <button type="submit" class="btn btn-success">Agregar</button>
+            </div>
+        </form>
+        
+        <div style="max-height: 300px; overflow-y: auto;">
+            <?php foreach ($sabores as $s): ?>
+                <div style="display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #ddd; <?= !$s['activo'] ? 'opacity: 0.5;' : '' ?>">
+                    <span><?= htmlspecialchars($s['nombre']) ?></span>
+                    <?php if ($s['activo']): ?>
+                        <a href="index.php?c=configuracion&a=eliminarSabor&id=<?= $s['id'] ?>" 
+                           class="btn btn-danger" style="padding: 3px 8px; font-size: 12px;"
+                           onclick="return confirm('¿Eliminar?')">✕</a>
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>
+
+<!-- VARIEDADES DE SALADOS -->
+<div class="card" style="margin-top: 20px;">
+    <h3 style="margin-bottom: 15px;">🧀 Variedades de Salados</h3>
+    
+    <form method="POST" action="index.php?c=configuracion&a=agregarVariedad" style="margin-bottom: 15px;">
+        <div style="display: flex; gap: 10px;">
+            <select name="tipo_salado_id" required style="padding: 8px;">
+                <?php foreach ($tipos_salados as $ts): ?>
+                    <option value="<?= $ts['id'] ?>"><?= htmlspecialchars($ts['nombre']) ?></option>
+                <?php endforeach; ?>
+            </select>
+            <input type="text" name="nombre" placeholder="Ej: Queso con Ajo" required style="flex: 1; padding: 8px;">
+            <button type="submit" class="btn btn-success">Agregar</button>
+        </div>
+    </form>
+    
+    <div style="max-height: 400px; overflow-y: auto;">
+        <?php foreach ($variedades as $v): ?>
+            <div style="display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #ddd; <?= !$v['activo'] ? 'opacity: 0.5;' : '' ?>">
+                <span>
+                    <span class="badge" style="background: #95a5a6;"><?= htmlspecialchars($v['tipo_nombre']) ?></span>
+                    <?= htmlspecialchars($v['nombre']) ?>
+                </span>
+                <?php if ($v['activo']): ?>
+                    <a href="index.php?c=configuracion&a=eliminarVariedad&id=<?= $v['id'] ?>" 
+                       class="btn btn-danger" style="padding: 3px 8px; font-size: 12px;"
+                       onclick="return confirm('¿Eliminar?')">✕</a>
+                <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\egresos\crear.php
+Contenido:
+----------------------------------------
+<!-- app/views/egresos/crear.php -->
+<h2>Registrar Nuevo Egreso</h2>
+
+<form method="POST" action="index.php?c=egreso&a=crear">
+    <div class="grid-2">
+        <div class="form-group">
+            <label for="fecha">Fecha del Egreso *</label>
+            <input type="date" id="fecha" name="fecha" required value="<?= date('Y-m-d') ?>">
+        </div>
+        
+        <div class="form-group">
+            <label for="monto">Monto *</label>
+            <input type="number" id="monto" name="monto" step="0.01" min="0" required placeholder="0.00">
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="categoria">Categoría (Opcional)</label>
+        <input type="text" id="categoria" name="categoria" list="categorias_list" placeholder="Ej: Compras, Servicios, Impuestos...">
+        <datalist id="categorias_list">
+            <?php foreach ($categorias as $cat): ?>
+                <option value="<?= htmlspecialchars($cat) ?>">
+            <?php endforeach; ?>
+        </datalist>
+        <small style="color: #666;">Escriba una categoría existente o cree una nueva</small>
+    </div>
+    
+    <div class="form-group">
+        <label for="descripcion">Descripción del Gasto *</label>
+        <textarea id="descripcion" name="descripcion" rows="4" required placeholder="Ej: Compra de artículos para stock - 4 productos (detalle de los productos)"></textarea>
+        <!-- <small style="color: #666;">Sea específico: qué se compró, dónde, cantidad, etc.</small> -->
+    </div>
+    
+    <!-- <div class="card" style="background: #fff3cd; margin-top: 20px;">
+        <h4 style="margin-bottom: 10px;">💡 Ejemplo de Descripción Detallada:</h4>
+        <p style="margin: 0; font-style: italic; color: #666;">
+            "Compra en MercadoLibre - 4 artículos:<br>
+            - 10 unidades de Producto A ($5.000 c/u)<br>
+            - 5 unidades de Producto B ($8.000 c/u)<br>
+            - Gastos de envío: $2.500"
+        </p>
+    </div> -->
+    
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">💾 Guardar Egreso</button>
+        <a href="index.php?c=egreso&a=index" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\egresos\editar.php
+Contenido:
+----------------------------------------
+<!-- app/views/egresos/editar.php -->
+<h2>Editar Egreso</h2>
+
+<form method="POST" action="index.php?c=egreso&a=editar&id=<?= $egreso['id'] ?>">
+    <div class="grid-2">
+        <div class="form-group">
+            <label for="fecha">Fecha del Egreso *</label>
+            <input type="date" id="fecha" name="fecha" required value="<?= $egreso['fecha'] ?>">
+        </div>
+        
+        <div class="form-group">
+            <label for="monto">Monto *</label>
+            <input type="number" id="monto" name="monto" step="0.01" min="0" required value="<?= $egreso['monto'] ?>">
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="categoria">Categoría (Opcional)</label>
+        <input type="text" id="categoria" name="categoria" list="categorias_list" value="<?= htmlspecialchars($egreso['categoria'] ?? '') ?>" placeholder="Ej: Compras, Servicios, Impuestos...">
+        <datalist id="categorias_list">
+            <?php foreach ($categorias as $cat): ?>
+                <option value="<?= htmlspecialchars($cat) ?>">
+            <?php endforeach; ?>
+        </datalist>
+        <small style="color: #666;">Escriba una categoría existente o cree una nueva</small>
+    </div>
+    
+    <div class="form-group">
+        <label for="descripcion">Descripción del Gasto *</label>
+        <textarea id="descripcion" name="descripcion" rows="4" required><?= htmlspecialchars($egreso['descripcion']) ?></textarea>
+        <small style="color: #666;">Sea específico: qué se compró, dónde, cantidad, etc.</small>
+    </div>
+    
+    <div class="card" style="background: #e3f2fd; margin-top: 10px;">
+        <small style="color: #666;">
+            <strong>Registrado el:</strong> <?= date('d/m/Y H:i', strtotime($egreso['fecha_creacion'])) ?>
+        </small>
+    </div>
+    
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">💾 Actualizar Egreso</button>
+        <a href="index.php?c=egreso&a=index" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\egresos\index.php
+Contenido:
+----------------------------------------
+<!-- app/views/egresos/index.php -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Registro de Egresos</h2>
+    <a href="index.php?c=egreso&a=crear" class="btn btn-primary">+ Nuevo Egreso</a>
+</div>
+
+<!-- Estadísticas -->
+<div class="card" style="background: #ffebee; margin-bottom: 20px;">
+    <h4 style="margin-bottom: 10px; color: #c62828;">💸 Total de Egresos</h4>
+    <div style="font-size: 28px; font-weight: bold; color: #c62828;">
+        <?= FormatHelper::precio($total_egresos) ?>
+    </div>
+    <small style="color: #666;"><?= count($egresos) ?> egresos registrados</small>
+</div>
+
+<!-- Filtros -->
+<div class="filtros">
+    <form method="GET" action="index.php">
+        <input type="hidden" name="c" value="egreso">
+        <input type="hidden" name="a" value="index">
+        
+        <div class="form-group">
+            <label for="fecha_desde">Fecha Desde</label>
+            <input type="date" id="fecha_desde" name="fecha_desde" value="<?= $filtros['fecha_desde'] ?? '' ?>">
+        </div>
+        
+        <div class="form-group">
+            <label for="fecha_hasta">Fecha Hasta</label>
+            <input type="date" id="fecha_hasta" name="fecha_hasta" value="<?= $filtros['fecha_hasta'] ?? '' ?>">
+        </div>
+        
+        <div class="form-group">
+            <label for="categoria">Categoría</label>
+            <select id="categoria" name="categoria">
+                <option value="">Todas</option>
+                <?php foreach ($categorias as $cat): ?>
+                    <option value="<?= htmlspecialchars($cat) ?>" <?= ($filtros['categoria'] ?? '') == $cat ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($cat) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>&nbsp;</label>
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+            <a href="index.php?c=egreso&a=index" class="btn btn-secondary">Limpiar</a>
+        </div>
+    </form>
+</div>
+
+<?php if (empty($egresos)): ?>
+    <div class="card">
+        <p style="text-align: center; color: #95a5a6; padding: 20px;">No hay egresos registrados.</p>
+    </div>
+<?php else: ?>
+    <table>
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Categoría</th>
+                <th>Descripción</th>
+                <th>Monto</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($egresos as $egreso): ?>
+                <tr>
+                    <td><strong><?= date('d/m/Y', strtotime($egreso['fecha'])) ?></strong></td>
+                    <td>
+                        <?php if ($egreso['categoria']): ?>
+                            <span class="badge" style="background: #9b59b6;">
+                                <?= htmlspecialchars($egreso['categoria']) ?>
+                            </span>
+                        <?php else: ?>
+                            <span style="color: #95a5a6;">Sin categoría</span>
+                        <?php endif; ?>
+                    </td>
+                    <td><?= nl2br(htmlspecialchars($egreso['descripcion'])) ?></td>
+                    <td><strong style="color: #c62828; font-size: 16px;"><?= FormatHelper::precio($egreso['monto']) ?></strong></td>
+                    <td>
+                        <a href="index.php?c=egreso&a=editar&id=<?= $egreso['id'] ?>" class="btn btn-success" style="padding: 5px 10px;">✏️ Editar</a>
+                        <a href="index.php?c=egreso&a=eliminar&id=<?= $egreso['id'] ?>" 
+                           class="btn btn-danger" 
+                           style="padding: 5px 10px;"
+                           onclick="return confirm('¿Eliminar este egreso?')">🗑️ Eliminar</a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    
+    <div style="margin-top: 20px; color: #666;">
+        Total de egresos mostrados: <?= count($egresos) ?>
+    </div>
+<?php endif; ?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\pedidos\detalle.php
+Contenido:
+----------------------------------------
+<!-- app/views/pedidos/detalle.php -->
+<div style="margin-bottom: 20px;">
+    <a href="index.php?c=pedido&a=index" class="btn btn-secondary">← Volver a Pedidos</a>
+</div>
+
+<div class="card" style="margin-bottom: 20px;">
+    <h2>Detalle del Pedido #<?= $pedido['id'] ?></h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 15px;">
+        <div>
+            <strong>Fecha Creación:</strong><br>
+            <?= date('d/m/Y H:i', strtotime($pedido['fecha_creacion'])) ?>
+        </div>
+        <div>
+            <strong>Estado:</strong><br>
+            <?php if ($pedido['estado'] == 'pendiente'): ?>
+                <span class="badge badge-pendiente">⏳ Pendiente</span>
+            <?php elseif ($pedido['estado'] == 'realizado'): ?>
+                <span class="badge badge-realizado">✓ Realizado</span>
+            <?php else: ?>
+                <span class="badge badge-faltante">⚠ Faltante</span>
+            <?php endif; ?>
+        </div>
+        <div>
+            <strong>Fecha Realización:</strong><br>
+            <?php if ($pedido['fecha_realizacion']): ?>
+                <?= date('d/m/Y H:i', strtotime($pedido['fecha_realizacion'])) ?>
+            <?php else: ?>
+                <span style="color: #95a5a6;">-</span>
+            <?php endif; ?>
+        </div>
+    </div>
+    
+    <?php if ($pedido['observaciones']): ?>
+    <div style="margin-top: 15px; padding: 10px; background: #ecf0f1; border-radius: 4px;">
+        <strong>Observaciones:</strong><br>
+        <?= nl2br(htmlspecialchars($pedido['observaciones'])) ?>
+    </div>
+    <?php endif; ?>
+</div>
+
+<?php if ($pedido['estado'] == 'pendiente'): ?>
+<div class="card" style="margin-bottom: 20px; background: #fff3cd;">
+    <h3 style="margin-bottom: 15px;">Acciones del Pedido</h3>
+    <div style="display: flex; gap: 10px;">
+        <a href="index.php?c=pedido&a=marcarRealizado&id=<?= $pedido['id'] ?>" 
+           class="btn btn-success"
+           onclick="return confirm('¿Marcar este pedido como realizado? Esto actualizará el stock de todos los productos.')">
+            ✓ Marcar como Realizado
+        </a>
+        
+        <button type="button" class="btn btn-warning" onclick="mostrarFormFaltante()">
+            ⚠ Marcar con Faltantes
+        </button>
+    </div>
+    
+    <div id="form_faltante" style="display: none; margin-top: 15px;">
+        <form method="POST" action="index.php?c=pedido&a=marcarFaltante&id=<?= $pedido['id'] ?>">
+            <div class="form-group">
+                <label for="observaciones">Detalles de los faltantes:</label>
+                <textarea id="observaciones" name="observaciones" rows="3" required placeholder="Especifique qué productos faltaron y otros detalles..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-warning">Guardar</button>
+            <button type="button" class="btn btn-secondary" onclick="ocultarFormFaltante()">Cancelar</button>
+        </form>
+    </div>
+</div>
+<?php endif; ?>
+
+<h3 style="margin-bottom: 15px;">Productos del Pedido</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>Producto Padre</th>
+            <th>Variedad</th>
+            <th>Stock Actual</th>
+            <th>Cant. Solicitada</th>
+            <th>Cant. Recibida</th>
+            <th>Observaciones</th>
+            <?php if ($pedido['estado'] == 'pendiente'): ?>
+            <th>Acciones</th>
+            <?php endif; ?>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($detalles as $detalle): 
+            $stockBajo = $detalle['stock'] <= $detalle['stock_minimo'];
+        ?>
+            <tr>
+                <td>
+                    <span style="color: #7f8c8d; font-size: 12px;"><?= htmlspecialchars($detalle['producto_padre_nombre']) ?></span>
+                </td>
+                <td>
+                    <?= $stockBajo ? '<span style="color: #e74c3c;">⚠️</span> ' : '' ?>
+                    <strong><?= htmlspecialchars($detalle['variedad_nombre']) ?></strong>
+                </td>
+                <td>
+                    <span style="color: <?= $stockBajo ? '#e74c3c' : '#27ae60' ?>; font-weight: bold;">
+                        <?= $detalle['stock'] ?>
+                    </span>
+                    <br>
+                    <small style="color: #95a5a6;">Mín: <?= $detalle['stock_minimo'] ?></small>
+                </td>
+                <td><strong><?= $detalle['cantidad_solicitada'] ?></strong></td>
+                <td>
+                    <?php if ($detalle['cantidad_recibida'] > 0): ?>
+                        <span style="color: #27ae60; font-weight: bold;"><?= $detalle['cantidad_recibida'] ?></span>
+                    <?php else: ?>
+                        <span style="color: #95a5a6;">-</span>
+                    <?php endif; ?>
+                </td>
+                <td>
+                    <?php if ($detalle['observaciones']): ?>
+                        <small><?= nl2br(htmlspecialchars($detalle['observaciones'])) ?></small>
+                    <?php else: ?>
+                        <span style="color: #95a5a6;">-</span>
+                    <?php endif; ?>
+                </td>
+                <?php if ($pedido['estado'] == 'pendiente'): ?>
+                <td>
+                    <button type="button" class="btn btn-info" style="padding: 5px 10px;" 
+                            onclick="mostrarFormRecepcion(<?= $detalle['id'] ?>, '<?= htmlspecialchars($detalle['variedad_nombre']) ?>', <?= $detalle['cantidad_solicitada'] ?>)">
+                        Recibir
+                    </button>
+                </td>
+                <?php endif; ?>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+
+<!-- Modal para recepción de mercadería -->
+<div id="modal_recepcion" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 8px; min-width: 400px;">
+        <h3 id="modal_titulo" style="margin-bottom: 15px;">Recibir Mercadería</h3>
+        <form method="POST" action="index.php?c=pedido&a=actualizarDetalle&id=<?= $pedido['id'] ?>">
+            <input type="hidden" id="detalle_id" name="detalle_id">
+            
+            <div class="form-group">
+                <label for="cantidad_recibida">Cantidad Recibida *</label>
+                <input type="number" id="cantidad_recibida" name="cantidad_recibida" min="0" required style="width: 100%; padding: 8px;">
+                <small style="color: #666;">El stock se actualizará automáticamente</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="obs_recepcion">Observaciones</label>
+                <textarea id="obs_recepcion" name="observaciones" rows="3" style="width: 100%; padding: 8px;" placeholder="Notas sobre la recepción..."></textarea>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="button" class="btn btn-secondary" onclick="cerrarModal()">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function mostrarFormFaltante() {
+    document.getElementById('form_faltante').style.display = 'block';
+}
+
+function ocultarFormFaltante() {
+    document.getElementById('form_faltante').style.display = 'none';
+}
+
+function mostrarFormRecepcion(detalleId, nombreVariedad, cantidadSolicitada) {
+    document.getElementById('detalle_id').value = detalleId;
+    document.getElementById('modal_titulo').textContent = 'Recibir: ' + nombreVariedad;
+    document.getElementById('cantidad_recibida').value = cantidadSolicitada;
+    document.getElementById('cantidad_recibida').max = cantidadSolicitada * 2; // Permitir recibir hasta el doble
+    document.getElementById('modal_recepcion').style.display = 'block';
+}
+
+function cerrarModal() {
+    document.getElementById('modal_recepcion').style.display = 'none';
+}
+
+// Cerrar modal al hacer clic fuera
+document.getElementById('modal_recepcion')?.addEventListener('click', function(e) {
+    if (e.target === this) {
+        cerrarModal();
+    }
+});
+</script>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\pedidos\index.php
+Contenido:
+----------------------------------------
+<!-- app/views/pedidos/index.php -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Gestión de Pedidos</h2>
+    <a href="index.php?c=pedido&a=nuevo" class="btn btn-primary">+ Nuevo Pedido</a>
+</div>
+
+<?php if (empty($pedidos)): ?>
+    <p>No hay pedidos registrados.</p>
+<?php else: ?>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Fecha Creación</th>
+                <th>Cantidad Items</th>
+                <th>Total Unidades</th>
+                <th>Estado</th>
+                <th>Fecha Realización</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($pedidos as $pedido): ?>
+                <tr>
+                    <td><strong>#<?= $pedido['id'] ?></strong></td>
+                    <td><?= date('d/m/Y H:i', strtotime($pedido['fecha_creacion'])) ?></td>
+                    <td>
+                        <span class="badge" style="background: #3498db;"><?= $pedido['cantidad_items'] ?> productos</span>
+                    </td>
+                    <td>
+                        <strong><?= $pedido['total_unidades'] ?></strong> unidades
+                    </td>
+                    <td>
+                        <?php if ($pedido['estado'] == 'pendiente'): ?>
+                            <span class="badge badge-pendiente">⏳ Pendiente</span>
+                        <?php elseif ($pedido['estado'] == 'realizado'): ?>
+                            <span class="badge badge-realizado">✓ Realizado</span>
+                        <?php else: ?>
+                            <span class="badge badge-faltante">⚠ Faltante</span>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <?php if ($pedido['fecha_realizacion']): ?>
+                            <?= date('d/m/Y H:i', strtotime($pedido['fecha_realizacion'])) ?>
+                        <?php else: ?>
+                            <span style="color: #95a5a6;">-</span>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <a href="index.php?c=pedido&a=detalle&id=<?= $pedido['id'] ?>" class="btn btn-primary" style="padding: 5px 10px;">Ver Detalle</a>
+                        <?php if ($pedido['estado'] == 'pendiente'): ?>
+                            <a href="index.php?c=pedido&a=eliminar&id=<?= $pedido['id'] ?>" 
+                               class="btn btn-danger" 
+                               style="padding: 5px 10px;"
+                               onclick="return confirm('¿Eliminar este pedido?')">Eliminar</a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    
+    <div style="margin-top: 20px; color: #666;">
+        Total de pedidos: <?= count($pedidos) ?>
+    </div>
+<?php endif; ?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\pedidos\nuevo.php
+Contenido:
+----------------------------------------
+<!-- app/views/pedidos/nuevo.php -->
+<h2>Nuevo Pedido</h2>
+
+<?php if (!empty($variedades_stock_bajo)): ?>
+<div class="card" style="margin-bottom: 20px; background: #fff3cd; border: 1px solid #ffc107;">
+    <h3 style="margin-bottom: 15px; color: #856404;">⚠️ Productos con Stock Bajo</h3>
+    <p style="margin-bottom: 10px;">Los siguientes productos tienen stock por debajo del mínimo:</p>
+    <div style="display: grid; gap: 10px;">
+        <?php foreach ($variedades_stock_bajo as $var): ?>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: white; border-radius: 4px;">
+                <div>
+                    <strong><?= htmlspecialchars($var['producto_padre_nombre']) ?> - <?= htmlspecialchars($var['nombre']) ?></strong><br>
+                    <small style="color: #666;">Stock actual: <span style="color: #e74c3c; font-weight: bold;"><?= $var['stock'] ?></span> | Mínimo: <?= $var['stock_minimo'] ?></small>
+                </div>
+                <button type="button" class="btn btn-warning" style="padding: 5px 10px;" onclick="agregarProductoRapido(<?= $var['id'] ?>, '<?= htmlspecialchars($var['producto_padre_nombre'] . ' - ' . $var['nombre']) ?>', <?= $var['stock_minimo'] - $var['stock'] + 10 ?>)">
+                    + Agregar al Pedido
+                </button>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>
+<?php endif; ?>
+
+<div class="card" style="margin-bottom: 20px;">
+    <h3 style="margin-bottom: 15px;">Agregar Productos al Pedido</h3>
+    
+    <div class="form-group">
+        <label for="variedad_select">Seleccionar Producto</label>
+        <select id="variedad_select" style="width: 100%; padding: 10px;">
+            <option value="">Seleccione un producto...</option>
+            <?php foreach ($variedades as $var): 
+                $stock_bajo = $var['stock'] <= $var['stock_minimo'];
+            ?>
+                <option value="<?= $var['id'] ?>" 
+                        data-nombre="<?= htmlspecialchars($var['producto_padre_nombre'] . ' - ' . $var['nombre']) ?>"
+                        data-stock="<?= $var['stock'] ?>"
+                        data-minimo="<?= $var['stock_minimo'] ?>"
+                        data-stock-bajo="<?= $stock_bajo ? 'true' : 'false' ?>">
+                    <?= $stock_bajo ? '⚠️ ' : '' ?>
+                    <?= htmlspecialchars($var['producto_padre_nombre']) ?> - <?= htmlspecialchars($var['nombre']) ?> 
+                    (Stock: <?= $var['stock'] ?> / Mín: <?= $var['stock_minimo'] ?>)
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    
+    <button type="button" onclick="agregarProducto()" class="btn btn-success">➕ Agregar al Pedido</button>
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom: 15px;">Productos en el Pedido</h3>
+    
+    <table id="tabla_pedido">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Stock Actual</th>
+                <th>Cantidad a Pedir</th>
+                <th>Observaciones</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="items_pedido">
+            <tr id="sin_productos">
+                <td colspan="5" style="text-align: center; color: #95a5a6;">No hay productos agregados al pedido</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<form method="POST" action="index.php?c=pedido&a=nuevo" id="form_pedido" style="margin-top: 20px;">
+    <input type="hidden" name="productos_json" id="productos_json">
+    
+    <div class="form-group">
+        <label for="observaciones">Observaciones del Pedido</label>
+        <textarea id="observaciones" name="observaciones" rows="4" placeholder="Notas adicionales sobre el pedido..."></textarea>
+    </div>
+    
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary" onclick="return validarPedido()">✓ Crear Pedido</button>
+        <a href="index.php?c=pedido&a=index" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+<script>
+let productosPedido = [];
+
+function agregarProductoRapido(variedadId, nombre, cantidadSugerida) {
+    // Verificar si ya está agregado
+    const existe = productosPedido.find(p => p.variedad_id == variedadId);
+    if (existe) {
+        existe.cantidad = cantidadSugerida;
+    } else {
+        productosPedido.push({
+            variedad_id: variedadId,
+            nombre: nombre,
+            cantidad: cantidadSugerida,
+            observaciones: 'Stock bajo - Pedido automático'
+        });
+    }
+    
+    actualizarTabla();
+}
+
+function agregarProducto() {
+    const select = document.getElementById('variedad_select');
+    const option = select.options[select.selectedIndex];
+    
+    if (!option.value) {
+        alert('Seleccione un producto');
+        return;
+    }
+    
+    const variedadId = option.value;
+    const nombre = option.dataset.nombre;
+    const stock = parseInt(option.dataset.stock);
+    const minimo = parseInt(option.dataset.minimo);
+    const stockBajo = option.dataset.stockBajo === 'true';
+    
+    // Verificar si ya está agregado
+    const existe = productosPedido.find(p => p.variedad_id == variedadId);
+    if (existe) {
+        alert('Este producto ya está en el pedido');
+        return;
+    }
+    
+    // Calcular cantidad sugerida
+    let cantidadSugerida = 10;
+    if (stockBajo) {
+        cantidadSugerida = minimo - stock + 10;
+    }
+    
+    // Agregar nuevo producto
+    productosPedido.push({
+        variedad_id: variedadId,
+        nombre: nombre,
+        cantidad: cantidadSugerida,
+        stock: stock,
+        minimo: minimo,
+        observaciones: ''
+    });
+    
+    actualizarTabla();
+    select.selectedIndex = 0;
+}
+
+function eliminarProducto(index) {
+    productosPedido.splice(index, 1);
+    actualizarTabla();
+}
+
+function cambiarCantidad(index, cantidad) {
+    const nuevaCantidad = parseInt(cantidad);
+    
+    if (nuevaCantidad < 1) {
+        alert('La cantidad debe ser al menos 1');
+        return;
+    }
+    
+    productosPedido[index].cantidad = nuevaCantidad;
+    actualizarTabla();
+}
+
+function cambiarObservaciones(index, observaciones) {
+    productosPedido[index].observaciones = observaciones;
+}
+
+function actualizarTabla() {
+    const tbody = document.getElementById('items_pedido');
+    
+    // Limpiar completamente el tbody
+    tbody.innerHTML = '';
+    
+    if (productosPedido.length === 0) {
+        tbody.innerHTML = '<tr id="sin_productos"><td colspan="5" style="text-align: center; color: #95a5a6;">No hay productos agregados al pedido</td></tr>';
+        return;
+    }
+    
+    productosPedido.forEach((item, index) => {
+        const stockBajo = item.stock <= item.minimo;
+        const row = `<tr>
+            <td>
+                ${stockBajo ? '<span style="color: #e74c3c;">⚠️</span> ' : ''}
+                <strong>${item.nombre}</strong>
+            </td>
+            <td>
+                <span style="color: ${stockBajo ? '#e74c3c' : '#27ae60'}; font-weight: bold;">
+                    ${item.stock || 0}
+                </span>
+                <small style="display: block; color: #95a5a6;">Mínimo: ${item.minimo || 10}</small>
+            </td>
+            <td>
+                <input type="number" value="${item.cantidad}" min="1" 
+                       style="width: 100px; padding: 5px;" 
+                       onchange="cambiarCantidad(${index}, this.value)">
+            </td>
+            <td>
+                <input type="text" value="${item.observaciones || ''}" 
+                       style="width: 200px; padding: 5px;" 
+                       placeholder="Notas..." 
+                       onchange="cambiarObservaciones(${index}, this.value)">
+            </td>
+            <td>
+                <button type="button" class="btn btn-danger" 
+                        style="padding: 5px 10px;" 
+                        onclick="eliminarProducto(${index})">Quitar</button>
+            </td>
+        </tr>`;
+        tbody.innerHTML += row;
+    });
+}
+
+function validarPedido() {
+    if (productosPedido.length === 0) {
+        alert('Debe agregar al menos un producto al pedido');
+        return false;
+    }
+    
+    document.getElementById('productos_json').value = JSON.stringify(productosPedido);
+    return true;
+}
+</script>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\productos_padre\crear.php
+Contenido:
+----------------------------------------
+<!-- app/views/productos_padre/crear.php -->
+<h2>Crear Producto Padre</h2>
+
+<form method="POST" action="index.php?c=productoPadre&a=crear">
+    <div class="form-group">
+        <label for="nombre">Nombre del Producto *</label>
+        <input type="text" id="nombre" name="nombre" required placeholder="Ej: Colaless VINTAGE">
+    </div>
+    
+    <div class="card">
+        <h3 style="margin-bottom: 15px;">📦 Precios Pack x3</h3>
+        <!-- <p style="color: #666; margin-bottom: 15px;">
+            El precio final será: <strong>Costo + (Costo × Porcentaje / 100)</strong><br>
+            Ejemplo: Si costo = $7,904 y porcentaje = 100%, precio final = $7,904 + ($7,904 × 100/100) = $15,808
+        </p> -->
+        <div class="grid-2">
+            <div class="form-group">
+                <label for="porcentaje_pack3_tarjeta">💳 Porcentaje Tarjeta (%)</label>
+                <input type="number" id="porcentaje_pack3_tarjeta" name="porcentaje_pack3_tarjeta" step="0.01" min="0" value="100">
+            </div>
+            <div class="form-group">
+                <label for="porcentaje_pack3_efectivo">💵 Porcentaje Efectivo (%)</label>
+                <input type="number" id="porcentaje_pack3_efectivo" name="porcentaje_pack3_efectivo" step="0.01" min="0" value="80">
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h3 style="margin-bottom: 15px;">🏷️ Precios Por Unidad</h3>
+        <!-- <p style="color: #666; margin-bottom: 15px;">
+            El precio por unidad se calcula dividiendo el precio del pack x3 entre 3
+        </p> -->
+        <div class="grid-2">
+            <div class="form-group">
+                <label for="porcentaje_unidad_tarjeta">💳 Porcentaje Tarjeta (%)</label>
+                <input type="number" id="porcentaje_unidad_tarjeta" name="porcentaje_unidad_tarjeta" step="0.01" min="0" value="100">
+            </div>
+            <div class="form-group">
+                <label for="porcentaje_unidad_efectivo">💵 Porcentaje Efectivo (%)</label>
+                <input type="number" id="porcentaje_unidad_efectivo" name="porcentaje_unidad_efectivo" step="0.01" min="0" value="80">
+            </div>
+        </div>
+    </div>
+    
+    <!-- <div class="card" style="background: #e8f5e9;">
+        <h4 style="margin-bottom: 10px;">💡 Ejemplo de Cálculo</h4>
+        <p style="margin-bottom: 5px;"><strong>Si el costo es $7,904:</strong></p>
+        <ul style="margin-left: 20px;">
+            <li>Pack x3 Tarjeta (100%): $7,904 + $7,904 = <strong>$15,808</strong></li>
+            <li>Pack x3 Efectivo (80%): $7,904 + $6,323.20 = <strong>$14,227.20</strong></li>
+            <li>Por 1 Tarjeta: $15,808 / 3 = <strong>$5,269.33</strong></li>
+            <li>Por 1 Efectivo: $14,227.20 / 3 = <strong>$4,742.40</strong></li>
+        </ul>
+    </div> -->
+    
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Guardar Producto Padre</button>
+        <a href="index.php?c=productoPadre&a=index" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\productos_padre\editar.php
+Contenido:
+----------------------------------------
+<!-- app/views/productos_padre/editar.php -->
+<h2>Editar Producto Padre</h2>
+
+<form method="POST" action="index.php?c=productoPadre&a=editar&id=<?= $producto['id'] ?>">
+    <div class="form-group">
+        <label for="nombre">Nombre del Producto *</label>
+        <input type="text" id="nombre" name="nombre" required value="<?= htmlspecialchars($producto['nombre']) ?>">
+    </div>
+    
+    <div class="card">
+        <h3 style="margin-bottom: 15px;">📦 Precios Pack x3</h3>
+        <div class="grid-2">
+            <div class="form-group">
+                <label for="porcentaje_pack3_tarjeta">💳 Porcentaje Tarjeta (%)</label>
+                <input type="number" id="porcentaje_pack3_tarjeta" name="porcentaje_pack3_tarjeta" step="0.01" min="0" value="<?= $producto['porcentaje_pack3_tarjeta'] ?>">
+            </div>
+            <div class="form-group">
+                <label for="porcentaje_pack3_efectivo">💵 Porcentaje Efectivo (%)</label>
+                <input type="number" id="porcentaje_pack3_efectivo" name="porcentaje_pack3_efectivo" step="0.01" min="0" value="<?= $producto['porcentaje_pack3_efectivo'] ?>">
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h3 style="margin-bottom: 15px;">🏷️ Precios Por Unidad</h3>
+        <div class="grid-2">
+            <div class="form-group">
+                <label for="porcentaje_unidad_tarjeta">💳 Porcentaje Tarjeta (%)</label>
+                <input type="number" id="porcentaje_unidad_tarjeta" name="porcentaje_unidad_tarjeta" step="0.01" min="0" value="<?= $producto['porcentaje_unidad_tarjeta'] ?>">
+            </div>
+            <div class="form-group">
+                <label for="porcentaje_unidad_efectivo">💵 Porcentaje Efectivo (%)</label>
+                <input type="number" id="porcentaje_unidad_efectivo" name="porcentaje_unidad_efectivo" step="0.01" min="0" value="<?= $producto['porcentaje_unidad_efectivo'] ?>">
+            </div>
+        </div>
+    </div>
+    
+    <div class="form-group checkbox-group">
+        <input type="checkbox" id="activo" name="activo" <?= $producto['activo'] ? 'checked' : '' ?>>
+        <label for="activo">Producto Activo</label>
+    </div>
+    
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Actualizar</button>
+        <a href="index.php?c=productoPadre&a=index" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\productos_padre\index.php
+Contenido:
+----------------------------------------
+<!-- app/views/productos_padre/index.php -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Productos Padre</h2>
+    <a href="index.php?c=productoPadre&a=crear" class="btn btn-primary">+ Nuevo Producto Padre</a>
+</div>
+
+<p style="color: #666; margin-bottom: 20px;">
+    Los productos padre son las categorías generales que agrupan variedades. Aquí se configuran los descuentos que se aplicarán a todas sus variedades.
+</p>
+
+<?php if (empty($productos)): ?>
+    <p>No hay productos padre registrados.</p>
+<?php else: ?>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Pack x3 Tarjeta</th>
+                <th>Pack x3 Efectivo</th>
+                <th>Por 1 Tarjeta</th>
+                <th>Por 1 Efectivo</th>
+                <th>Variedades</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php 
+            $productoPadreModel = new ProductoPadre();
+            foreach ($productos as $prod): 
+                $cantidad_variedades = $productoPadreModel->cantidadVariedades($prod['id']);
+            ?>
+                <tr>
+                    <td><strong><?= htmlspecialchars($prod['nombre']) ?></strong></td>
+                    <td><?= $prod['porcentaje_pack3_tarjeta'] ?>%</td>
+                    <td><?= $prod['porcentaje_pack3_efectivo'] ?>%</td>
+                    <td><?= $prod['porcentaje_unidad_tarjeta'] ?>%</td>
+                    <td><?= $prod['porcentaje_unidad_efectivo'] ?>%</td>
+                    <td>
+                        <span class="badge" style="background: #3498db;"><?= $cantidad_variedades ?> variedades</span>
+                    </td>
+                    <td>
+                        <span class="badge badge-activo">Activo</span>
+                    </td>
+                    <td>
+                        <a href="index.php?c=productoPadre&a=editar&id=<?= $prod['id'] ?>" class="btn btn-success" style="padding: 5px 10px;">Editar</a>
+                        <a href="index.php?c=productoPadre&a=eliminar&id=<?= $prod['id'] ?>" 
+                           class="btn btn-danger" 
+                           style="padding: 5px 10px;"
+                           onclick="return confirm('¿Eliminar este producto padre?')">Eliminar</a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    
+    <div style="margin-top: 20px; color: #666;">
+        Total de productos padre: <?= count($productos) ?>
+    </div>
+<?php endif; ?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\promociones\crear.php
+Contenido:
+----------------------------------------
+<!-- app/views/promociones/crear.php -->
+<h2>Crear Nueva Promoción</h2>
+
+<form method="POST" action="index.php?c=promocion&a=crear">
+    <div class="form-group">
+        <label for="variedad_id">Variedad *</label>
+        <select id="variedad_id" name="variedad_id" required onchange="mostrarInfoVariedad()">
+            <option value="">Seleccione una variedad...</option>
+            <?php foreach ($variedades as $var): ?>
+                <option value="<?= $var['id'] ?>" 
+                        data-precio="<?= $var['precio_venta_unitario'] ?>"
+                        data-nombre="<?= htmlspecialchars($var['nombre']) ?>"
+                        data-padre="<?= htmlspecialchars($var['producto_padre_nombre']) ?>">
+                    <?= htmlspecialchars($var['producto_padre_nombre']) ?> - <?= htmlspecialchars($var['nombre']) ?> 
+                    (Precio: $<?= number_format($var['precio_venta_unitario'], 2) ?>)
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    
+    <div id="info_variedad" style="display: none;" class="card">
+        <h4 style="margin-bottom: 10px;">Información del Producto</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+            <div>
+                <strong>Producto Padre:</strong><br>
+                <span id="info_padre">-</span>
+            </div>
+            <div>
+                <strong>Variedad:</strong><br>
+                <span id="info_nombre">-</span>
+            </div>
+            <div>
+                <strong>Precio Unitario:</strong><br>
+                <span id="info_precio" style="color: #27ae60; font-weight: bold;">-</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="grid-2">
+        <div class="form-group">
+            <label for="cantidad">Cantidad de Unidades *</label>
+            <input type="number" id="cantidad" name="cantidad" min="2" required onchange="calcularPrecioSugerido()">
+            <small style="color: #666;">Cantidad mínima para aplicar la promoción</small>
+        </div>
+        
+        <div class="form-group">
+            <label for="precio_promocional">Precio Promocional *</label>
+            <input type="number" id="precio_promocional" name="precio_promocional" step="0.01" min="0" required onchange="calcularAhorro()">
+            <small style="color: #666;">Precio total de la promoción</small>
+        </div>
+    </div>
+    
+    <div id="calculo_promo" style="display: none;" class="card">
+        <h4 style="margin-bottom: 10px;">Cálculo de Promoción</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+            <div>
+                <strong>Precio Normal:</strong><br>
+                <span id="precio_normal" style="font-size: 18px;">$0.00</span>
+            </div>
+            <div>
+                <strong>Precio Promo:</strong><br>
+                <span id="precio_promo" style="font-size: 18px; color: #27ae60;">$0.00</span>
+            </div>
+            <div>
+                <strong>Ahorro:</strong><br>
+                <span id="ahorro" style="font-size: 18px; color: #e74c3c;">$0.00</span>
+                <br>
+                <span id="ahorro_porcentaje" style="color: #e74c3c; font-weight: bold;">0%</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="grid-2">
+        <div class="form-group">
+            <label for="fecha_inicio">Fecha Inicio (Opcional)</label>
+            <input type="datetime-local" id="fecha_inicio" name="fecha_inicio">
+        </div>
+        
+        <div class="form-group">
+            <label for="fecha_fin">Fecha Fin (Opcional)</label>
+            <input type="datetime-local" id="fecha_fin" name="fecha_fin">
+        </div>
+    </div>
+    
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Crear Promoción</button>
+        <a href="index.php?c=promocion&a=index" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+<script>
+let precioUnitario = 0;
+
+function mostrarInfoVariedad() {
+    const select = document.getElementById('variedad_id');
+    const option = select.options[select.selectedIndex];
+    
+    if (option.value) {
+        precioUnitario = parseFloat(option.dataset.precio);
+        
+        document.getElementById('info_padre').textContent = option.dataset.padre;
+        document.getElementById('info_nombre').textContent = option.dataset.nombre;
+        document.getElementById('info_precio').textContent = '$' + precioUnitario.toFixed(2);
+        document.getElementById('info_variedad').style.display = 'block';
+        
+        calcularPrecioSugerido();
+    } else {
+        document.getElementById('info_variedad').style.display = 'none';
+        document.getElementById('calculo_promo').style.display = 'none';
+    }
+}
+
+function calcularPrecioSugerido() {
+    const cantidad = parseInt(document.getElementById('cantidad').value) || 0;
+    
+    if (cantidad > 0 && precioUnitario > 0) {
+        // Sugerir un 10% de descuento
+        const precioNormal = precioUnitario * cantidad;
+        const precioSugerido = precioNormal * 0.9;
+        
+        document.getElementById('precio_promocional').value = precioSugerido.toFixed(2);
+        calcularAhorro();
+    }
+}
+
+function calcularAhorro() {
+    const cantidad = parseInt(document.getElementById('cantidad').value) || 0;
+    const precioPromo = parseFloat(document.getElementById('precio_promocional').value) || 0;
+    
+    if (cantidad > 0 && precioPromo > 0 && precioUnitario > 0) {
+        const precioNormal = precioUnitario * cantidad;
+        const ahorro = precioNormal - precioPromo;
+        const ahorroPorcentaje = (ahorro / precioNormal) * 100;
+        
+        document.getElementById('precio_normal').textContent = '$' + precioNormal.toFixed(2);
+        document.getElementById('precio_promo').textContent = '$' + precioPromo.toFixed(2);
+        document.getElementById('ahorro').textContent = '$' + ahorro.toFixed(2);
+        document.getElementById('ahorro_porcentaje').textContent = ahorroPorcentaje.toFixed(1) + '%';
+        
+        document.getElementById('calculo_promo').style.display = 'block';
+    }
+}
+</script>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\promociones\editar.php
+Contenido:
+----------------------------------------
+<!-- app/views/promociones/editar.php -->
+<h2>Editar Promoción</h2>
+
+<div class="card" style="margin-bottom: 20px;">
+    <h3><?= htmlspecialchars($promocion['producto_padre_nombre']) ?> - <?= htmlspecialchars($promocion['variedad_nombre']) ?></h3>
+</div>
+
+<form method="POST" action="index.php?c=promocion&a=editar&id=<?= $promocion['id'] ?>">
+    <div class="grid-2">
+        <div class="form-group">
+            <label for="cantidad">Cantidad de Unidades *</label>
+            <input type="number" id="cantidad" name="cantidad" min="2" required value="<?= $promocion['cantidad'] ?>">
+        </div>
+        
+        <div class="form-group">
+            <label for="precio_promocional">Precio Promocional *</label>
+            <input type="number" id="precio_promocional" name="precio_promocional" step="0.01" min="0" required value="<?= $promocion['precio_promocional'] ?>">
+        </div>
+    </div>
+    
+    <div class="grid-2">
+        <div class="form-group">
+            <label for="fecha_inicio">Fecha Inicio</label>
+            <input type="datetime-local" id="fecha_inicio" name="fecha_inicio" 
+                   value="<?= $promocion['fecha_inicio'] ? date('Y-m-d\TH:i', strtotime($promocion['fecha_inicio'])) : '' ?>">
+        </div>
+        
+        <div class="form-group">
+            <label for="fecha_fin">Fecha Fin</label>
+            <input type="datetime-local" id="fecha_fin" name="fecha_fin"
+                   value="<?= $promocion['fecha_fin'] ? date('Y-m-d\TH:i', strtotime($promocion['fecha_fin'])) : '' ?>">
+        </div>
+    </div>
+    
+    <div class="form-group checkbox-group">
+        <input type="checkbox" id="activo" name="activo" <?= $promocion['activo'] ? 'checked' : '' ?>>
+        <label for="activo">Promoción Activa</label>
+    </div>
+    
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Actualizar</button>
+        <a href="index.php?c=promocion&a=index" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\promociones\index.php
+Contenido:
+----------------------------------------
+<!-- app/views/promociones/index.php -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Promociones</h2>
+    <a href="index.php?c=promocion&a=crear" class="btn btn-primary">+ Nueva Promoción</a>
+</div>
+
+<?php if (empty($promociones)): ?>
+    <p>No hay promociones registradas.</p>
+<?php else: ?>
+    <table>
+        <thead>
+            <tr>
+                <th>Producto Padre</th>
+                <th>Variedad</th>
+                <th>Cantidad</th>
+                <th>Precio Promocional</th>
+                <th>Ahorro</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php 
+            $variedadModel = new Variedad();
+            foreach ($promociones as $promo): 
+                $variedad = $variedadModel->getById($promo['variedad_id']);
+                $precio_normal = $variedad['precio_venta_unitario'] * $promo['cantidad'];
+                $ahorro = $precio_normal - $promo['precio_promocional'];
+                $ahorro_porcentaje = ($precio_normal > 0) ? (($ahorro / $precio_normal) * 100) : 0;
+            ?>
+                <tr>
+                    <td>
+                        <span style="color: #7f8c8d; font-size: 12px;"><?= htmlspecialchars($promo['producto_padre_nombre']) ?></span>
+                    </td>
+                    <td><strong><?= htmlspecialchars($promo['variedad_nombre']) ?></strong></td>
+                    <td>
+                        <span class="badge" style="background: #3498db;"><?= $promo['cantidad'] ?> unidades</span>
+                    </td>
+                    <td>
+                        <strong style="color: #27ae60;">$<?= number_format($promo['precio_promocional'], 2) ?></strong>
+                        <br>
+                        <small style="color: #95a5a6;">Normal: $<?= number_format($precio_normal, 2) ?></small>
+                    </td>
+                    <td>
+                        <span style="color: #27ae60; font-weight: bold;">
+                            $<?= number_format($ahorro, 2) ?>
+                            <br>
+                            <small>(<?= number_format($ahorro_porcentaje, 1) ?>%)</small>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge badge-activo">Activa</span>
+                    </td>
+                    <td>
+                        <a href="index.php?c=promocion&a=editar&id=<?= $promo['id'] ?>" class="btn btn-success" style="padding: 5px 10px;">Editar</a>
+                        <a href="index.php?c=promocion&a=eliminar&id=<?= $promo['id'] ?>" 
+                           class="btn btn-danger" 
+                           style="padding: 5px 10px;"
+                           onclick="return confirm('¿Eliminar esta promoción?')">Eliminar</a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    
+    <div style="margin-top: 20px; color: #666;">
+        Total de promociones: <?= count($promociones) ?>
+    </div>
+<?php endif; ?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\variedades\crear.php
+Contenido:
+----------------------------------------
+<!-- app/views/variedades/crear.php -->
+<h2>Crear Nueva Variedad</h2>
+
+<form method="POST" action="index.php?c=variedad&a=crear">
+    <div class="form-group">
+        <label for="producto_padre_id">Producto Padre *</label>
+        <select id="producto_padre_id" name="producto_padre_id" required onchange="cargarPorcentajes()">
+            <option value="">Seleccione...</option>
+            <?php foreach ($productos_padre as $pp): ?>
+                <option value="<?= $pp['id'] ?>"
+                        data-pack3-tarjeta="<?= $pp['porcentaje_pack3_tarjeta'] ?>"
+                        data-pack3-efectivo="<?= $pp['porcentaje_pack3_efectivo'] ?>"
+                        data-unidad-tarjeta="<?= $pp['porcentaje_unidad_tarjeta'] ?>"
+                        data-unidad-efectivo="<?= $pp['porcentaje_unidad_efectivo'] ?>">
+                    <?= htmlspecialchars($pp['nombre']) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+        <small style="color: #666;">Los precios se calcularán según los porcentajes del producto padre</small>
+    </div>
+    
+    <div class="grid-2">
+        <div class="form-group">
+            <label for="nombre">Nombre de la Variedad *</label>
+            <input type="text" id="nombre" name="nombre" required placeholder="Ej: Colaless VINTAGE Negro M">
+        </div>
+        
+        <div class="form-group">
+            <label for="descripcion">Descripción</label>
+            <input type="text" id="descripcion" name="descripcion" placeholder="Opcional">
+        </div>
+    </div>
+    
+    <div class="card">
+        <h3 style="margin-bottom: 15px;">💰 Datos de Compra</h3>
+        <div class="grid-3">
+            <div class="form-group">
+                <label for="precio_compra_total">Precio Total de Compra *</label>
+                <input type="number" id="precio_compra_total" name="precio_compra_total" step="0.01" min="0" required onchange="calcularCostoYPrecios()">
+                <small style="color: #666;">Precio total pagado al proveedor</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="cantidad_comprada">Cantidad Comprada *</label>
+                <input type="number" id="cantidad_comprada" name="cantidad_comprada" min="1" required onchange="calcularCostoYPrecios()">
+                <small style="color: #666;">Unidades que compraste</small>
+            </div>
+            
+            <div class="form-group">
+                <label>Costo Unitario (Calculado)</label>
+                <input type="text" id="costo_unitario_display" readonly style="background: #ecf0f1; font-weight: bold;" value="$ 0.00">
+                <small style="color: #666;">Se calcula automáticamente</small>
+            </div>
+        </div>
+        
+        <!-- SELECTOR DE UNIDADES POR PACK -->
+        <div style="margin-top: 15px; padding: 15px; background: #fff3cd; border-radius: 4px; border-left: 4px solid #f39c12;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <label for="unidades_por_pack" style="margin: 0; font-weight: bold;">📦 Unidades por Pack:</label>
+                <select id="unidades_por_pack" name="unidades_por_pack" onchange="calcularCostoYPrecios()" style="padding: 8px; font-size: 16px; border-radius: 4px; border: 2px solid #f39c12;">
+                    <option value="2">x2 (Pack de 2 unidades)</option>
+                    <option value="3" selected>x3 (Pack de 3 unidades)</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card" style="background: #e8f5e9;">
+        <h3 style="margin-bottom: 15px;">📊 Precios de Venta Calculados Automáticamente</h3>
+        <p style="color: #666; margin-bottom: 15px;">
+            Los precios se calculan según los porcentajes configurados en el Producto Padre
+        </p>
+        
+        <div class="grid-2">
+            <div class="form-group">
+                <label for="precio_pack3_tarjeta">💳 <span id="label_pack_tarjeta">Pack x3</span> Tarjeta (precio total)</label>
+                <input type="text" id="precio_pack3_tarjeta_display" readonly style="background: #f0f0f0; font-weight: bold; font-size: 18px; color: #27ae60;">
+                <input type="hidden" id="precio_pack3_tarjeta" name="precio_pack3_tarjeta">
+                <small id="info_pack3_tarjeta" style="color: #666;">-</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="precio_pack3_efectivo">💵 <span id="label_pack_efectivo">Pack x3</span> Efectivo (precio total)</label>
+                <input type="text" id="precio_pack3_efectivo_display" readonly style="background: #f0f0f0; font-weight: bold; font-size: 18px; color: #27ae60;">
+                <input type="hidden" id="precio_pack3_efectivo" name="precio_pack3_efectivo">
+                <small id="info_pack3_efectivo" style="color: #666;">-</small>
+            </div>
+        </div>
+        
+        <div class="grid-2" style="margin-top: 15px;">
+            <div class="form-group">
+                <label for="precio_unidad_tarjeta">💳 Por 1 Unidad Tarjeta</label>
+                <input type="text" id="precio_unidad_tarjeta_display" readonly style="background: #f0f0f0; font-weight: bold; font-size: 18px; color: #3498db;">
+                <input type="hidden" id="precio_unidad_tarjeta" name="precio_unidad_tarjeta">
+                <small id="info_unidad_tarjeta" style="color: #666;">-</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="precio_unidad_efectivo">💵 Por 1 Unidad Efectivo</label>
+                <input type="text" id="precio_unidad_efectivo_display" readonly style="background: #f0f0f0; font-weight: bold; font-size: 18px; color: #3498db;">
+                <input type="hidden" id="precio_unidad_efectivo" name="precio_unidad_efectivo">
+                <small id="info_unidad_efectivo" style="color: #666;">-</small>
+            </div>
+        </div>
+        
+        <!-- BOTÓN para igualar precios -->
+        <div style="margin-top: 15px; padding: 15px; background: #fff3cd; border-radius: 4px; border-left: 4px solid #f39c12;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">
+                        Con este Botón Igualas los precios automaticamente para productos que se venden por unidad
+                    </p>
+                </div>
+                <button type="button" class="btn btn-warning" onclick="igualarPrecios()">
+                    📋 Igualar Precios
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h3 style="margin-bottom: 15px;">🏷️ Stock</h3>
+        <div class="grid-2">
+            <div class="form-group">
+                <label for="stock">Stock Inicial *</label>
+                <input type="number" id="stock" name="stock" min="0" required>
+                <small id="stock_help" style="color: #666;">Por defecto = cantidad comprada × 3</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="stock_minimo">Stock Mínimo</label>
+                <input type="number" id="stock_minimo" name="stock_minimo" min="0" value="3">
+                <small style="color: #666;">Alerta cuando llegue a este nivel</small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Guardar Variedad</button>
+        <a href="index.php?c=variedad&a=index" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+<script>
+let porcentajes = {
+    pack3_tarjeta: 0,
+    pack3_efectivo: 0,
+    unidad_tarjeta: 0,
+    unidad_efectivo: 0
+};
+
+function formatearPrecio(numero) {
+    return '$ ' + numero.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+function getUnidadesPorPack() {
+    return parseInt(document.getElementById('unidades_por_pack').value) || 3;
+}
+
+function actualizarLabels() {
+    const unidades = getUnidadesPorPack();
+    document.getElementById('label_pack_tarjeta').textContent = `Pack x${unidades}`;
+    document.getElementById('label_pack_efectivo').textContent = `Pack x${unidades}`;
+    document.getElementById('stock_help').textContent = `Por defecto = cantidad comprada × ${unidades}`;
+}
+
+function cargarPorcentajes() {
+    const select = document.getElementById('producto_padre_id');
+    const option = select.options[select.selectedIndex];
+    
+    if (option.value) {
+        porcentajes.pack3_tarjeta = parseFloat(option.dataset.pack3Tarjeta) || 0;
+        porcentajes.pack3_efectivo = parseFloat(option.dataset.pack3Efectivo) || 0;
+        porcentajes.unidad_tarjeta = parseFloat(option.dataset.unidadTarjeta) || 0;
+        porcentajes.unidad_efectivo = parseFloat(option.dataset.unidadEfectivo) || 0;
+        
+        calcularCostoYPrecios();
+    }
+}
+
+function calcularCostoYPrecios() {
+    const precioTotal = parseFloat(document.getElementById('precio_compra_total').value) || 0;
+    const cantidad = parseInt(document.getElementById('cantidad_comprada').value) || 0;
+    const unidadesPorPack = getUnidadesPorPack();
+    
+    // Actualizar labels
+    actualizarLabels();
+    
+    if (cantidad <= 0 || precioTotal <= 0) {
+        return;
+    }
+
+    // 1. COSTO UNITARIO
+    const costoUnitario = precioTotal / cantidad;
+    document.getElementById('costo_unitario_display').value = formatearPrecio(costoUnitario);
+
+    // Auto-completar stock (cantidad × unidades por pack)
+    if (!document.getElementById('stock').value) {
+        document.getElementById('stock').value = cantidad * unidadesPorPack;
+    }
+
+    // 2. CALCULAR PRECIOS
+    calcularPreciosVenta(precioTotal, costoUnitario, unidadesPorPack);
+}
+
+function calcularPreciosVenta(precioCompraTotal, costoUnitario, unidadesPorPack) {
+    // PRECIOS PACK (sobre el costo TOTAL de la caja/pack)
+    const pack3Tarjeta = costoUnitario + (costoUnitario * porcentajes.pack3_tarjeta / 100);
+    const pack3Efectivo = costoUnitario + (costoUnitario * porcentajes.pack3_efectivo / 100);
+
+    // PRECIOS POR UNIDAD (sobre el costo UNITARIO, dividido por unidades del pack)
+    const unidadTarjeta = (costoUnitario) + (costoUnitario * porcentajes.unidad_tarjeta / 100);
+    const unidadEfectivo = costoUnitario + (costoUnitario * porcentajes.unidad_efectivo / 100);
+
+    // Actualizar campos OCULTOS (valores reales para enviar)
+    document.getElementById('precio_pack3_tarjeta').value = pack3Tarjeta.toFixed(2);
+    document.getElementById('precio_pack3_efectivo').value = pack3Efectivo.toFixed(2);
+    document.getElementById('precio_unidad_tarjeta').value = (unidadTarjeta / unidadesPorPack).toFixed(2);
+    document.getElementById('precio_unidad_efectivo').value = (unidadEfectivo / unidadesPorPack).toFixed(2);
+
+    // Actualizar campos VISIBLES (con formato)
+    document.getElementById('precio_pack3_tarjeta_display').value = formatearPrecio(pack3Tarjeta);
+    document.getElementById('precio_pack3_efectivo_display').value = formatearPrecio(pack3Efectivo);
+    document.getElementById('precio_unidad_tarjeta_display').value = formatearPrecio(unidadTarjeta / unidadesPorPack);
+    document.getElementById('precio_unidad_efectivo_display').value = formatearPrecio(unidadEfectivo / unidadesPorPack);
+
+    // Actualizar textos informativos
+    document.getElementById('info_pack3_tarjeta').textContent = 
+        `${precioCompraTotal.toFixed(2)} + (${precioCompraTotal.toFixed(2)} × ${porcentajes.pack3_tarjeta}%) | Por unidad: ${formatearPrecio(pack3Tarjeta/unidadesPorPack)}`;
+    
+    document.getElementById('info_pack3_efectivo').textContent = 
+        `${precioCompraTotal.toFixed(2)} + (${precioCompraTotal.toFixed(2)} × ${porcentajes.pack3_efectivo}%) | Por unidad: ${formatearPrecio(pack3Efectivo/unidadesPorPack)}`;
+    
+    document.getElementById('info_unidad_tarjeta').textContent = 
+        `${costoUnitario.toFixed(2)} + (${costoUnitario.toFixed(2)} × ${porcentajes.unidad_tarjeta}%)`;
+    
+    document.getElementById('info_unidad_efectivo').textContent = 
+        `${costoUnitario.toFixed(2)} + (${costoUnitario.toFixed(2)} × ${porcentajes.unidad_efectivo}%)`;
+}
+
+function igualarPrecios() {
+    const packTarjeta = parseFloat(document.getElementById('precio_pack3_tarjeta').value) || 0;
+    const packEfectivo = parseFloat(document.getElementById('precio_pack3_efectivo').value) || 0;
+    
+    if (packTarjeta === 0 || packEfectivo === 0) {
+        alert('⚠️ Primero debe calcular los precios del pack.');
+        return;
+    }
+    
+    if (!confirm(
+        '¿Confirma que este producto se vende SOLO por unidad?\n\n' +
+        'El precio del PACK se tomará como precio por UNIDAD.'
+    )) {
+        return;
+    }
+
+    // Actualizar valores ocultos
+    document.getElementById('precio_unidad_tarjeta').value = packTarjeta.toFixed(2);
+    document.getElementById('precio_unidad_efectivo').value = packEfectivo.toFixed(2);
+
+    // Actualizar valores visibles con formato
+    document.getElementById('precio_unidad_tarjeta_display').value = formatearPrecio(packTarjeta);
+    document.getElementById('precio_unidad_efectivo_display').value = formatearPrecio(packEfectivo);
+
+    // Estilo visual
+    document.getElementById('precio_unidad_tarjeta_display').style.background = '#fff3cd';
+    document.getElementById('precio_unidad_efectivo_display').style.background = '#fff3cd';
+
+    // Info
+    document.getElementById('info_unidad_tarjeta').textContent = '⚠️ Igualado al precio del pack';
+    document.getElementById('info_unidad_efectivo').textContent = '⚠️ Igualado al precio del pack';
+
+    alert(
+        '✅ Precios ajustados correctamente.\n\n' +
+        'El precio del pack ahora se usa como precio por unidad.'
+    );
+}
+</script>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\variedades\editar.php
+Contenido:
+----------------------------------------
+<!-- app/views/variedades/editar.php -->
+<h2>Editar Variedad</h2>
+
+<div class="card" style="margin-bottom: 20px;">
+    <h3><?= htmlspecialchars($variedad['producto_padre_nombre']) ?> - <?= htmlspecialchars($variedad['nombre']) ?></h3>
+</div>
+
+<form method="POST" action="index.php?c=variedad&a=editar&id=<?= $variedad['id'] ?>">
+    <div class="grid-2">
+        <div class="form-group">
+            <label for="nombre">Nombre de la Variedad *</label>
+            <input type="text" id="nombre" name="nombre" required value="<?= htmlspecialchars($variedad['nombre']) ?>">
+        </div>
+        
+        <div class="form-group">
+            <label for="descripcion">Descripción</label>
+            <input type="text" id="descripcion" name="descripcion" value="<?= htmlspecialchars($variedad['descripcion']) ?>">
+        </div>
+    </div>
+    
+    <div class="card">
+        <h3 style="margin-bottom: 15px;">💰 Datos de Compra</h3>
+        <div class="grid-3">
+            <div class="form-group">
+                <label for="precio_compra_total">Precio Total de Compra *</label>
+                <input type="number" id="precio_compra_total" name="precio_compra_total" step="0.01" min="0" required value="<?= $variedad['precio_compra_total'] ?>" onchange="calcularCostoYPrecios()">
+            </div>
+            
+            <div class="form-group">
+                <label for="cantidad_comprada">Cantidad Comprada *</label>
+                <input type="number" id="cantidad_comprada" name="cantidad_comprada" min="1" required value="<?= $variedad['cantidad_comprada'] ?>" onchange="calcularCostoYPrecios()">
+            </div>
+            
+            <div class="form-group">
+                <label>Costo Unitario (Calculado)</label>
+                <input type="text" id="costo_unitario_display" readonly style="background: #ecf0f1; font-weight: bold;" value="$<?= number_format($variedad['precio_costo_unitario'], 2) ?>">
+            </div>
+        </div>
+        <div style="margin-top: 15px; padding: 15px; background: #fff3cd; border-radius: 4px;">
+    <div style="display: flex; align-items: center; gap: 15px;">
+        <label for="unidades_por_pack" style="margin: 0; font-weight: bold;">📦 Unidades por Pack:</label>
+        <select id="unidades_por_pack" name="unidades_por_pack" style="padding: 8px;">
+            <option value="2" <?= $variedad['unidades_por_pack'] == 2 ? 'selected' : '' ?>>x2</option>
+            <option value="3" <?= $variedad['unidades_por_pack'] == 3 ? 'selected' : '' ?>>x3</option>
+        </select>
+    </div>
+</div>
+    </div>
+    
+    <div class="card" style="background: #e8f5e9;">
+        <h3 style="margin-bottom: 15px;">📊 Precios de Venta</h3>
+        
+        <div class="grid-2">
+            <div class="form-group">
+                <label for="precio_pack3_tarjeta">💳 Pack x3 Tarjeta (por unidad)</label>
+                <input type="number" id="precio_pack3_tarjeta" name="precio_pack3_tarjeta" step="0.01" min="0" value="<?= $variedad['precio_pack3_tarjeta'] ?>" style="font-weight: bold;">
+                <small style="color: #666;">Precio por unidad en pack de 3</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="precio_pack3_efectivo">💵 Pack x3 Efectivo (por unidad)</label>
+                <input type="number" id="precio_pack3_efectivo" name="precio_pack3_efectivo" step="0.01" min="0" value="<?= $variedad['precio_pack3_efectivo'] ?>" style="font-weight: bold;">
+                <small style="color: #666;">Precio por unidad en pack de 3</small>
+            </div>
+        </div>
+        
+        <div class="grid-2">
+            <div class="form-group">
+                <label for="precio_unidad_tarjeta">💳 Por 1 Unidad Tarjeta</label>
+                <input type="number" id="precio_unidad_tarjeta" name="precio_unidad_tarjeta" step="0.01" min="0" value="<?= $variedad['precio_unidad_tarjeta'] ?>" style="font-weight: bold;">
+                <small style="color: #666;">Precio unitario individual</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="precio_unidad_efectivo">💵 Por 1 Unidad Efectivo</label>
+                <input type="number" id="precio_unidad_efectivo" name="precio_unidad_efectivo" step="0.01" min="0" value="<?= $variedad['precio_unidad_efectivo'] ?>" style="font-weight: bold;">
+                <small style="color: #666;">Precio unitario individual</small>
+            </div>
+        </div>
+        
+        <button type="button" class="btn btn-info" onclick="recalcularPrecios()" style="margin-top: 10px;">
+            🔄 Recalcular Precios Automáticamente
+        </button>
+
+        <!-- NUEVO: Botón para igualar precios -->
+        <button type="button" class="btn btn-warning" onclick="copiarPreciosPack3AUnidad()" style="margin-top: 10px; margin-left: 10px;">
+            📋 Copiar Precios Pack x3 a Por Unidad
+        </button>
+    </div>
+    
+    <div class="card">
+        <h3 style="margin-bottom: 15px;">🏷️ Stock</h3>
+        <div class="grid-2">
+            <!-- <div class="form-group">
+                <label for="precio_venta_unitario">Precio Base (Referencia)</label>
+                <input type="number" id="precio_venta_unitario" name="precio_venta_unitario" step="0.01" min="0" required value="<?= $variedad['precio_venta_unitario'] ?>">
+                <small style="color: #666;">Solo para referencia interna</small>
+            </div> -->
+            
+            <div class="form-group">
+                <label for="stock">Stock Actual *</label>
+                <input type="number" id="stock" name="stock" min="0" required value="<?= $variedad['stock'] ?>">
+            </div>
+            
+            <div class="form-group">
+                <label for="stock_minimo">Stock Mínimo</label>
+                <input type="number" id="stock_minimo" name="stock_minimo" min="0" value="<?= $variedad['stock_minimo'] ?>">
+            </div>
+        </div>
+    </div>
+    
+    <?php if (!empty($promociones)): ?>
+    <div class="card">
+        <h3 style="margin-bottom: 15px;">🎁 Promociones Activas</h3>
+        <?php foreach ($promociones as $promo): ?>
+            <div style="padding: 10px; background: white; border-radius: 4px; margin-bottom: 10px;">
+                <strong><?= $promo['cantidad'] ?> unidades por $<?= number_format($promo['precio_promocional'], 2) ?></strong>
+                <?php if ($promo['activo']): ?>
+                    <span class="badge badge-activo">Activa</span>
+                <?php else: ?>
+                    <span class="badge badge-inactivo">Inactiva</span>
+                <?php endif; ?>
+                <a href="index.php?c=promocion&a=editar&id=<?= $promo['id'] ?>" class="btn btn-warning" style="padding: 3px 8px; font-size: 12px; float: right;">Editar</a>
+            </div>
+        <?php endforeach; ?>
+        <a href="index.php?c=promocion&a=crear" class="btn btn-success" style="padding: 5px 10px; margin-top: 10px;">+ Agregar Promoción</a>
+    </div>
+    <?php endif; ?>
+    
+    <div class="form-group checkbox-group">
+        <input type="checkbox" id="activo" name="activo" <?= $variedad['activo'] ? 'checked' : '' ?>>
+        <label for="activo">Variedad Activa</label>
+    </div>
+    
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Actualizar</button>
+        <a href="index.php?c=variedad&a=index" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+<script>
+// Obtener el producto_padre_id desde PHP
+const productoPadreId = <?= $variedad['producto_padre_id'] ?>;
+
+function calcularCostoYPrecios() {
+    const precioTotal = parseFloat(document.getElementById('precio_compra_total').value) || 0;
+    const cantidad = parseInt(document.getElementById('cantidad_comprada').value) || 0;
+    
+    if (cantidad > 0) {
+        const costoUnitario = precioTotal / cantidad;
+        document.getElementById('costo_unitario_display').value = '$' + costoUnitario.toFixed(2);
+    }
+}
+
+function recalcularPrecios() {
+    const precioTotal = parseFloat(document.getElementById('precio_compra_total').value) || 0;
+    const cantidad = parseInt(document.getElementById('cantidad_comprada').value) || 0;
+    
+    if (cantidad <= 0 || precioTotal <= 0) {
+        alert('Primero ingrese el precio total y la cantidad comprada');
+        return;
+    }
+    
+    const costoUnitario = precioTotal / cantidad;
+    
+    // Hacer petición AJAX para obtener los porcentajes del producto padre
+    fetch('index.php?c=variedad&a=calcularPreciosVenta', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'costo_unitario=' + costoUnitario + '&producto_padre_id=' + productoPadreId
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('precio_pack3_tarjeta').value = data.precio_pack3_tarjeta;
+        document.getElementById('precio_pack3_efectivo').value = data.precio_pack3_efectivo;
+        document.getElementById('precio_unidad_tarjeta').value = data.precio_unidad_tarjeta;
+        document.getElementById('precio_unidad_efectivo').value = data.precio_unidad_efectivo;
+        
+        alert('✅ Precios recalculados correctamente');
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error al calcular los precios');
+    });
+}
+/**
+ * Copia los precios del Pack x3 a los precios Por Unidad
+ */
+function copiarPreciosPack3AUnidad() {
+    const pack3Tarjeta = document.getElementById('precio_pack3_tarjeta').value;
+    const pack3Efectivo = document.getElementById('precio_pack3_efectivo').value;
+    
+    if (!pack3Tarjeta || !pack3Efectivo) {
+        alert('Los precios del Pack x3 están vacíos.');
+        return;
+    }
+    
+    if (confirm('¿Está seguro de copiar los precios del Pack x3 a Por Unidad?\n\nEsto sobrescribirá los valores actuales de Por 1 Unidad.')) {
+        document.getElementById('precio_unidad_tarjeta').value = pack3Tarjeta;
+        document.getElementById('precio_unidad_efectivo').value = pack3Efectivo;
+        
+        alert('✅ Precios copiados correctamente.');
+    }
+}
+</script>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\variedades\index.php
+Contenido:
+----------------------------------------
+<!-- app/views/variedades/index.php -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Listado de Variedades</h2>
+    <a href="index.php?c=variedad&a=crear" class="btn btn-primary">+ Nueva Variedad</a>
+</div>
+
+<!-- Filtros -->
+<div class="filtros">
+    <form method="GET" action="index.php">
+        <input type="hidden" name="c" value="variedad">
+        <input type="hidden" name="a" value="index">
+        
+        <div class="form-group">
+            <label for="stock_estado">Estado de Stock</label>
+            <select id="stock_estado" name="stock_estado">
+                <option value="">Todos</option>
+                <option value="sin_stock" <?= ($filtros['stock_estado'] ?? '') == 'sin_stock' ? 'selected' : '' ?>>Sin Stock</option>
+                <option value="bajo" <?= ($filtros['stock_estado'] ?? '') == 'bajo' ? 'selected' : '' ?>>Stock Bajo</option>
+                <option value="normal" <?= ($filtros['stock_estado'] ?? '') == 'normal' ? 'selected' : '' ?>>Stock Normal</option>
+                <option value="alto" <?= ($filtros['stock_estado'] ?? '') == 'alto' ? 'selected' : '' ?>>Stock Alto</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="producto_padre_id">Producto Padre</label>
+            <select id="producto_padre_id" name="producto_padre_id">
+                <option value="">Todos</option>
+                <?php foreach ($productos_padre as $pp): ?>
+                    <option value="<?= $pp['id'] ?>" <?= ($filtros['producto_padre_id'] ?? '') == $pp['id'] ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($pp['nombre']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>&nbsp;</label>
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+            <a href="index.php?c=variedad&a=index" class="btn btn-secondary">Limpiar</a>
+        </div>
+    </form>
+</div>
+
+<?php if (empty($variedades)): ?>
+    <p>No hay variedades registradas.</p>
+<?php else: ?>
+    <div style="overflow-x: auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Producto Padre</th>
+                    <th>Variedad</th>
+                    <th>Stock</th>
+                    <th>Costo Unit.</th>
+                    <th>Costo Tot. Compra</th>
+                    <th>Pack x3 💳</th>
+                    <th>Pack x3 💵</th>
+                    <th>x1 💳</th>
+                    <th>x1 💵</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <?php
+                $total_costo_compra = 0;
+                foreach ($variedades as $var) {
+                    $total_costo_compra += $var['precio_compra_total'];
+                }
+            ?>
+            <!-- Estadísticas -->
+            <div class="grid-3" style="margin-bottom: 20px;">
+                <div class="card" style="background: #e8f5e9;">
+                    <h4 style="margin-bottom: 10px; color: #27ae60;">💲 Costo Total de las compras</h4>
+                    <div style="font-size: 28px; font-weight: bold; color: #27ae60;">
+                        <?= FormatHelper::precio($total_costo_compra) ?>
+                    </div>
+                    <small style="color: #666;"><?= count($variedades) ?? 0 ?> compras realizadas</small>
+                </div>
+            </div>
+            <tbody>
+                <?php foreach ($variedades as $var): 
+                    $stock_bajo = $var['stock'] <= $var['stock_minimo'];
+                ?>
+                    <tr>
+                        <td>
+                            <span style="color: #7f8c8d; font-size: 12px;"><?= htmlspecialchars($var['producto_padre_nombre']) ?></span>
+                        </td>
+                        <td>
+                            <strong><?= htmlspecialchars($var['nombre']) ?></strong>
+                            <?php if ($var['descripcion']): ?>
+                                <br><small style="color: #95a5a6;"><?= htmlspecialchars($var['descripcion']) ?></small>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if ($stock_bajo): ?>
+                                <span class="badge badge-stock-bajo"><?= $var['stock'] ?></span>
+                                <small style="display: block; color: #e74c3c; margin-top: 4px;">Mín: <?= $var['stock_minimo'] ?></small>
+                            <?php else: ?>
+                                <span class="badge badge-stock-ok" ><?= $var['stock'] ?></span>
+                                <small style="display: block; color: #95a5a6; margin-top: 4px;">Mín: <?= $var['stock_minimo'] ?></small>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <strong><?= FormatHelper::precio($var['precio_costo_unitario']) ?></strong>
+                        </td>
+                        <td>
+                            <strong><?= FormatHelper::precio($var['precio_compra_total']) ?></strong>
+                        </td>
+                        <td>
+                            <?php if ($var['precio_pack3_tarjeta'] > 0): ?>
+                                <strong style="color: #3498db;"><?= FormatHelper::precio($var['precio_pack3_tarjeta']) ?></strong>
+                            <?php else: ?>
+                                <span style="color: #95a5a6;">-</span>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if ($var['precio_pack3_efectivo'] > 0): ?>
+                                <strong style="color: #27ae60;"><?= FormatHelper::precio($var['precio_pack3_efectivo']) ?></strong>
+                            <?php else: ?>
+                                <span style="color: #95a5a6;">-</span>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if ($var['precio_unidad_tarjeta'] > 0): ?>
+                                <strong style="color: #3498db;"><?= FormatHelper::precio($var['precio_unidad_tarjeta']) ?></strong>
+                            <?php else: ?>
+                                <span style="color: #95a5a6;">-</span>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if ($var['precio_unidad_efectivo'] > 0): ?>
+                                <strong style="color: #27ae60;"><?= FormatHelper::precio($var['precio_unidad_efectivo']) ?></strong>
+                            <?php else: ?>
+                                <span style="color: #95a5a6;">-</span>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                        <div style="display: flex; gap: 6px; justify-content: center;">
+                            <a href="index.php?c=variedad&a=editar&id=<?= $var['id'] ?>" 
+                            class="btn btn-success" 
+                            style="padding: 5px 10px;">
+                            ✏️
+                            </a>
+
+                            <a href="index.php?c=variedad&a=eliminar&id=<?= $var['id'] ?>" 
+                            class="btn btn-danger" 
+                            style="padding: 5px 10px;"
+                            onclick="return confirm('¿Eliminar esta variedad?')">
+                            🗑️
+                            </a>
+                        </div>
+                    </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+<?php endif; ?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\detalle.php
+Contenido:
+----------------------------------------
+<!-- app/views/ventas/detalle.php -->
+<div style="margin-bottom: 20px;">
+    <a href="index.php?c=venta&a=index" class="btn btn-secondary">← Volver al Historial</a>
+</div>
+
+<div class="card" style="margin-bottom: 20px;">
+    <h2>Detalle de Venta #<?= $venta['id'] ?></h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 15px;">
+        <div>
+            <strong>Fecha:</strong><br>
+            <?= date('d/m/Y H:i', strtotime($venta['fecha'])) ?>
+        </div>
+        <div>
+            <strong>Cliente:</strong><br>
+            <?php if ($venta['nombre_cliente']): ?>
+                <span style="font-size: 16px;">👤 <?= htmlspecialchars($venta['nombre_cliente']) ?></span>
+            <?php else: ?>
+                <span style="color: #95a5a6;">Anónimo</span>
+            <?php endif; ?>
+        </div>
+        <div>
+            <strong>Estado:</strong><br>
+            <?php if ($venta['estado'] == 'completada'): ?>
+                <span class="badge" style="background: #27ae60; font-size: 14px;">✅ Completada</span>
+            <?php elseif ($venta['estado'] == 'preventa'): ?>
+                <span class="badge" style="background: #f39c12; font-size: 14px;">⏳ Pre-venta</span>
+            <?php else: ?>
+                <span class="badge" style="background: #e74c3c; font-size: 14px;">❌ Cancelada</span>
+            <?php endif; ?>
+        </div>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
+        <div>
+            <strong>Método de Pago:</strong><br>
+            <?php if ($venta['metodo_pago'] == 'efectivo'): ?>
+                <span class="badge" style="background: #27ae60;">💵 Efectivo</span>
+            <?php else: ?>
+                <span class="badge" style="background: #3498db;">💳 Tarjeta</span>
+            <?php endif; ?>
+        </div>
+        <?php if ($venta['fecha_formalizacion']): ?>
+        <div style="margin-top: 15px; padding: 10px; background: #e8f5e9; border-radius: 4px;">
+            <strong>Fecha de Formalización:</strong> <?= date('d/m/Y H:i', strtotime($venta['fecha_formalizacion'])) ?>
+        </div>
+        <?php endif; ?>
+        <div>
+            <strong>Total:</strong><br>
+            <span style="color: #27ae60; font-size: 24px; font-weight: bold;"><?= FormatHelper::precio($venta['total']) ?></span>
+        </div>
+    </div>
+    
+</div>
+
+<!-- Acciones para PRE-VENTAS -->
+<?php if ($venta['estado'] == 'preventa'): ?>
+<div class="card" style="margin-bottom: 20px; background: #fff3cd; border: 2px solid #f39c12;">
+    <h3 style="margin-bottom: 15px; color: #856404;">⏳ Acciones de Pre-venta</h3>
+    <p style="margin-bottom: 15px; color: #666;">
+        Esta es una pre-venta. El stock está reservado pero el ingreso no se ha registrado todavía.
+    </p>
+    <div style="display: flex; gap: 10px;">
+        <form method="POST" action="index.php?c=venta&a=formalizarPreventa&id=<?= $venta['id'] ?>" style="display: inline;" onsubmit="return confirm('¿Confirma FORMALIZAR esta pre-venta?\n\nSe registrará el ingreso de <?= FormatHelper::precio($venta['total']) ?>')">
+            <button type="submit" class="btn btn-success">
+                ✅ Formalizar Venta
+            </button>
+        </form>
+        
+        <button type="button" class="btn btn-danger" onclick="mostrarConfirmacionCancelacion()">
+            ❌ Cancelar Pre-venta
+        </button>
+    </div>
+</div>
+
+<!-- Modal de confirmación de cancelación -->
+<div id="modal_cancelacion" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 8px; min-width: 500px;">
+        <h3 style="margin-bottom: 15px; color: #e74c3c;">⚠️ Confirmar Cancelación</h3>
+        <p style="margin-bottom: 20px; line-height: 1.6;">
+            ¿Está seguro de <strong>CANCELAR</strong> esta pre-venta?
+        </p>
+        <div style="background: #f8d7da; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
+            <strong>⚠️ Esta acción:</strong>
+            <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+                <li>Devolverá el stock reservado</li>
+                <li>NO registrará ningún ingreso</li>
+                <li><strong>NO se podrá revertir</strong></li>
+            </ul>
+        </div>
+        <form method="POST" action="index.php?c=venta&a=cancelarPreventa&id=<?= $venta['id'] ?>">
+            <input type="hidden" name="confirmar_cancelacion" value="1">
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button type="button" class="btn btn-secondary" onclick="cerrarModalCancelacion()">
+                    Volver
+                </button>
+                <button type="submit" class="btn btn-danger">
+                    Sí, Cancelar Pre-venta
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function mostrarConfirmacionCancelacion() {
+    document.getElementById('modal_cancelacion').style.display = 'block';
+}
+
+function cerrarModalCancelacion() {
+    document.getElementById('modal_cancelacion').style.display = 'none';
+}
+
+// Cerrar modal al hacer clic fuera
+document.getElementById('modal_cancelacion')?.addEventListener('click', function(e) {
+    if (e.target === this) {
+        cerrarModalCancelacion();
+    }
+});
+</script>
+<?php endif; ?>
+
+<!-- Información adicional para ventas CANCELADAS -->
+<?php if ($venta['estado'] == 'cancelada'): ?>
+<div class="card" style="margin-bottom: 20px; background: #f8d7da; border: 2px solid #e74c3c;">
+    <h3 style="margin-bottom: 10px; color: #721c24;">❌ Venta Cancelada</h3>
+    <p style="color: #721c24;">
+        Esta pre-venta fue cancelada. El stock fue devuelto y no se registró ningún ingreso.
+    </p>
+</div>
+<?php endif; ?>
+
+<h3 style="margin-bottom: 15px;">Productos Vendidos</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>Producto Padre</th>
+            <th>Variedad</th>
+            <th>Cantidad</th>
+            <th>Precio Unit.</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($detalles as $detalle): ?>
+            <tr>
+                <td>
+                    <span style="color: #7f8c8d; font-size: 12px;"><?= htmlspecialchars($detalle['producto_padre_nombre']) ?></span>
+                </td>
+                <td><strong><?= htmlspecialchars($detalle['variedad_nombre']) ?></strong></td>
+                <td><?= $detalle['cantidad'] ?></td>
+                <td><?= FormatHelper::precio($detalle['precio_unitario']) ?></td>
+                <td><strong><?= FormatHelper::precio($detalle['subtotal']) ?></strong></td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\index.php
+Contenido:
+----------------------------------------
+<!-- app/views/ventas/index.php -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Historial de Ventas</h2>
+    <a href="index.php?c=venta&a=nueva" class="btn btn-primary">+ Nueva Venta</a>
+</div>
+<!-- <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Historial de Ventas</h2>
+    <div style="display: flex; gap: 10px;">
+        <?php
+        // Construir URL con filtros actuales
+        // $exportUrl = 'index.php?c=venta&a=exportarExcel';
+        // if (!empty($filtros['fecha_desde'])) $exportUrl .= '&fecha_desde=' . $filtros['fecha_desde'];
+        // if (!empty($filtros['fecha_hasta'])) $exportUrl .= '&fecha_hasta=' . $filtros['fecha_hasta'];
+        // if (!empty($filtros['metodo_pago'])) $exportUrl .= '&metodo_pago=' . $filtros['metodo_pago'];
+        ?>
+        <a href="<?= $exportUrl ?>" class="btn btn-success">📊 Exportar a Excel</a>
+        <a href="index.php?c=venta&a=nueva" class="btn btn-primary">+ Nueva Venta</a>
+    </div>
+</div> -->
+
+<!-- Estadísticas -->
+<div class="grid-3" style="margin-bottom: 20px;">
+    <div class="card" style="background: #e8f5e9;">
+        <h4 style="margin-bottom: 10px; color: #27ae60;">💰 Total Vendido</h4>
+        <div style="font-size: 28px; font-weight: bold; color: #27ae60;">
+            <?= FormatHelper::precio($estadisticas['total_vendido'] ?? 0) ?>
+        </div>
+        <small style="color: #666;"><?= $estadisticas['total_ventas'] ?? 0 ?> ventas realizadas</small>
+    </div>
+    
+    <div class="card" style="background: #fff3cd;">
+        <h4 style="margin-bottom: 10px; color: #f39c12;">💵 Efectivo</h4>
+        <div style="font-size: 28px; font-weight: bold; color: #f39c12;">
+            <?= FormatHelper::precio($estadisticas['total_efectivo'] ?? 0) ?>
+        </div>
+        <small style="color: #666;">
+            <?php 
+            $porcentaje_efectivo = ($estadisticas['total_vendido'] > 0) 
+                ? (($estadisticas['total_efectivo'] / $estadisticas['total_vendido']) * 100) 
+                : 0;
+            echo number_format($porcentaje_efectivo, 1) . '% del total';
+            ?>
+        </small>
+    </div>
+    
+    <div class="card" style="background: #e3f2fd;">
+        <h4 style="margin-bottom: 10px; color: #3498db;">💳 Tarjeta</h4>
+        <div style="font-size: 28px; font-weight: bold; color: #3498db;">
+            <?= FormatHelper::precio($estadisticas['total_tarjeta_combinado'] ?? 0) ?>
+        </div>
+        <small style="color: #666;">
+            <?php 
+            $porcentaje_tarjeta = ($estadisticas['total_vendido'] > 0) 
+                ? (($estadisticas['total_tarjeta_combinado'] / $estadisticas['total_vendido']) * 100) 
+                : 0;
+            echo number_format($porcentaje_tarjeta, 1) . '% del total';
+            ?>
+        </small>
+    </div>
+    
+    <!-- NUEVO: Total Stock Disponible -->
+    <div class="card" style="background: #f3e5f5;">
+        <h4 style="margin-bottom: 10px; color: #9c27b0;">📦 Total Stock Disponible</h4>
+        <div style="font-size: 28px; font-weight: bold; color: #9c27b0;">
+            <?= FormatHelper::precio($total_stock_disponible ?? 0) ?>
+        </div>
+        <small style="color: #666;">Valor total del inventario</small>
+    </div>
+    
+    <div class="card" style="background: #ffebee;">
+        <h4 style="margin-bottom: 10px; color: #c62828;">💸 Egresos</h4>
+        <div style="font-size: 24px; font-weight: bold; color: #c62828;">
+            <?= FormatHelper::precio($total_egresos ?? 0) ?>
+        </div>
+        <small style="color: #666;">
+            <a href="index.php?c=egreso&a=index" style="color: #c62828; text-decoration: underline;">Ver detalle</a>
+        </small>
+    </div>
+</div>
+
+<div class="card" style="background: <?= $balance >= 0 ? '#e8f5e9' : '#ffebee' ?>; margin-bottom: 20px; border: 2px solid <?= $balance >= 0 ? '#27ae60' : '#c62828' ?>;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h3 style="margin-bottom: 5px; color: <?= $balance >= 0 ? '#27ae60' : '#c62828' ?>;">
+                <?= $balance >= 0 ? '📈' : '📉' ?> Balance del Período
+            </h3>
+            <small style="color: #666;">Ingresos - Egresos</small>
+        </div>
+        <div style="text-align: right;">
+            <div style="font-size: 32px; font-weight: bold; color: <?= $balance >= 0 ? '#27ae60' : '#c62828' ?>;">
+                <?= FormatHelper::precio($balance) ?>
+            </div>
+            <small style="color: #666;">
+                <?php if ($balance >= 0): ?>
+                    ✅ Resultado positivo
+                <?php else: ?>
+                    ⚠️ Resultado negativo
+                <?php endif; ?>
+            </small>
+        </div>
+    </div>
+</div>
+<!-- Filtros -->
+<div class="filtros">
+    <form method="GET" action="index.php">
+        <input type="hidden" name="c" value="venta">
+        <input type="hidden" name="a" value="index">
+        
+        <div class="form-group">
+            <label for="fecha_desde">Fecha Desde</label>
+            <input type="date" id="fecha_desde" name="fecha_desde" value="<?= $filtros['fecha_desde'] ?? '' ?>">
+        </div>
+        
+        <div class="form-group">
+            <label for="fecha_hasta">Fecha Hasta</label>
+            <input type="date" id="fecha_hasta" name="fecha_hasta" value="<?= $filtros['fecha_hasta'] ?? '' ?>">
+        </div>
+        
+        <div class="form-group">
+            <label for="metodo_pago">Método de Pago</label>
+            <select id="metodo_pago" name="metodo_pago">
+                <option value="">Todos</option>
+                <option value="efectivo" <?= ($filtros['metodo_pago'] ?? '') == 'efectivo' ? 'selected' : '' ?>>💵 Efectivo</option>
+                <option value="tarjeta" <?= ($filtros['metodo_pago'] ?? '') == 'tarjeta' ? 'selected' : '' ?>>💳 Tarjeta</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="estado">Estado</label>
+            <select id="estado" name="estado">
+                <option value="">Todos</option>
+                <option value="completada" <?= ($filtros['estado'] ?? '') == 'completada' ? 'selected' : '' ?>>
+                    ✅ Completada
+                </option>
+                <option value="preventa" <?= ($filtros['estado'] ?? '') == 'preventa' ? 'selected' : '' ?>>
+                    ⏳ Pre-venta
+                </option>
+                <option value="cancelada" <?= ($filtros['estado'] ?? '') == 'cancelada' ? 'selected' : '' ?>>
+                    ❌ Cancelada
+                </option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>&nbsp;</label>
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+            <a href="index.php?c=venta&a=index" class="btn btn-secondary">Limpiar</a>
+        </div>
+    </form>
+</div>
+
+<?php if (empty($ventas)): ?>
+    <div class="card">
+        <p style="text-align: center; color: #95a5a6; padding: 20px;">No hay ventas registradas.</p>
+    </div>
+<?php else: ?>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Fecha</th>
+            <th>Cliente</th>
+            <th>Estado</th>
+            <th>Método de Pago</th>
+            <th>Total</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($ventas as $venta): ?>
+            <tr style="<?= $venta['estado'] == 'cancelada' ? 'opacity: 0.6;' : '' ?>">
+                <td><strong>#<?= $venta['id'] ?></strong></td>
+                <td><?= date('d/m/Y H:i', strtotime($venta['fecha'])) ?></td>
+                <td>
+                    <?php if ($venta['nombre_cliente']): ?>
+                        <strong>👤 <?= htmlspecialchars($venta['nombre_cliente']) ?></strong>
+                    <?php else: ?>
+                        <span style="color: #95a5a6;">Anónimo</span>
+                    <?php endif; ?>
+                </td>
+                <td>
+                    <?php if ($venta['estado'] == 'completada'): ?>
+                        <span class="badge" style="background: #27ae60;">✅ Completada</span>
+                    <?php elseif ($venta['estado'] == 'preventa'): ?>
+                        <span class="badge" style="background: #f39c12;">⏳ Pre-venta</span>
+                    <?php else: ?>
+                        <span class="badge" style="background: #e74c3c;">❌ Cancelada</span>
+                    <?php endif; ?>
+                </td>
+                <td>
+                    <?php if ($venta['metodo_pago'] == 'efectivo'): ?>
+                        <span class="badge" style="background: #27ae60;">💵 Efectivo</span>
+                    <?php elseif ($venta['metodo_pago'] == 'tarjeta'): ?>
+                        <span class="badge" style="background: #3498db;">💳 Tarjeta</span>
+                    <?php else: ?>
+                        <span class="badge" style="background: #9b59b6;">🔄 Transferencia</span>
+                    <?php endif; ?>
+                </td>
+                <td><strong style="color: #27ae60; font-size: 16px;"><?= FormatHelper::precio($venta['total']) ?></strong></td>
+                <td>
+                    <a href="index.php?c=venta&a=detalle&id=<?= $venta['id'] ?>" class="btn btn-primary" style="padding: 5px 10px;">Ver Detalle</a>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+<?php endif; ?>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\nueva.php
+Contenido:
+----------------------------------------
+<!-- app/views/ventas/nueva.php -->
+<h2>Nueva Venta</h2>
+
+<div class="card" style="margin-bottom: 20px;">
+    <h3 style="margin-bottom: 15px;">Agregar Productos a la Venta</h3>
+    
+    <div class="form-group">
+        <label for="variedad_select">Seleccionar Producto</label>
+        <select id="variedad_select" style="width: 100%; padding: 10px;">
+            <option value="">Seleccione un producto...</option>
+            <?php foreach ($variedades as $var): ?>
+                <option value="<?= $var['id'] ?>" 
+                        data-nombre="<?= htmlspecialchars($var['producto_padre_nombre'] . ' - ' . $var['nombre']) ?>"
+                        data-stock="<?= $var['stock'] ?>"
+                        data-unidades-pack="<?= $var['unidades_por_pack'] ?? 3 ?>"
+                        data-pack3-tarjeta="<?= $var['precio_pack3_tarjeta'] ?>"
+                        data-pack3-efectivo="<?= $var['precio_pack3_efectivo'] ?>"
+                        data-unidad-tarjeta="<?= $var['precio_unidad_tarjeta'] ?>"
+                        data-unidad-efectivo="<?= $var['precio_unidad_efectivo'] ?>">
+                    <?= htmlspecialchars($var['producto_padre_nombre']) ?> - <?= htmlspecialchars($var['nombre']) ?> 
+                    (Stock: <?= $var['stock'] ?>)
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    
+    <div class="grid-3" style="margin-top: 15px;">
+        <div class="form-group">
+            <label for="cantidad_venta">Cantidad</label>
+            <input type="number" id="cantidad_venta" min="1" value="1" style="width: 100%; padding: 8px;">
+        </div>
+        
+        <div class="form-group">
+            <label for="tipo_venta">Tipo de Venta</label>
+            <select id="tipo_venta" style="width: 100%; padding: 8px;" onchange="actualizarPrecioVenta()">
+                <option value="pack">Pack (x<span id="pack_cantidad">2</span>)(x<span id="pack_cantidad">3</span>)</option>
+                <option value="unidad">Por Unidad</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="metodo_pago_item">Método de Pago</label>
+            <select id="metodo_pago_item" style="width: 100%; padding: 8px;" onchange="actualizarPrecioVenta()">
+                <option value="efectivo">💵 Efectivo</option>
+                <option value="tarjeta">💳 Tarjeta</option>
+            </select>
+        </div>
+    </div>
+    
+    <div id="info_precio" style="display: none; margin-top: 15px; padding: 15px; background: #e8f5e9; border-radius: 4px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+            <div>
+                <strong>Precio Unitario:</strong><br>
+                <span id="precio_unitario_display" style="color: #27ae60; font-size: 20px; font-weight: bold;">$0.00</span>
+            </div>
+            <div>
+                <strong>Cantidad:</strong><br>
+                <span id="cantidad_display" style="font-size: 20px; font-weight: bold;">1</span>
+            </div>
+            <div>
+                <strong>Subtotal:</strong><br>
+                <span id="subtotal_display" style="color: #2980b9; font-size: 20px; font-weight: bold;">$0.00</span>
+            </div>
+        </div>
+    </div>
+    
+    <button type="button" onclick="agregarProducto()" class="btn btn-success" style="margin-top: 15px;">➕ Agregar a la Venta</button>
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom: 15px;">Productos en la Venta</h3>
+    
+    <table id="tabla_venta">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Tipo</th>
+                <th>Cantidad</th>
+                <th>Método Pago</th>
+                <th>Precio Unit.</th>
+                <th>Subtotal</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="items_venta">
+            <tr id="sin_productos">
+                <td colspan="7" style="text-align: center; color: #95a5a6;">No hay productos agregados a la venta</td>
+            </tr>
+        </tbody>
+        <tfoot id="total_venta" style="display: none;">
+            <tr style="background: #ecf0f1; font-weight: bold;">
+                <td colspan="5" style="text-align: right;">TOTAL:</td>
+                <td id="total_general" style="color: #27ae60; font-size: 18px;">$0.00</td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<form method="POST" action="index.php?c=venta&a=nueva" id="form_venta" style="margin-top: 20px;">
+    <input type="hidden" name="productos_json" id="productos_json">
+    <input type="hidden" name="es_preventa" id="es_preventa" value="0">
+    
+    <!-- NUEVO: Campo opcional para nombre del cliente -->
+    <div class="card" style="background: #e3f2fd; margin-bottom: 20px;">
+        <h3 style="margin-bottom: 15px;">👤 Información del Cliente (Opcional)</h3>
+        <div class="form-group">
+            <label for="nombre_cliente">Nombre del Cliente</label>
+            <input type="text" id="nombre_cliente" name="nombre_cliente" placeholder="Dejar vacío para venta anónima" style="width: 100%; padding: 10px;">
+            <small style="color: #666;">Útil para pre-ventas o ventas a crédito</small>
+        </div>
+    </div>
+    
+    <div class="form-actions">
+        <button type="button" class="btn btn-primary" onclick="finalizarVenta(false)">
+            ✅ Completar Venta
+        </button>
+        <button type="button" class="btn btn-warning" onclick="finalizarVenta(true)" style="margin-left: 10px;">
+            ⏳ Guardar como Pre-venta
+        </button>
+        <a href="index.php?c=venta&a=index" class="btn btn-secondary">Cancelar</a>
+    </div>
+    
+    <!-- <div style="margin-top: 15px; padding: 15px; background: #fff3cd; border-radius: 4px; border-left: 4px solid #f39c12;">
+        <strong>💡 Diferencia entre Venta y Pre-venta:</strong>
+        <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+            <li><strong>Venta Completa:</strong> Se registra inmediatamente el ingreso y descuenta stock definitivamente.</li>
+            <li><strong>Pre-venta:</strong> Reserva el stock pero no registra el ingreso hasta que se formalice. Útil para apartados o ventas a crédito.</li>
+        </ul>
+    </div> -->
+</form>
+
+<script>
+let productosVenta = [];
+
+function actualizarPrecioVenta() {
+    const select = document.getElementById('variedad_select');
+    const option = select.options[select.selectedIndex];
+    
+    if (!option.value) {
+        document.getElementById('info_precio').style.display = 'none';
+        return;
+    }
+    
+    const unidadesPorPack = parseInt(option.dataset.unidadesPack) || 3;
+    let cantidad = parseInt(document.getElementById('cantidad_venta').value) || 1;
+    const tipoVenta = document.getElementById('tipo_venta').value;
+    const metodoPago = document.getElementById('metodo_pago_item').value;
+    
+    let precioUnitario = 0;
+    
+    if (tipoVenta === 'pack') {
+        // Usar el precio del pack guardado (que ya es el precio total)
+        precioUnitario = metodoPago === 'efectivo' 
+            ? parseFloat(option.dataset.pack3Efectivo) 
+            : parseFloat(option.dataset.pack3Tarjeta);
+        
+        // Forzar cantidad según las unidades del pack
+        cantidad = unidadesPorPack;
+        document.getElementById('cantidad_venta').value = cantidad;
+    } else {
+        precioUnitario = metodoPago === 'efectivo' 
+            ? parseFloat(option.dataset.unidadEfectivo) 
+            : parseFloat(option.dataset.unidadTarjeta);
+    }
+    
+    const subtotal = precioUnitario * (tipoVenta === 'pack' ? 1 : cantidad);
+    
+    // Mostrar información
+    document.getElementById('precio_unitario_display').textContent = '$' + precioUnitario.toFixed(2);
+    document.getElementById('cantidad_display').textContent = cantidad;
+    document.getElementById('subtotal_display').textContent = '$' + subtotal.toFixed(2);
+    document.getElementById('info_precio').style.display = 'block';
+}
+
+// Actualizar precio cuando cambia la selección
+document.getElementById('variedad_select').addEventListener('change', actualizarPrecioVenta);
+document.getElementById('cantidad_venta').addEventListener('change', actualizarPrecioVenta);
+
+function agregarProducto() {
+    const select = document.getElementById('variedad_select');
+    const option = select.options[select.selectedIndex];
+    
+    if (!option.value) {
+        alert('Seleccione un producto');
+        return;
+    }
+    
+    const variedadId = option.value;
+    const nombre = option.dataset.nombre;
+    const stock = parseInt(option.dataset.stock);
+    const unidadesPorPack = parseInt(option.dataset.unidadesPack) || 3;
+    const tipoVenta = document.getElementById('tipo_venta').value;
+    const metodoPago = document.getElementById('metodo_pago_item').value;
+    
+    let cantidad = parseInt(document.getElementById('cantidad_venta').value) || 1;
+    let precioUnitario = 0;
+    let tipoVentaTexto = '';
+    
+    if (tipoVenta === 'pack') {
+        cantidad = unidadesPorPack;
+        tipoVentaTexto = `Pack x${unidadesPorPack}`;
+        precioUnitario = metodoPago === 'efectivo' 
+            ? parseFloat(option.dataset.pack3Efectivo) 
+            : parseFloat(option.dataset.pack3Tarjeta);
+    } else {
+        tipoVentaTexto = 'Por Unidad';
+        precioUnitario = metodoPago === 'efectivo' 
+            ? parseFloat(option.dataset.unidadEfectivo) 
+            : parseFloat(option.dataset.unidadTarjeta);
+    }
+    
+    // Validar stock
+    if (cantidad > stock) {
+        alert(`Stock insuficiente. Solo hay ${stock} unidades disponibles.`);
+        return;
+    }
+    
+    if (precioUnitario <= 0) {
+        alert('Este producto no tiene precio configurado para la opción seleccionada.');
+        return;
+    }
+    
+    // El subtotal es diferente según el tipo
+    const subtotal = tipoVenta === 'pack' ? precioUnitario : (precioUnitario * cantidad);
+    
+    productosVenta.push({
+        variedad_id: variedadId,
+        nombre: nombre,
+        cantidad: cantidad,
+        tipo_venta: tipoVentaTexto,
+        metodo_pago: metodoPago,
+        precio_unitario: precioUnitario,
+        subtotal: subtotal
+    });
+    
+    actualizarTablaVenta();
+    
+    select.selectedIndex = 0;
+    document.getElementById('cantidad_venta').value = 1;
+    document.getElementById('info_precio').style.display = 'none';
+}
+
+function eliminarProducto(index) {
+    productosVenta.splice(index, 1);
+    actualizarTablaVenta();
+}
+
+function actualizarTablaVenta() {
+    const tbody = document.getElementById('items_venta');
+    const totalFooter = document.getElementById('total_venta');
+    
+    // Limpiar completamente el tbody
+    tbody.innerHTML = '';
+    
+    if (productosVenta.length === 0) {
+        // Si no hay productos, mostrar mensaje
+        tbody.innerHTML = '<tr id="sin_productos"><td colspan="7" style="text-align: center; color: #95a5a6;">No hay productos agregados a la venta</td></tr>';
+        totalFooter.style.display = 'none';
+        return;
+    }
+    
+    // Si hay productos, construir la tabla
+    totalFooter.style.display = 'table-footer-group';
+    
+    let totalGeneral = 0;
+    
+    productosVenta.forEach((item, index) => {
+        totalGeneral += item.subtotal;
+        
+        const metodoPagoIcon = item.metodo_pago === 'efectivo' ? '💵' : '💳';
+        const metodoPagoText = item.metodo_pago === 'efectivo' ? 'Efectivo' : 'Tarjeta';
+        
+        const row = `
+            <tr>
+                <td><strong>${item.nombre}</strong></td>
+                <td>
+                    <span class="badge" style="background: ${item.tipo_venta === 'Pack x3' ? '#3498db' : '#9b59b6'};">
+                        ${item.tipo_venta}
+                    </span>
+                </td>
+                <td>${item.cantidad}</td>
+                <td>${metodoPagoIcon} ${metodoPagoText}</td>
+                <td>$${item.precio_unitario.toFixed(2)}</td>
+                <td><strong style="color: #27ae60;">$${item.subtotal.toFixed(2)}</strong></td>
+                <td>
+                    <button type="button" class="btn btn-danger" style="padding: 5px 10px;" 
+                            onclick="eliminarProducto(${index})">Quitar</button>
+                </td>
+            </tr>
+        `;
+        tbody.innerHTML += row;
+    });
+    
+    document.getElementById('total_general').textContent = '$' + totalGeneral.toFixed(2);
+}
+
+function finalizarVenta(esPreventa) {
+    if (productosVenta.length === 0) {
+        alert('Debe agregar al menos un producto a la venta');
+        return false;
+    }
+    
+    // Si es pre-venta, recomendar agregar nombre del cliente
+    if (esPreventa) {
+        const nombreCliente = document.getElementById('nombre_cliente').value.trim();
+        if (!nombreCliente) {
+            if (!confirm('⚠️ No ha ingresado el nombre del cliente.\n\n¿Desea continuar con la pre-venta anónima?')) {
+                return false;
+            }
+        }
+        
+        if (!confirm('¿Confirma crear esta PRE-VENTA?\n\nSe reservará el stock pero no se registrará el ingreso hasta que se formalice.')) {
+            return false;
+        }
+    }
+    
+    document.getElementById('productos_json').value = JSON.stringify(productosVenta);
+    document.getElementById('es_preventa').value = esPreventa ? '1' : '0';
+    document.getElementById('form_venta').submit();
+    return true;
+}
+</script>.
+========================================
+.
+Ruta del archivo: C:\Users\guill\OneDrive\Escritorio\AdminStock\servidor\php\phar.phar.bat
+Contenido:
+----------------------------------------
+"%~dp0php.exe" "%~dp0pharcommand.phar" %*
+.
+========================================
+.

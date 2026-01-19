@@ -28,19 +28,8 @@
     <div class="form-group">
         <label for="descripcion">Descripción del Gasto *</label>
         <textarea id="descripcion" name="descripcion" rows="4" required placeholder="Ej: Compra de artículos para stock - 4 productos (detalle de los productos)"></textarea>
-        <!-- <small style="color: #666;">Sea específico: qué se compró, dónde, cantidad, etc.</small> -->
     </div>
-    
-    <!-- <div class="card" style="background: #fff3cd; margin-top: 20px;">
-        <h4 style="margin-bottom: 10px;">💡 Ejemplo de Descripción Detallada:</h4>
-        <p style="margin: 0; font-style: italic; color: #666;">
-            "Compra en MercadoLibre - 4 artículos:<br>
-            - 10 unidades de Producto A ($5.000 c/u)<br>
-            - 5 unidades de Producto B ($8.000 c/u)<br>
-            - Gastos de envío: $2.500"
-        </p>
-    </div> -->
-    
+      
     <div class="form-actions">
         <button type="submit" class="btn btn-primary">💾 Guardar Egreso</button>
         <a href="index.php?c=egreso&a=index" class="btn btn-secondary">Cancelar</a>

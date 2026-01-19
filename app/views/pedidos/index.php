@@ -3,7 +3,39 @@
     <h2>Gestión de Pedidos</h2>
     <a href="index.php?c=pedido&a=nuevo" class="btn btn-primary">+ Nuevo Pedido</a>
 </div>
-
+<!-- Filtros -->
+<div class="filtros">
+    <form method="GET" action="index.php">
+        <input type="hidden" name="c" value="pedido">
+        <input type="hidden" name="a" value="index">
+        
+        <div class="form-group">
+            <label for="fecha_desde">Fecha Desde</label>
+            <input type="date" id="fecha_desde" name="fecha_desde" value="<?= $filtros['fecha_desde'] ?? '' ?>">
+        </div>
+        
+        <div class="form-group">
+            <label for="fecha_hasta">Fecha Hasta</label>
+            <input type="date" id="fecha_hasta" name="fecha_hasta" value="<?= $filtros['fecha_hasta'] ?? '' ?>">
+        </div>
+        
+        <div class="form-group">
+            <label for="estado">Estado</label>
+            <select id="estado" name="estado">
+                <option value="">Todos</option>
+                <option value="pendiente" <?= ($filtros['estado'] ?? '') == 'pendiente' ? 'selected' : '' ?>>⏳ Pendiente</option>
+                <option value="realizado" <?= ($filtros['estado'] ?? '') == 'realizado' ? 'selected' : '' ?>>✅ Realizado</option>
+                <option value="faltante" <?= ($filtros['estado'] ?? '') == 'faltante' ? 'selected' : '' ?>>⚠️ Faltante</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>&nbsp;</label>
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+            <a href="index.php?c=pedido&a=index" class="btn btn-secondary">Limpiar</a>
+        </div>
+    </form>
+</div>
 <?php if (empty($pedidos)): ?>
     <p>No hay pedidos registrados.</p>
 <?php else: ?>

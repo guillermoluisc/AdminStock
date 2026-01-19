@@ -167,9 +167,9 @@ function actualizarPrecioVenta() {
     const subtotal = precioUnitario * (tipoVenta === 'pack' ? 1 : cantidad);
     
     // Mostrar información
-    document.getElementById('precio_unitario_display').textContent = '$' + precioUnitario.toFixed(2);
+    document.getElementById('precio_unitario_display').textContent = formatPesos(precioUnitario);
     document.getElementById('cantidad_display').textContent = cantidad;
-    document.getElementById('subtotal_display').textContent = '$' + subtotal.toFixed(2);
+    document.getElementById('subtotal_display').textContent = formatPesos(subtotal);
     document.getElementById('info_precio').style.display = 'block';
 }
 
@@ -281,8 +281,8 @@ function actualizarTablaVenta() {
                 </td>
                 <td>${item.cantidad}</td>
                 <td>${metodoPagoIcon} ${metodoPagoText}</td>
-                <td>$${item.precio_unitario.toFixed(2)}</td>
-                <td><strong style="color: #27ae60;">$${item.subtotal.toFixed(2)}</strong></td>
+                <td>${formatPesos(item.precio_unitario)}</td>
+                <td><strong style="color: #27ae60;">${formatPesos(item.subtotal)}</strong></td>
                 <td>
                     <button type="button" class="btn btn-danger" style="padding: 5px 10px;" 
                             onclick="eliminarProducto(${index})">Quitar</button>
@@ -292,7 +292,7 @@ function actualizarTablaVenta() {
         tbody.innerHTML += row;
     });
     
-    document.getElementById('total_general').textContent = '$' + totalGeneral.toFixed(2);
+    document.getElementById('total_general').textContent = formatPesos(totalGeneral);
 }
 
 function finalizarVenta(esPreventa) {
@@ -319,5 +319,13 @@ function finalizarVenta(esPreventa) {
     document.getElementById('es_preventa').value = esPreventa ? '1' : '0';
     document.getElementById('form_venta').submit();
     return true;
+}
+
+function formatPesos(valor) {
+    return new Intl.NumberFormat('es-AR', {
+        style: 'currency',
+        currency: 'ARS',
+        minimumFractionDigits: 2
+    }).format(valor);
 }
 </script>

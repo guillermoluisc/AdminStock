@@ -7,16 +7,37 @@ class Pedido {
         $this->db = Database::getInstance()->getConnection();
     }
     
-    public function getAll() {
+    public function getAll($filtros = []) {
         $sql = "SELECT p.*, 
                 COUNT(pd.id) as cantidad_items,
                 SUM(pd.cantidad_solicitada) as total_unidades
                 FROM pedidos p
                 LEFT JOIN pedido_detalles pd ON p.id = pd.pedido_id
-                GROUP BY p.id
-                ORDER BY p.fecha_creacion DESC";
+                WHERE 1=1";
         
-        $stmt = $this->db->query($sql);
+        $params = [];
+        
+        // Filtro por fecha
+        if (!empty($filtros['fecha_desde'])) {
+            $sql .= " AND DATE(p.fecha_creacion) >= ?";
+            $params[] = $filtros['fecha_desde'];
+        }
+        
+        if (!empty($filtros['fecha_hasta'])) {
+            $sql .= " AND DATE(p.fecha_creacion) <= ?";
+            $params[] = $filtros['fecha_hasta'];
+        }
+        
+        // Filtro por estado
+        if (!empty($filtros['estado'])) {
+            $sql .= " AND p.estado = ?";
+            $params[] = $filtros['estado'];
+        }
+        
+        $sql .= " GROUP BY p.id ORDER BY p.fecha_creacion DESC";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
         return $stmt->fetchAll();
     }
     

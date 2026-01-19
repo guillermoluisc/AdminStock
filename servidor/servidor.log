@@ -1,15 +1,117 @@
-[Mon Jan 19 15:46:11 2026] PHP 8.2.30 Development Server (http://localhost:8080) started
-[Mon Jan 19 15:46:13 2026] [::1]:61105 Accepted
-[Mon Jan 19 15:46:13 2026] [::1]:64951 Accepted
-[Mon Jan 19 15:46:13 2026] [::1]:61105 [200]: GET /
-[Mon Jan 19 15:46:13 2026] [::1]:61105 Closing
-[Mon Jan 19 15:46:13 2026] [::1]:64951 [404]: GET /favicon.ico - No such file or directory
-[Mon Jan 19 15:46:13 2026] [::1]:64951 Closing
-[Mon Jan 19 15:46:17 2026] [::1]:56467 Accepted
-[Mon Jan 19 15:46:17 2026] PHP Warning:  Undefined variable $exportUrl in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\index.php on line 16
-[Mon Jan 19 15:46:17 2026] [::1]:56467 [200]: GET /index.php?c=venta&a=index
-[Mon Jan 19 15:46:17 2026] [::1]:56467 Closing
-[Mon Jan 19 15:46:17 2026] [::1]:56946 Accepted
-[Mon Jan 19 15:46:21 2026] [::1]:56946 [200]: GET /index.php?c=venta&a=detalle&id=27
-[Mon Jan 19 15:46:21 2026] [::1]:56946 Closing
-[Mon Jan 19 15:46:21 2026] [::1]:61738 Accepted
+[Mon Jan 19 17:02:24 2026] PHP 8.2.30 Development Server (http://localhost:8080) started
+[Mon Jan 19 17:02:26 2026] [::1]:56321 Accepted
+[Mon Jan 19 17:02:26 2026] [::1]:56321 [200]: GET /
+[Mon Jan 19 17:02:26 2026] [::1]:56321 Closing
+[Mon Jan 19 17:02:26 2026] [::1]:65412 Accepted
+[Mon Jan 19 17:02:27 2026] [::1]:65412 Closed without sending a request; it was probably just an unused speculative preconnection
+[Mon Jan 19 17:02:27 2026] [::1]:65412 Closing
+[Mon Jan 19 17:02:27 2026] [::1]:61014 Accepted
+[Mon Jan 19 17:02:27 2026] [::1]:61014 [404]: GET /favicon.ico - No such file or directory
+[Mon Jan 19 17:02:27 2026] [::1]:61014 Closing
+[Mon Jan 19 17:02:29 2026] [::1]:64015 Accepted
+[Mon Jan 19 17:02:29 2026] PHP Warning:  Undefined variable $exportUrl in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\index.php on line 16
+[Mon Jan 19 17:02:29 2026] [::1]:64015 [200]: GET /index.php?c=venta&a=index
+[Mon Jan 19 17:02:29 2026] [::1]:64015 Closing
+[Mon Jan 19 17:02:29 2026] [::1]:58837 Accepted
+[Mon Jan 19 17:03:49 2026] [::1]:58837 Closed without sending a request; it was probably just an unused speculative preconnection
+[Mon Jan 19 17:03:49 2026] [::1]:58837 Closing
+[Mon Jan 19 17:13:18 2026] [::1]:56690 Accepted
+[Mon Jan 19 17:13:18 2026] PHP Warning:  Undefined variable $exportUrl in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\index.php on line 16
+[Mon Jan 19 17:13:18 2026] [::1]:56690 [200]: GET /index.php?c=venta&a=index
+[Mon Jan 19 17:13:18 2026] [::1]:56690 Closing
+[Mon Jan 19 17:13:18 2026] [::1]:55496 Accepted
+[Mon Jan 19 17:13:20 2026] [::1]:55496 [200]: GET /index.php?c=venta&a=nueva
+[Mon Jan 19 17:13:20 2026] [::1]:55496 Closing
+[Mon Jan 19 17:13:20 2026] [::1]:62081 Accepted
+[Mon Jan 19 17:16:25 2026] [::1]:62081 Closed without sending a request; it was probably just an unused speculative preconnection
+[Mon Jan 19 17:16:25 2026] [::1]:62081 Closing
+[Mon Jan 19 17:16:25 2026] [::1]:59109 Accepted
+[Mon Jan 19 17:16:25 2026] [::1]:59109 [200]: GET /index.php?c=venta&a=nueva
+[Mon Jan 19 17:16:25 2026] [::1]:59109 Closing
+[Mon Jan 19 17:16:25 2026] [::1]:51336 Accepted
+[Mon Jan 19 17:16:25 2026] [::1]:51336 [404]: GET /favicon.ico - No such file or directory
+[Mon Jan 19 17:16:25 2026] [::1]:51336 Closing
+[Mon Jan 19 17:17:01 2026] [::1]:56107 Accepted
+[Mon Jan 19 17:17:01 2026] [::1]:56107 [200]: GET /index.php?c=venta&a=nueva
+[Mon Jan 19 17:17:01 2026] [::1]:56107 Closing
+[Mon Jan 19 17:17:01 2026] [::1]:55419 Accepted
+[Mon Jan 19 17:17:01 2026] [::1]:55419 [404]: GET /favicon.ico - No such file or directory
+[Mon Jan 19 17:17:01 2026] [::1]:55419 Closing
+[Mon Jan 19 17:17:56 2026] [::1]:50909 Accepted
+[Mon Jan 19 17:17:56 2026] [::1]:50909 [200]: GET /index.php?c=venta&a=nueva
+[Mon Jan 19 17:17:56 2026] [::1]:50909 Closing
+[Mon Jan 19 17:17:56 2026] [::1]:65437 Accepted
+[Mon Jan 19 17:17:56 2026] [::1]:65437 [404]: GET /favicon.ico - No such file or directory
+[Mon Jan 19 17:17:56 2026] [::1]:65437 Closing
+[Mon Jan 19 17:19:41 2026] [::1]:58578 Accepted
+[Mon Jan 19 17:19:41 2026] [::1]:58578 [200]: GET /index.php?c=venta&a=nueva
+[Mon Jan 19 17:19:41 2026] [::1]:58578 Closing
+[Mon Jan 19 17:19:41 2026] [::1]:56555 Accepted
+[Mon Jan 19 17:19:41 2026] [::1]:56555 [404]: GET /favicon.ico - No such file or directory
+[Mon Jan 19 17:19:41 2026] [::1]:56555 Closing
+[Mon Jan 19 17:19:54 2026] [::1]:64693 Accepted
+[Mon Jan 19 17:19:54 2026] [::1]:64693 [200]: GET /index.php?c=venta&a=nueva
+[Mon Jan 19 17:19:54 2026] [::1]:64693 Closing
+[Mon Jan 19 17:19:54 2026] [::1]:57734 Accepted
+[Mon Jan 19 17:19:54 2026] [::1]:57734 [404]: GET /favicon.ico - No such file or directory
+[Mon Jan 19 17:19:54 2026] [::1]:57734 Closing
+[Mon Jan 19 17:20:44 2026] [::1]:52659 Accepted
+[Mon Jan 19 17:20:44 2026] [::1]:52659 [200]: GET /index.php?c=venta&a=nueva
+[Mon Jan 19 17:20:44 2026] [::1]:52659 Closing
+[Mon Jan 19 17:20:44 2026] [::1]:61149 Accepted
+[Mon Jan 19 17:20:44 2026] [::1]:61149 [404]: GET /favicon.ico - No such file or directory
+[Mon Jan 19 17:20:44 2026] [::1]:61149 Closing
+[Mon Jan 19 17:21:20 2026] [::1]:58105 Accepted
+[Mon Jan 19 17:21:20 2026] [::1]:58105 [200]: GET /index.php?c=venta&a=nueva
+[Mon Jan 19 17:21:20 2026] [::1]:58105 Closing
+[Mon Jan 19 17:21:20 2026] [::1]:52224 Accepted
+[Mon Jan 19 17:21:20 2026] [::1]:52224 [404]: GET /favicon.ico - No such file or directory
+[Mon Jan 19 17:21:20 2026] [::1]:52224 Closing
+[Mon Jan 19 17:21:40 2026] [::1]:54850 Accepted
+[Mon Jan 19 17:21:40 2026] [::1]:54850 [302]: POST /index.php?c=venta&a=nueva
+[Mon Jan 19 17:21:40 2026] [::1]:54850 Closing
+[Mon Jan 19 17:21:40 2026] [::1]:64560 Accepted
+[Mon Jan 19 17:21:40 2026] [::1]:64560 [200]: GET /index.php?c=venta&a=detalle&id=29
+[Mon Jan 19 17:21:40 2026] [::1]:64560 Closing
+[Mon Jan 19 17:21:44 2026] [::1]:57147 Accepted
+[Mon Jan 19 17:21:44 2026] PHP Warning:  Undefined variable $exportUrl in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\index.php on line 16
+[Mon Jan 19 17:21:44 2026] [::1]:57147 [200]: GET /index.php?c=venta&a=index
+[Mon Jan 19 17:21:44 2026] [::1]:57147 Closing
+[Mon Jan 19 17:21:44 2026] [::1]:57867 Accepted
+[Mon Jan 19 17:21:50 2026] [::1]:57867 [200]: GET /index.php?c=venta&a=detalle&id=29
+[Mon Jan 19 17:21:50 2026] [::1]:57867 Closing
+[Mon Jan 19 17:21:50 2026] [::1]:59659 Accepted
+[Mon Jan 19 17:21:53 2026] PHP Warning:  Undefined variable $exportUrl in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\index.php on line 16
+[Mon Jan 19 17:21:53 2026] [::1]:59659 [200]: GET /index.php?c=venta&a=index
+[Mon Jan 19 17:21:53 2026] [::1]:59659 Closing
+[Mon Jan 19 17:21:53 2026] [::1]:53511 Accepted
+[Mon Jan 19 17:21:54 2026] [::1]:53511 [200]: GET /index.php?c=venta&a=nueva
+[Mon Jan 19 17:21:54 2026] [::1]:53511 Closing
+[Mon Jan 19 17:21:54 2026] [::1]:56927 Accepted
+[Mon Jan 19 17:21:57 2026] [::1]:56927 [200]: GET /index.php?c=pedido&a=index
+[Mon Jan 19 17:21:57 2026] [::1]:56927 Closing
+[Mon Jan 19 17:21:57 2026] [::1]:49406 Accepted
+[Mon Jan 19 17:21:59 2026] [::1]:49406 [200]: GET /index.php?c=pedido&a=detalle&id=5
+[Mon Jan 19 17:21:59 2026] [::1]:49406 Closing
+[Mon Jan 19 17:21:59 2026] [::1]:51753 Accepted
+[Mon Jan 19 17:22:01 2026] [::1]:51753 [200]: GET /index.php?c=pedido&a=index
+[Mon Jan 19 17:22:01 2026] [::1]:51753 Closing
+[Mon Jan 19 17:22:01 2026] [::1]:63054 Accepted
+[Mon Jan 19 17:22:02 2026] [::1]:63054 [200]: GET /index.php?c=egreso&a=index
+[Mon Jan 19 17:22:02 2026] [::1]:63054 Closing
+[Mon Jan 19 17:22:02 2026] [::1]:49670 Accepted
+[Mon Jan 19 17:22:04 2026] [::1]:49670 [200]: GET /index.php?c=egreso&a=crear
+[Mon Jan 19 17:22:04 2026] [::1]:49670 Closing
+[Mon Jan 19 17:22:04 2026] [::1]:62515 Accepted
+[Mon Jan 19 17:22:15 2026] [::1]:62515 [200]: GET /index.php?c=egreso&a=index
+[Mon Jan 19 17:22:15 2026] [::1]:62515 Closing
+[Mon Jan 19 17:22:15 2026] [::1]:53161 Accepted
+[Mon Jan 19 17:22:17 2026] [::1]:53161 [200]: GET /index.php?c=egreso&a=editar&id=1
+[Mon Jan 19 17:22:17 2026] [::1]:53161 Closing
+[Mon Jan 19 17:22:17 2026] [::1]:59914 Accepted
+[Mon Jan 19 17:22:20 2026] [::1]:59914 [200]: GET /index.php?c=egreso&a=index
+[Mon Jan 19 17:22:20 2026] [::1]:59914 Closing
+[Mon Jan 19 17:22:20 2026] [::1]:60655 Accepted
+[Mon Jan 19 17:22:23 2026] [::1]:60655 [200]: GET /index.php?c=egreso&a=crear
+[Mon Jan 19 17:22:23 2026] [::1]:60655 Closing
+[Mon Jan 19 17:22:23 2026] [::1]:54387 Accepted

@@ -10,10 +10,29 @@ class PedidoController {
     }
     
     public function index() {
-        $pedidos = $this->pedidoModel->getAll();
+        // Obtener filtros con valores por defecto del mes actual
+        $filtros = [];
+        
+        if (empty($_GET['fecha_desde']) && empty($_GET['fecha_hasta']) && empty($_GET['estado'])) {
+            $filtros['fecha_desde'] = date('Y-m-01');
+            $filtros['fecha_hasta'] = date('Y-m-t');
+        } else {
+            if (!empty($_GET['fecha_desde'])) {
+                $filtros['fecha_desde'] = $_GET['fecha_desde'];
+            }
+            if (!empty($_GET['fecha_hasta'])) {
+                $filtros['fecha_hasta'] = $_GET['fecha_hasta'];
+            }
+            if (!empty($_GET['estado'])) {
+                $filtros['estado'] = $_GET['estado'];
+            }
+        }
+        
+        $pedidos = $this->pedidoModel->getAll($filtros);
         
         $this->render('pedidos/index', [
-            'pedidos' => $pedidos
+            'pedidos' => $pedidos,
+            'filtros' => $filtros
         ]);
     }
     

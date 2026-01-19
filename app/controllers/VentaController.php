@@ -18,7 +18,7 @@ public function index() {
     $filtros = [];
     
     // Si no hay filtros en GET, usar mes actual por defecto
-    if (empty($_GET['fecha_desde']) && empty($_GET['fecha_hasta']) && empty($_GET['metodo_pago'])) {
+    if (empty($_GET['fecha_desde']) && empty($_GET['fecha_hasta']) && empty($_GET['metodo_pago']) && empty($_GET['estado'])) {
         $filtros['fecha_desde'] = date('Y-m-01'); // Primer día del mes
         $filtros['fecha_hasta'] = date('Y-m-t');   // Último día del mes
     } else {
@@ -31,6 +31,9 @@ public function index() {
         if (!empty($_GET['metodo_pago'])) {
             $filtros['metodo_pago'] = $_GET['metodo_pago'];
         }
+        if (!empty($_GET['estado'])) {
+            $filtros['estado'] = $_GET['estado'];
+        }
     }
     
     $ventas = $this->ventaModel->getAll($filtros);
@@ -40,14 +43,30 @@ public function index() {
         $filtros['fecha_hasta'] ?? null
     );
     
-    // NUEVO: Calcular total stock disponible
+    // Calcular total stock disponible
     $total_stock_disponible = $this->variedadModel->getTotalStockDisponible();
+    
+    // NUEVO: Calcular total de egresos en el mismo período
+    $egresoModel = new Egreso();
+    $filtros_egresos = [];
+    if (!empty($filtros['fecha_desde'])) {
+        $filtros_egresos['fecha_desde'] = $filtros['fecha_desde'];
+    }
+    if (!empty($filtros['fecha_hasta'])) {
+        $filtros_egresos['fecha_hasta'] = $filtros['fecha_hasta'];
+    }
+    $total_egresos = $egresoModel->getTotalEgresos($filtros_egresos);
+    
+    // NUEVO: Calcular balance (ingresos - egresos)
+    $balance = ($estadisticas['total_vendido'] ?? 0) - $total_egresos;
     
     $this->render('ventas/index', [
         'ventas' => $ventas,
         'total_ventas' => $total_ventas,
         'estadisticas' => $estadisticas,
         'total_stock_disponible' => $total_stock_disponible,
+        'total_egresos' => $total_egresos,
+        'balance' => $balance,
         'filtros' => $filtros
     ]);
 }
@@ -139,69 +158,70 @@ public function nueva() {
         require BASE_PATH . '/views/layout.php';
     }
 
-    public function exportarExcel() {
-    // Obtener los mismos filtros que en index
-    $filtros = [];
-    if (!empty($_GET['fecha_desde'])) {
-        $filtros['fecha_desde'] = $_GET['fecha_desde'];
-    }
-    if (!empty($_GET['fecha_hasta'])) {
-        $filtros['fecha_hasta'] = $_GET['fecha_hasta'];
-    }
-    if (!empty($_GET['metodo_pago'])) {
-        $filtros['metodo_pago'] = $_GET['metodo_pago'];
-    }
+// public function exportarExcel() {
+//     // Obtener los mismos filtros que en index
+//     $filtros = [];
+//     if (!empty($_GET['fecha_desde'])) {
+//         $filtros['fecha_desde'] = $_GET['fecha_desde'];
+//     }
+//     if (!empty($_GET['fecha_hasta'])) {
+//         $filtros['fecha_hasta'] = $_GET['fecha_hasta'];
+//     }
+//     if (!empty($_GET['metodo_pago'])) {
+//         $filtros['metodo_pago'] = $_GET['metodo_pago'];
+//     }
     
-    $ventas = $this->ventaModel->getAll($filtros);
-    $estadisticas = $this->ventaModel->getEstadisticas(
-        $filtros['fecha_desde'] ?? null,
-        $filtros['fecha_hasta'] ?? null
-    );
+//     $ventas = $this->ventaModel->getAll($filtros);
+//     $estadisticas = $this->ventaModel->getEstadisticas(
+//         $filtros['fecha_desde'] ?? null,
+//         $filtros['fecha_hasta'] ?? null
+//     );
     
-    // Generar nombre del archivo
-    $fecha = date('Y-m-d_H-i-s');
-    $filename = "ventas_export_{$fecha}.csv";
+//     // Generar nombre del archivo
+//     $fecha = date('Y-m-d_H-i-s');
+//     $filename = "ventas_export_{$fecha}.csv";
     
-    // Headers para descarga
-    header('Content-Type: text/csv; charset=utf-8');
-    header('Content-Disposition: attachment; filename="' . $filename . '"');
-    header('Pragma: no-cache');
-    header('Expires: 0');
+//     // Headers para descarga
+//     header('Content-Type: text/csv; charset=utf-8');
+//     header('Content-Disposition: attachment; filename="' . $filename . '"');
+//     header('Pragma: no-cache');
+//     header('Expires: 0');
     
-    // Crear archivo CSV
-    $output = fopen('php://output', 'w');
+//     // Crear archivo CSV
+//     $output = fopen('php://output', 'w');
     
-    // BOM para Excel UTF-8
-    fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
+//     // BOM para Excel UTF-8
+//     fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
     
-    // Encabezados
-    fputcsv($output, ['ID', 'Fecha', 'Método de Pago', 'Total', 'Descuento Aplicado']);
+//     // Encabezados
+//     fputcsv($output, ['ID', 'Fecha', 'Método de Pago', 'Total', 'Descuento Aplicado']);
     
-    // Datos
-    foreach ($ventas as $venta) {
-        fputcsv($output, [
-            $venta['id'],
-            date('d/m/Y H:i', strtotime($venta['fecha'])),
-            ucfirst($venta['metodo_pago']),
-            number_format($venta['total'], 2),
-            number_format($venta['descuento_aplicado'], 2)
-        ]);
-    }
+//     // Datos
+//     foreach ($ventas as $venta) {
+//         fputcsv($output, [
+//             $venta['id'],
+//             date('d/m/Y H:i', strtotime($venta['fecha'])),
+//             ucfirst($venta['metodo_pago']),
+//             number_format($venta['total'], 2),
+//             number_format($venta['descuento_aplicado'], 2)
+//         ]);
+//     }
     
-    // Línea en blanco
-    fputcsv($output, []);
+//     // Línea en blanco
+//     fputcsv($output, []);
     
-    // Totales
-    fputcsv($output, ['ESTADÍSTICAS']);
-    fputcsv($output, ['Total Ventas', number_format($estadisticas['total_vendido'] ?? 0, 2)]);
-    fputcsv($output, ['Cantidad de Ventas', $estadisticas['total_ventas'] ?? 0]);
-    fputcsv($output, ['Promedio por Venta', number_format($estadisticas['promedio_venta'] ?? 0, 2)]);
-    fputcsv($output, ['Total Efectivo', number_format($estadisticas['total_efectivo'] ?? 0, 2)]);
-    fputcsv($output, ['Total Tarjeta/Transferencia', number_format($estadisticas['total_tarjeta_combinado'] ?? 0, 2)]);
+//     // Totales
+//     fputcsv($output, ['ESTADÍSTICAS']);
+//     fputcsv($output, ['Total Ventas', number_format($estadisticas['total_vendido'] ?? 0, 2)]);
+//     fputcsv($output, ['Cantidad de Ventas', $estadisticas['total_ventas'] ?? 0]);
+//     fputcsv($output, ['Promedio por Venta', number_format($estadisticas['promedio_venta'] ?? 0, 2)]);
+//     fputcsv($output, ['Total Efectivo', number_format($estadisticas['total_efectivo'] ?? 0, 2)]);
+//     fputcsv($output, ['Total Tarjeta/Transferencia', number_format($estadisticas['total_tarjeta_combinado'] ?? 0, 2)]);
     
-    fclose($output);
-    exit;
-}
+//     fclose($output);
+//     exit;
+// }
+
 public function formalizarPreventa($id) {
     $venta = $this->ventaModel->getById($id);
     

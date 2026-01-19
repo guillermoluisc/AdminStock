@@ -120,13 +120,13 @@
         <a href="index.php?c=venta&a=index" class="btn btn-secondary">Cancelar</a>
     </div>
     
-    <div style="margin-top: 15px; padding: 15px; background: #fff3cd; border-radius: 4px; border-left: 4px solid #f39c12;">
+    <!-- <div style="margin-top: 15px; padding: 15px; background: #fff3cd; border-radius: 4px; border-left: 4px solid #f39c12;">
         <strong>💡 Diferencia entre Venta y Pre-venta:</strong>
         <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
             <li><strong>Venta Completa:</strong> Se registra inmediatamente el ingreso y descuenta stock definitivamente.</li>
             <li><strong>Pre-venta:</strong> Reserva el stock pero no registra el ingreso hasta que se formalice. Útil para apartados o ventas a crédito.</li>
         </ul>
-    </div>
+    </div> -->
 </form>
 
 <script>

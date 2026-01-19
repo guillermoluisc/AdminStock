@@ -81,12 +81,12 @@
     
     <div class="card">
         <h3 style="margin-bottom: 15px;">🏷️ Stock</h3>
-        <div class="grid-3">
-            <div class="form-group">
+        <div class="grid-2">
+            <!-- <div class="form-group">
                 <label for="precio_venta_unitario">Precio Base (Referencia)</label>
                 <input type="number" id="precio_venta_unitario" name="precio_venta_unitario" step="0.01" min="0" required value="<?= $variedad['precio_venta_unitario'] ?>">
                 <small style="color: #666;">Solo para referencia interna</small>
-            </div>
+            </div> -->
             
             <div class="form-group">
                 <label for="stock">Stock Actual *</label>

@@ -136,6 +136,16 @@ class Database {
             fecha_realizacion DATETIME
         )";
         $db->exec($sql);
+
+        $sql = "CREATE TABLE IF NOT EXISTS egresos (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                fecha DATE NOT NULL,
+                monto DECIMAL(10,2) NOT NULL,
+                descripcion TEXT NOT NULL,
+                categoria VARCHAR(100),
+                fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP
+            )";
+        $db->exec($sql);
         
         // Tabla de DETALLE DE PEDIDOS
         $sql = "CREATE TABLE IF NOT EXISTS pedido_detalles (

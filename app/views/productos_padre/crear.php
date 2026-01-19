@@ -9,39 +9,35 @@
     
     <div class="card">
         <h3 style="margin-bottom: 15px;">📦 Precios Pack x3</h3>
-        <p style="color: #666; margin-bottom: 15px;">
+        <!-- <p style="color: #666; margin-bottom: 15px;">
             El precio final será: <strong>Costo + (Costo × Porcentaje / 100)</strong><br>
             Ejemplo: Si costo = $7,904 y porcentaje = 100%, precio final = $7,904 + ($7,904 × 100/100) = $15,808
-        </p>
+        </p> -->
         <div class="grid-2">
             <div class="form-group">
                 <label for="porcentaje_pack3_tarjeta">💳 Porcentaje Tarjeta (%)</label>
                 <input type="number" id="porcentaje_pack3_tarjeta" name="porcentaje_pack3_tarjeta" step="0.01" min="0" value="100">
-                <small style="color: #666;">100% = precio es el doble del costo</small>
             </div>
             <div class="form-group">
                 <label for="porcentaje_pack3_efectivo">💵 Porcentaje Efectivo (%)</label>
                 <input type="number" id="porcentaje_pack3_efectivo" name="porcentaje_pack3_efectivo" step="0.01" min="0" value="80">
-                <small style="color: #666;">80% = precio es costo + 80% del costo</small>
             </div>
         </div>
     </div>
     
     <div class="card">
         <h3 style="margin-bottom: 15px;">🏷️ Precios Por Unidad</h3>
-        <p style="color: #666; margin-bottom: 15px;">
+        <!-- <p style="color: #666; margin-bottom: 15px;">
             El precio por unidad se calcula dividiendo el precio del pack x3 entre 3
-        </p>
+        </p> -->
         <div class="grid-2">
             <div class="form-group">
                 <label for="porcentaje_unidad_tarjeta">💳 Porcentaje Tarjeta (%)</label>
                 <input type="number" id="porcentaje_unidad_tarjeta" name="porcentaje_unidad_tarjeta" step="0.01" min="0" value="100">
-                <small style="color: #666;">Normalmente igual al pack x3</small>
             </div>
             <div class="form-group">
                 <label for="porcentaje_unidad_efectivo">💵 Porcentaje Efectivo (%)</label>
                 <input type="number" id="porcentaje_unidad_efectivo" name="porcentaje_unidad_efectivo" step="0.01" min="0" value="80">
-                <small style="color: #666;">Normalmente igual al pack x3</small>
             </div>
         </div>
     </div>

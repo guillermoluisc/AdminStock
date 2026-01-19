@@ -72,6 +72,7 @@
                 <a href="index.php?c=venta&a=nueva">➕ Nueva Venta</a>
                 <a href="index.php?c=pedido&a=index">📋 Pedidos</a>
                 <a href="index.php?c=pedido&a=nuevo">🛒 Nuevo Pedido</a>
+                <a href="index.php?c=egreso&a=index">💸 Egresos</a>
             </div>
         </div>
     </div>

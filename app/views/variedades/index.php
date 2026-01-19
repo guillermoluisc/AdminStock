@@ -93,24 +93,21 @@
                         <td>
                             <?php if ($stock_bajo): ?>
                                 <span class="badge badge-stock-bajo"><?= $var['stock'] ?></span>
-                                <small style="display: block; color: #e74c3c;">Mín: <?= $var['stock_minimo'] ?></small>
+                                <small style="display: block; color: #e74c3c; margin-top: 4px;">Mín: <?= $var['stock_minimo'] ?></small>
                             <?php else: ?>
-                                <span class="badge badge-stock-ok"><?= $var['stock'] ?></span>
-                                <small style="display: block; color: #95a5a6;">Mín: <?= $var['stock_minimo'] ?></small>
+                                <span class="badge badge-stock-ok" ><?= $var['stock'] ?></span>
+                                <small style="display: block; color: #95a5a6; margin-top: 4px;">Mín: <?= $var['stock_minimo'] ?></small>
                             <?php endif; ?>
                         </td>
                         <td>
-                            <small style="color: #95a5a6;">Costo:</small><br>
                             <strong><?= FormatHelper::precio($var['precio_costo_unitario']) ?></strong>
                         </td>
                         <td>
-                            <small style="color: #95a5a6;">Costo Tot. Compra:</small><br>
                             <strong><?= FormatHelper::precio($var['precio_compra_total']) ?></strong>
                         </td>
                         <td>
                             <?php if ($var['precio_pack3_tarjeta'] > 0): ?>
                                 <strong style="color: #3498db;"><?= FormatHelper::precio($var['precio_pack3_tarjeta']) ?></strong>
-                                <br><small style="color: #95a5a6;">c/u</small>
                             <?php else: ?>
                                 <span style="color: #95a5a6;">-</span>
                             <?php endif; ?>
@@ -118,7 +115,6 @@
                         <td>
                             <?php if ($var['precio_pack3_efectivo'] > 0): ?>
                                 <strong style="color: #27ae60;"><?= FormatHelper::precio($var['precio_pack3_efectivo']) ?></strong>
-                                <br><small style="color: #95a5a6;">c/u</small>
                             <?php else: ?>
                                 <span style="color: #95a5a6;">-</span>
                             <?php endif; ?>
@@ -138,12 +134,21 @@
                             <?php endif; ?>
                         </td>
                         <td>
-                            <a href="index.php?c=variedad&a=editar&id=<?= $var['id'] ?>" class="btn btn-success" style="padding: 5px 10px;">✏️</a>
+                        <div style="display: flex; gap: 6px; justify-content: center;">
+                            <a href="index.php?c=variedad&a=editar&id=<?= $var['id'] ?>" 
+                            class="btn btn-success" 
+                            style="padding: 5px 10px;">
+                            ✏️
+                            </a>
+
                             <a href="index.php?c=variedad&a=eliminar&id=<?= $var['id'] ?>" 
-                               class="btn btn-danger" 
-                               style="padding: 5px 10px;"
-                               onclick="return confirm('¿Eliminar esta variedad?')">🗑️</a>
-                        </td>
+                            class="btn btn-danger" 
+                            style="padding: 5px 10px;"
+                            onclick="return confirm('¿Eliminar esta variedad?')">
+                            🗑️
+                            </a>
+                        </div>
+                    </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

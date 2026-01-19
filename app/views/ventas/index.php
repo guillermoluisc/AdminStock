@@ -66,8 +66,40 @@
         </div>
         <small style="color: #666;">Valor total del inventario</small>
     </div>
+    
+    <div class="card" style="background: #ffebee;">
+        <h4 style="margin-bottom: 10px; color: #c62828;">💸 Egresos</h4>
+        <div style="font-size: 24px; font-weight: bold; color: #c62828;">
+            <?= FormatHelper::precio($total_egresos ?? 0) ?>
+        </div>
+        <small style="color: #666;">
+            <a href="index.php?c=egreso&a=index" style="color: #c62828; text-decoration: underline;">Ver detalle</a>
+        </small>
+    </div>
 </div>
 
+<div class="card" style="background: <?= $balance >= 0 ? '#e8f5e9' : '#ffebee' ?>; margin-bottom: 20px; border: 2px solid <?= $balance >= 0 ? '#27ae60' : '#c62828' ?>;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h3 style="margin-bottom: 5px; color: <?= $balance >= 0 ? '#27ae60' : '#c62828' ?>;">
+                <?= $balance >= 0 ? '📈' : '📉' ?> Balance del Período
+            </h3>
+            <small style="color: #666;">Ingresos - Egresos</small>
+        </div>
+        <div style="text-align: right;">
+            <div style="font-size: 32px; font-weight: bold; color: <?= $balance >= 0 ? '#27ae60' : '#c62828' ?>;">
+                <?= FormatHelper::precio($balance) ?>
+            </div>
+            <small style="color: #666;">
+                <?php if ($balance >= 0): ?>
+                    ✅ Resultado positivo
+                <?php else: ?>
+                    ⚠️ Resultado negativo
+                <?php endif; ?>
+            </small>
+        </div>
+    </div>
+</div>
 <!-- Filtros -->
 <div class="filtros">
     <form method="GET" action="index.php">
@@ -90,6 +122,22 @@
                 <option value="">Todos</option>
                 <option value="efectivo" <?= ($filtros['metodo_pago'] ?? '') == 'efectivo' ? 'selected' : '' ?>>💵 Efectivo</option>
                 <option value="tarjeta" <?= ($filtros['metodo_pago'] ?? '') == 'tarjeta' ? 'selected' : '' ?>>💳 Tarjeta</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="estado">Estado</label>
+            <select id="estado" name="estado">
+                <option value="">Todos</option>
+                <option value="completada" <?= ($filtros['estado'] ?? '') == 'completada' ? 'selected' : '' ?>>
+                    ✅ Completada
+                </option>
+                <option value="preventa" <?= ($filtros['estado'] ?? '') == 'preventa' ? 'selected' : '' ?>>
+                    ⏳ Pre-venta
+                </option>
+                <option value="cancelada" <?= ($filtros['estado'] ?? '') == 'cancelada' ? 'selected' : '' ?>>
+                    ❌ Cancelada
+                </option>
             </select>
         </div>
         

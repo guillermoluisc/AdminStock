@@ -1,13 +1,13 @@
 <!-- app/views/variedades/crear.php -->
 <h2>Crear Nueva Variedad</h2>
 
-<div class="alert alert-info" style="background: #d1ecf1; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
+<!-- <div class="alert alert-info" style="background: #d1ecf1; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
     <strong>📌 Instrucciones:</strong>
     <ul style="margin: 10px 0 0 20px; line-height: 1.6;">
         <li><strong>Caso 1:</strong> Si compras 1 CAJA que contiene 3 unidades → Ingresa cantidad = 1</li>
         <li><strong>Caso 2:</strong> Si compras 1 producto que se vende SOLO por unidad → Usa el botón "Igualar Precios"</li>
     </ul>
-</div>
+</div> -->
 
 <form method="POST" action="index.php?c=variedad&a=crear">
     <div class="form-group">
@@ -100,9 +100,8 @@
         <div style="margin-top: 15px; padding: 15px; background: #fff3cd; border-radius: 4px; border-left: 4px solid #f39c12;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                    <strong>💡 ¿Vender solo por unidad al mismo precio?</strong>
                     <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">
-                        Si NO vendes por pack de 3, usa este botón para igualar los precios
+                        Con este Botón Igualas los precios automaticamente para productos que se venden por unidad
                     </p>
                 </div>
                 <button type="button" class="btn btn-warning" onclick="igualarPrecios()">
@@ -111,20 +110,20 @@
             </div>
         </div>
         
-        <div id="ejemplo_calculo" style="display: none; margin-top: 15px; padding: 15px; background: white; border-radius: 4px;">
+        <!-- <div id="ejemplo_calculo" style="display: none; margin-top: 15px; padding: 15px; background: white; border-radius: 4px;">
             <h4 style="margin-bottom: 10px;">🔍 Detalle del Cálculo:</h4>
             <div id="detalle_calculo" style="font-size: 14px; line-height: 1.8;"></div>
-        </div>
+        </div> -->
     </div>
     
     <div class="card">
         <h3 style="margin-bottom: 15px;">🏷️ Stock</h3>
-        <div class="grid-3">
-            <div class="form-group">
+        <div class="grid-2">
+            <!-- <div class="form-group">
                 <label for="precio_venta_unitario">Precio Base (Referencia)</label>
                 <input type="number" id="precio_venta_unitario" name="precio_venta_unitario" step="0.01" min="0" required value="0">
                 <small style="color: #666;">Solo para referencia interna</small>
-            </div>
+            </div> -->
             
             <div class="form-group">
                 <label for="stock">Stock Inicial *</label>
@@ -192,8 +191,8 @@ function calcularCostoYPrecios() {
 function calcularPreciosVenta(precioCompraTotal, costoUnitario) {
     // PRECIOS PACK x3 (sobre el costo TOTAL de la caja/pack)
     // Fórmula: PrecioCompraTotal + (PrecioCompraTotal × Porcentaje/100)
-    const pack3Tarjeta = precioCompraTotal + (precioCompraTotal * porcentajes.pack3_tarjeta / 100);
-    const pack3Efectivo = precioCompraTotal + (precioCompraTotal * porcentajes.pack3_efectivo / 100);
+    const pack3Tarjeta = costoUnitario + (costoUnitario * porcentajes.pack3_tarjeta / 100);
+    const pack3Efectivo = costoUnitario + (costoUnitario * porcentajes.pack3_efectivo / 100);
 
     // PRECIOS POR UNIDAD (sobre el costo UNITARIO)
     // Fórmula: CostoUnitario + (CostoUnitario × Porcentaje/100)

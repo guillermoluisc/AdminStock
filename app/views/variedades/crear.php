@@ -1,14 +1,6 @@
 <!-- app/views/variedades/crear.php -->
 <h2>Crear Nueva Variedad</h2>
 
-<!-- <div class="alert alert-info" style="background: #d1ecf1; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
-    <strong>📌 Instrucciones:</strong>
-    <ul style="margin: 10px 0 0 20px; line-height: 1.6;">
-        <li><strong>Caso 1:</strong> Si compras 1 CAJA que contiene 3 unidades → Ingresa cantidad = 1</li>
-        <li><strong>Caso 2:</strong> Si compras 1 producto que se vende SOLO por unidad → Usa el botón "Igualar Precios"</li>
-    </ul>
-</div> -->
-
 <form method="POST" action="index.php?c=variedad&a=crear">
     <div class="form-group">
         <label for="producto_padre_id">Producto Padre *</label>
@@ -56,8 +48,19 @@
             
             <div class="form-group">
                 <label>Costo Unitario (Calculado)</label>
-                <input type="text" id="costo_unitario_display" readonly style="background: #ecf0f1; font-weight: bold;" value="$0.00">
+                <input type="text" id="costo_unitario_display" readonly style="background: #ecf0f1; font-weight: bold;" value="$ 0.00">
                 <small style="color: #666;">Se calcula automáticamente</small>
+            </div>
+        </div>
+        
+        <!-- SELECTOR DE UNIDADES POR PACK -->
+        <div style="margin-top: 15px; padding: 15px; background: #fff3cd; border-radius: 4px; border-left: 4px solid #f39c12;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <label for="unidades_por_pack" style="margin: 0; font-weight: bold;">📦 Unidades por Pack:</label>
+                <select id="unidades_por_pack" name="unidades_por_pack" onchange="calcularCostoYPrecios()" style="padding: 8px; font-size: 16px; border-radius: 4px; border: 2px solid #f39c12;">
+                    <option value="2">x2 (Pack de 2 unidades)</option>
+                    <option value="3" selected>x3 (Pack de 3 unidades)</option>
+                </select>
             </div>
         </div>
     </div>
@@ -70,14 +73,16 @@
         
         <div class="grid-2">
             <div class="form-group">
-                <label for="precio_pack3_tarjeta">💳 Pack x3 Tarjeta (precio total)</label>
-                <input type="number" id="precio_pack3_tarjeta" name="precio_pack3_tarjeta" step="0.01" min="0" readonly style="background: #f0f0f0; font-weight: bold; font-size: 18px; color: #27ae60;">
+                <label for="precio_pack3_tarjeta">💳 <span id="label_pack_tarjeta">Pack x3</span> Tarjeta (precio total)</label>
+                <input type="text" id="precio_pack3_tarjeta_display" readonly style="background: #f0f0f0; font-weight: bold; font-size: 18px; color: #27ae60;">
+                <input type="hidden" id="precio_pack3_tarjeta" name="precio_pack3_tarjeta">
                 <small id="info_pack3_tarjeta" style="color: #666;">-</small>
             </div>
             
             <div class="form-group">
-                <label for="precio_pack3_efectivo">💵 Pack x3 Efectivo (precio total)</label>
-                <input type="number" id="precio_pack3_efectivo" name="precio_pack3_efectivo" step="0.01" min="0" readonly style="background: #f0f0f0; font-weight: bold; font-size: 18px; color: #27ae60;">
+                <label for="precio_pack3_efectivo">💵 <span id="label_pack_efectivo">Pack x3</span> Efectivo (precio total)</label>
+                <input type="text" id="precio_pack3_efectivo_display" readonly style="background: #f0f0f0; font-weight: bold; font-size: 18px; color: #27ae60;">
+                <input type="hidden" id="precio_pack3_efectivo" name="precio_pack3_efectivo">
                 <small id="info_pack3_efectivo" style="color: #666;">-</small>
             </div>
         </div>
@@ -85,13 +90,15 @@
         <div class="grid-2" style="margin-top: 15px;">
             <div class="form-group">
                 <label for="precio_unidad_tarjeta">💳 Por 1 Unidad Tarjeta</label>
-                <input type="number" id="precio_unidad_tarjeta" name="precio_unidad_tarjeta" step="0.01" min="0" readonly style="background: #f0f0f0; font-weight: bold; font-size: 18px; color: #3498db;">
+                <input type="text" id="precio_unidad_tarjeta_display" readonly style="background: #f0f0f0; font-weight: bold; font-size: 18px; color: #3498db;">
+                <input type="hidden" id="precio_unidad_tarjeta" name="precio_unidad_tarjeta">
                 <small id="info_unidad_tarjeta" style="color: #666;">-</small>
             </div>
             
             <div class="form-group">
                 <label for="precio_unidad_efectivo">💵 Por 1 Unidad Efectivo</label>
-                <input type="number" id="precio_unidad_efectivo" name="precio_unidad_efectivo" step="0.01" min="0" readonly style="background: #f0f0f0; font-weight: bold; font-size: 18px; color: #3498db;">
+                <input type="text" id="precio_unidad_efectivo_display" readonly style="background: #f0f0f0; font-weight: bold; font-size: 18px; color: #3498db;">
+                <input type="hidden" id="precio_unidad_efectivo" name="precio_unidad_efectivo">
                 <small id="info_unidad_efectivo" style="color: #666;">-</small>
             </div>
         </div>
@@ -109,26 +116,15 @@
                 </button>
             </div>
         </div>
-        
-        <!-- <div id="ejemplo_calculo" style="display: none; margin-top: 15px; padding: 15px; background: white; border-radius: 4px;">
-            <h4 style="margin-bottom: 10px;">🔍 Detalle del Cálculo:</h4>
-            <div id="detalle_calculo" style="font-size: 14px; line-height: 1.8;"></div>
-        </div> -->
     </div>
     
     <div class="card">
         <h3 style="margin-bottom: 15px;">🏷️ Stock</h3>
         <div class="grid-2">
-            <!-- <div class="form-group">
-                <label for="precio_venta_unitario">Precio Base (Referencia)</label>
-                <input type="number" id="precio_venta_unitario" name="precio_venta_unitario" step="0.01" min="0" required value="0">
-                <small style="color: #666;">Solo para referencia interna</small>
-            </div> -->
-            
             <div class="form-group">
                 <label for="stock">Stock Inicial *</label>
                 <input type="number" id="stock" name="stock" min="0" required>
-                <small style="color: #666;">Por defecto = cantidad comprada × 3</small>
+                <small id="stock_help" style="color: #666;">Por defecto = cantidad comprada × 3</small>
             </div>
             
             <div class="form-group">
@@ -153,6 +149,21 @@ let porcentajes = {
     unidad_efectivo: 0
 };
 
+function formatearPrecio(numero) {
+    return '$ ' + numero.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+function getUnidadesPorPack() {
+    return parseInt(document.getElementById('unidades_por_pack').value) || 3;
+}
+
+function actualizarLabels() {
+    const unidades = getUnidadesPorPack();
+    document.getElementById('label_pack_tarjeta').textContent = `Pack x${unidades}`;
+    document.getElementById('label_pack_efectivo').textContent = `Pack x${unidades}`;
+    document.getElementById('stock_help').textContent = `Por defecto = cantidad comprada × ${unidades}`;
+}
+
 function cargarPorcentajes() {
     const select = document.getElementById('producto_padre_id');
     const option = select.options[select.selectedIndex];
@@ -170,6 +181,10 @@ function cargarPorcentajes() {
 function calcularCostoYPrecios() {
     const precioTotal = parseFloat(document.getElementById('precio_compra_total').value) || 0;
     const cantidad = parseInt(document.getElementById('cantidad_comprada').value) || 0;
+    const unidadesPorPack = getUnidadesPorPack();
+    
+    // Actualizar labels
+    actualizarLabels();
     
     if (cantidad <= 0 || precioTotal <= 0) {
         return;
@@ -177,101 +192,52 @@ function calcularCostoYPrecios() {
 
     // 1. COSTO UNITARIO
     const costoUnitario = precioTotal / cantidad;
-    document.getElementById('costo_unitario_display').value = '$' + costoUnitario.toFixed(2);
+    document.getElementById('costo_unitario_display').value = formatearPrecio(costoUnitario);
 
-    // Auto-completar stock (cantidad × 3 para cajas)
+    // Auto-completar stock (cantidad × unidades por pack)
     if (!document.getElementById('stock').value) {
-        document.getElementById('stock').value = cantidad * 3;
+        document.getElementById('stock').value = cantidad * unidadesPorPack;
     }
 
     // 2. CALCULAR PRECIOS
-    calcularPreciosVenta(precioTotal, costoUnitario);
+    calcularPreciosVenta(precioTotal, costoUnitario, unidadesPorPack);
 }
 
-function calcularPreciosVenta(precioCompraTotal, costoUnitario) {
-    // PRECIOS PACK x3 (sobre el costo TOTAL de la caja/pack)
-    // Fórmula: PrecioCompraTotal + (PrecioCompraTotal × Porcentaje/100)
+function calcularPreciosVenta(precioCompraTotal, costoUnitario, unidadesPorPack) {
+    // PRECIOS PACK (sobre el costo TOTAL de la caja/pack)
     const pack3Tarjeta = costoUnitario + (costoUnitario * porcentajes.pack3_tarjeta / 100);
     const pack3Efectivo = costoUnitario + (costoUnitario * porcentajes.pack3_efectivo / 100);
 
-    // PRECIOS POR UNIDAD (sobre el costo UNITARIO)
-    // Fórmula: CostoUnitario + (CostoUnitario × Porcentaje/100)
+    // PRECIOS POR UNIDAD (sobre el costo UNITARIO, dividido por unidades del pack)
     const unidadTarjeta = (costoUnitario) + (costoUnitario * porcentajes.unidad_tarjeta / 100);
     const unidadEfectivo = costoUnitario + (costoUnitario * porcentajes.unidad_efectivo / 100);
 
-    // Actualizar campos
+    // Actualizar campos OCULTOS (valores reales para enviar)
     document.getElementById('precio_pack3_tarjeta').value = pack3Tarjeta.toFixed(2);
     document.getElementById('precio_pack3_efectivo').value = pack3Efectivo.toFixed(2);
-    document.getElementById('precio_unidad_tarjeta').value = (unidadTarjeta / 3).toFixed(2);
-    document.getElementById('precio_unidad_efectivo').value = (unidadEfectivo / 3).toFixed(2);
+    document.getElementById('precio_unidad_tarjeta').value = (unidadTarjeta / unidadesPorPack).toFixed(2);
+    document.getElementById('precio_unidad_efectivo').value = (unidadEfectivo / unidadesPorPack).toFixed(2);
+
+    // Actualizar campos VISIBLES (con formato)
+    document.getElementById('precio_pack3_tarjeta_display').value = formatearPrecio(pack3Tarjeta);
+    document.getElementById('precio_pack3_efectivo_display').value = formatearPrecio(pack3Efectivo);
+    document.getElementById('precio_unidad_tarjeta_display').value = formatearPrecio(unidadTarjeta / unidadesPorPack);
+    document.getElementById('precio_unidad_efectivo_display').value = formatearPrecio(unidadEfectivo / unidadesPorPack);
 
     // Actualizar textos informativos
     document.getElementById('info_pack3_tarjeta').textContent = 
-        `${precioCompraTotal.toFixed(2)} + (${precioCompraTotal.toFixed(2)} × ${porcentajes.pack3_tarjeta}%) | Por unidad: $${(pack3Tarjeta/3).toFixed(2)}`;
+        `${precioCompraTotal.toFixed(2)} + (${precioCompraTotal.toFixed(2)} × ${porcentajes.pack3_tarjeta}%) | Por unidad: ${formatearPrecio(pack3Tarjeta/unidadesPorPack)}`;
     
     document.getElementById('info_pack3_efectivo').textContent = 
-        `${precioCompraTotal.toFixed(2)} + (${precioCompraTotal.toFixed(2)} × ${porcentajes.pack3_efectivo}%) | Por unidad: $${(pack3Efectivo/3).toFixed(2)}`;
+        `${precioCompraTotal.toFixed(2)} + (${precioCompraTotal.toFixed(2)} × ${porcentajes.pack3_efectivo}%) | Por unidad: ${formatearPrecio(pack3Efectivo/unidadesPorPack)}`;
     
     document.getElementById('info_unidad_tarjeta').textContent = 
         `${costoUnitario.toFixed(2)} + (${costoUnitario.toFixed(2)} × ${porcentajes.unidad_tarjeta}%)`;
     
     document.getElementById('info_unidad_efectivo').textContent = 
         `${costoUnitario.toFixed(2)} + (${costoUnitario.toFixed(2)} × ${porcentajes.unidad_efectivo}%)`;
-
-    // Mostrar ejemplo
-    mostrarEjemploCalculo(precioCompraTotal, costoUnitario, pack3Tarjeta, pack3Efectivo, unidadTarjeta, unidadEfectivo);
 }
 
-function mostrarEjemploCalculo(costoTotal, costoUnit, p3t, p3e, u1t, u1e) {
-    document.getElementById('ejemplo_calculo').style.display = 'block';
-    
-    const html = `
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px;">
-            <div>
-                <strong>📦 DATOS DE COMPRA:</strong><br>
-                • Costo total: <strong>$${costoTotal.toFixed(2)}</strong><br>
-                • Costo unitario: <strong>$${costoUnit.toFixed(2)}</strong>
-            </div>
-            <div>
-                <strong>⚙️ PORCENTAJES:</strong><br>
-                • Pack x3 Tarjeta: <strong>${porcentajes.pack3_tarjeta}%</strong><br>
-                • Pack x3 Efectivo: <strong>${porcentajes.pack3_efectivo}%</strong><br>
-                • Por 1 Tarjeta: <strong>${porcentajes.unidad_tarjeta}%</strong><br>
-                • Por 1 Efectivo: <strong>${porcentajes.unidad_efectivo}%</strong>
-            </div>
-        </div>
-        <hr style="margin: 15px 0; border: none; border-top: 1px solid #ddd;">
-        <div>
-            <strong>💳 PACK x3 TARJETA:</strong><br>
-            $${costoTotal.toFixed(2)} + ($${costoTotal.toFixed(2)} × ${porcentajes.pack3_tarjeta}%) = 
-            <span style="color: #27ae60; font-weight: bold;">$${p3t.toFixed(2)}</span>
-            <small style="display: block; color: #666;">Por unidad en el pack: $${(p3t/3).toFixed(2)}</small>
-        </div>
-        <div style="margin-top: 10px;">
-            <strong>💵 PACK x3 EFECTIVO:</strong><br>
-            $${costoTotal.toFixed(2)} + ($${costoTotal.toFixed(2)} × ${porcentajes.pack3_efectivo}%) = 
-            <span style="color: #27ae60; font-weight: bold;">$${p3e.toFixed(2)}</span>
-            <small style="display: block; color: #666;">Por unidad en el pack: $${(p3e/3).toFixed(2)}</small>
-        </div>
-        <div style="margin-top: 10px;">
-            <strong>💳 POR 1 UNIDAD TARJETA:</strong><br>
-            $${costoUnit.toFixed(2)} + ($${costoUnit.toFixed(2)} × ${porcentajes.unidad_tarjeta}%) = 
-            <span style="color: #3498db; font-weight: bold;">$${u1t.toFixed(2)}</span>
-        </div>
-        <div style="margin-top: 10px;">
-            <strong>💵 POR 1 UNIDAD EFECTIVO:</strong><br>
-            $${costoUnit.toFixed(2)} + ($${costoUnit.toFixed(2)} × ${porcentajes.unidad_efectivo}%) = 
-            <span style="color: #3498db; font-weight: bold;">$${u1e.toFixed(2)}</span>
-        </div>
-    `;
-    
-    document.getElementById('detalle_calculo').innerHTML = html;
-}
-
-/**
- * Igualar precios: Copia los precios unitarios a los precios de pack
- * Usado cuando el producto se vende SOLO por unidad (no por pack de 3)
- */
 function igualarPrecios() {
     const packTarjeta = parseFloat(document.getElementById('precio_pack3_tarjeta').value) || 0;
     const packEfectivo = parseFloat(document.getElementById('precio_pack3_efectivo').value) || 0;
@@ -288,17 +254,17 @@ function igualarPrecios() {
         return;
     }
 
-    // Hacer editables los unitarios
-    document.getElementById('precio_unidad_tarjeta').readOnly = false;
-    document.getElementById('precio_unidad_efectivo').readOnly = false;
-
-    // 🔥 CLAVE: unidad = pack
+    // Actualizar valores ocultos
     document.getElementById('precio_unidad_tarjeta').value = packTarjeta.toFixed(2);
     document.getElementById('precio_unidad_efectivo').value = packEfectivo.toFixed(2);
 
+    // Actualizar valores visibles con formato
+    document.getElementById('precio_unidad_tarjeta_display').value = formatearPrecio(packTarjeta);
+    document.getElementById('precio_unidad_efectivo_display').value = formatearPrecio(packEfectivo);
+
     // Estilo visual
-    document.getElementById('precio_unidad_tarjeta').style.background = '#fff3cd';
-    document.getElementById('precio_unidad_efectivo').style.background = '#fff3cd';
+    document.getElementById('precio_unidad_tarjeta_display').style.background = '#fff3cd';
+    document.getElementById('precio_unidad_efectivo_display').style.background = '#fff3cd';
 
     // Info
     document.getElementById('info_unidad_tarjeta').textContent = '⚠️ Igualado al precio del pack';

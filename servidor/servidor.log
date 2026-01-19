@@ -430,3 +430,139 @@
 [Mon Jan 19 08:47:20 2026] [::1]:63944 [200]: GET /index.php?c=variedad&a=crear
 [Mon Jan 19 08:47:20 2026] [::1]:63944 Closing
 [Mon Jan 19 08:47:20 2026] [::1]:62426 Accepted
+[Mon Jan 19 08:49:28 2026] [::1]:62426 Closed without sending a request; it was probably just an unused speculative preconnection
+[Mon Jan 19 08:49:28 2026] [::1]:62426 Closing
+[Mon Jan 19 08:49:28 2026] [::1]:50862 Accepted
+[Mon Jan 19 08:49:28 2026] [::1]:50862 [200]: GET /index.php?c=variedad&a=crear
+[Mon Jan 19 08:49:28 2026] [::1]:50862 Closing
+[Mon Jan 19 08:49:28 2026] [::1]:64130 Accepted
+[Mon Jan 19 08:49:28 2026] [::1]:64130 [404]: GET /favicon.ico - No such file or directory
+[Mon Jan 19 08:49:28 2026] [::1]:64130 Closing
+[Mon Jan 19 08:51:00 2026] [::1]:59598 Accepted
+[Mon Jan 19 08:51:00 2026] PHP Warning:  Undefined array key "precio_venta_unitario" in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\controllers\VariedadController.php on line 51
+[Mon Jan 19 08:51:00 2026] [::1]:59598 [200]: POST /index.php?c=variedad&a=crear
+[Mon Jan 19 08:51:00 2026] [::1]:59598 Closing
+[Mon Jan 19 08:51:00 2026] [::1]:64690 Accepted
+[Mon Jan 19 08:51:03 2026] [::1]:64690 [200]: GET /index.php?c=variedad&a=index
+[Mon Jan 19 08:51:03 2026] [::1]:64690 Closing
+[Mon Jan 19 08:51:03 2026] [::1]:56049 Accepted
+[Mon Jan 19 08:51:08 2026] [::1]:56049 [200]: GET /index.php?c=variedad&a=crear
+[Mon Jan 19 08:51:08 2026] [::1]:56049 Closing
+[Mon Jan 19 08:51:08 2026] [::1]:59809 Accepted
+[Mon Jan 19 08:51:38 2026] PHP Warning:  Undefined array key "precio_venta_unitario" in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\controllers\VariedadController.php on line 51
+[Mon Jan 19 08:51:38 2026] [::1]:59809 [200]: POST /index.php?c=variedad&a=crear
+[Mon Jan 19 08:51:38 2026] [::1]:59809 Closing
+[Mon Jan 19 08:51:38 2026] [::1]:61400 Accepted
+[Mon Jan 19 08:52:42 2026] [::1]:61400 Closed without sending a request; it was probably just an unused speculative preconnection
+[Mon Jan 19 08:52:42 2026] [::1]:61400 Closing
+[Mon Jan 19 08:52:42 2026] [::1]:62073 Accepted
+[Mon Jan 19 08:52:42 2026] [::1]:62073 [302]: POST /index.php?c=variedad&a=crear
+[Mon Jan 19 08:52:42 2026] [::1]:62073 Closing
+[Mon Jan 19 08:52:42 2026] [::1]:63243 Accepted
+[Mon Jan 19 08:52:42 2026] [::1]:63243 [200]: GET /index.php?c=variedad&a=index
+[Mon Jan 19 08:52:42 2026] [::1]:63243 Closing
+[Mon Jan 19 08:52:42 2026] [::1]:54835 Accepted
+[Mon Jan 19 08:52:42 2026] [::1]:54835 [404]: GET /favicon.ico - No such file or directory
+[Mon Jan 19 08:52:42 2026] [::1]:54835 Closing
+[Mon Jan 19 08:52:46 2026] [::1]:62958 Accepted
+[Mon Jan 19 08:52:47 2026] [::1]:62958 [200]: GET /index.php?c=variedad&a=editar&id=32
+[Mon Jan 19 08:52:47 2026] [::1]:62958 Closing
+[Mon Jan 19 08:52:47 2026] [::1]:55433 Accepted
+[Mon Jan 19 08:52:54 2026] [::1]:55433 [200]: GET /index.php?c=variedad&a=index
+[Mon Jan 19 08:52:54 2026] [::1]:55433 Closing
+[Mon Jan 19 08:52:54 2026] [::1]:58059 Accepted
+[Mon Jan 19 08:52:58 2026] [::1]:61352 Accepted
+[Mon Jan 19 08:52:58 2026] [::1]:58059 [302]: GET /index.php?c=variedad&a=eliminar&id=31
+[Mon Jan 19 08:52:58 2026] [::1]:58059 Closing
+[Mon Jan 19 08:52:58 2026] [::1]:61352 [200]: GET /index.php?c=variedad&a=index
+[Mon Jan 19 08:52:58 2026] [::1]:61352 Closing
+[Mon Jan 19 08:52:59 2026] [::1]:58380 Accepted
+[Mon Jan 19 08:53:00 2026] [::1]:58380 [302]: GET /index.php?c=variedad&a=eliminar&id=32
+[Mon Jan 19 08:53:00 2026] [::1]:58380 Closing
+[Mon Jan 19 08:53:00 2026] [::1]:60161 Accepted
+[Mon Jan 19 08:53:00 2026] [::1]:60161 [200]: GET /index.php?c=variedad&a=index
+[Mon Jan 19 08:53:00 2026] [::1]:60161 Closing
+[Mon Jan 19 08:53:18 2026] [::1]:61908 Accepted
+[Mon Jan 19 08:53:18 2026] [::1]:61908 [200]: GET /index.php?c=variedad&a=index
+[Mon Jan 19 08:53:18 2026] [::1]:61908 Closing
+[Mon Jan 19 08:53:18 2026] [::1]:61463 Accepted
+[Mon Jan 19 08:53:19 2026] [::1]:61463 [200]: GET /index.php?c=productoPadre&a=index
+[Mon Jan 19 08:53:19 2026] [::1]:61463 Closing
+[Mon Jan 19 08:53:19 2026] [::1]:50518 Accepted
+[Mon Jan 19 08:53:24 2026] [::1]:50518 [200]: GET /index.php?c=variedad&a=index
+[Mon Jan 19 08:53:24 2026] [::1]:50518 Closing
+[Mon Jan 19 08:53:24 2026] [::1]:60639 Accepted
+[Mon Jan 19 08:53:27 2026] [::1]:60639 [200]: GET /index.php?c=variedad&a=crear
+[Mon Jan 19 08:53:27 2026] [::1]:60639 Closing
+[Mon Jan 19 08:53:27 2026] [::1]:51030 Accepted
+[Mon Jan 19 08:54:15 2026] [::1]:51030 [302]: POST /index.php?c=variedad&a=crear
+[Mon Jan 19 08:54:15 2026] [::1]:51030 Closing
+[Mon Jan 19 08:54:15 2026] [::1]:65047 Accepted
+[Mon Jan 19 08:54:15 2026] [::1]:65047 [200]: GET /index.php?c=variedad&a=index
+[Mon Jan 19 08:54:15 2026] [::1]:65047 Closing
+[Mon Jan 19 08:54:36 2026] [::1]:61276 Accepted
+[Mon Jan 19 08:54:37 2026] [::1]:65170 Accepted
+[Mon Jan 19 08:54:37 2026] [::1]:61276 [302]: GET /index.php?c=variedad&a=eliminar&id=33
+[Mon Jan 19 08:54:37 2026] [::1]:61276 Closing
+[Mon Jan 19 08:54:37 2026] [::1]:65170 [200]: GET /index.php?c=variedad&a=index
+[Mon Jan 19 08:54:37 2026] [::1]:65170 Closing
+[Mon Jan 19 08:54:39 2026] [::1]:56985 Accepted
+[Mon Jan 19 08:54:39 2026] [::1]:56985 [200]: GET /index.php?c=variedad&a=crear
+[Mon Jan 19 08:54:39 2026] [::1]:56985 Closing
+[Mon Jan 19 08:54:39 2026] [::1]:61399 Accepted
+[Mon Jan 19 08:55:24 2026] [::1]:61399 [302]: POST /index.php?c=variedad&a=crear
+[Mon Jan 19 08:55:24 2026] [::1]:61399 Closing
+[Mon Jan 19 08:55:24 2026] [::1]:50802 Accepted
+[Mon Jan 19 08:55:24 2026] [::1]:50802 [200]: GET /index.php?c=variedad&a=index
+[Mon Jan 19 08:55:24 2026] [::1]:50802 Closing
+[Mon Jan 19 08:55:31 2026] [::1]:54005 Accepted
+[Mon Jan 19 08:55:31 2026] [::1]:54005 [200]: GET /index.php?c=variedad&a=crear
+[Mon Jan 19 08:55:31 2026] [::1]:54005 Closing
+[Mon Jan 19 08:55:31 2026] [::1]:61757 Accepted
+[Mon Jan 19 08:57:26 2026] [::1]:61757 Closed without sending a request; it was probably just an unused speculative preconnection
+[Mon Jan 19 08:57:26 2026] [::1]:61757 Closing
+[Mon Jan 19 08:57:26 2026] [::1]:49307 Accepted
+[Mon Jan 19 08:57:26 2026] [::1]:49307 [302]: POST /index.php?c=variedad&a=crear
+[Mon Jan 19 08:57:26 2026] [::1]:49307 Closing
+[Mon Jan 19 08:57:26 2026] [::1]:52419 Accepted
+[Mon Jan 19 08:57:26 2026] [::1]:52419 [200]: GET /index.php?c=variedad&a=index
+[Mon Jan 19 08:57:26 2026] [::1]:52419 Closing
+[Mon Jan 19 08:57:30 2026] [::1]:53244 Accepted
+[Mon Jan 19 08:57:31 2026] [::1]:53244 [302]: GET /index.php?c=variedad&a=eliminar&id=35
+[Mon Jan 19 08:57:31 2026] [::1]:53244 Closing
+[Mon Jan 19 08:57:31 2026] [::1]:65498 Accepted
+[Mon Jan 19 08:57:31 2026] [::1]:65498 [200]: GET /index.php?c=variedad&a=index
+[Mon Jan 19 08:57:31 2026] [::1]:65498 Closing
+[Mon Jan 19 08:57:33 2026] [::1]:56637 Accepted
+[Mon Jan 19 08:57:33 2026] [::1]:56637 [200]: GET /index.php?c=variedad&a=crear
+[Mon Jan 19 08:57:33 2026] [::1]:56637 Closing
+[Mon Jan 19 08:57:33 2026] [::1]:52553 Accepted
+[Mon Jan 19 09:07:17 2026] [::1]:52553 Closed without sending a request; it was probably just an unused speculative preconnection
+[Mon Jan 19 09:07:17 2026] [::1]:52553 Closing
+[Mon Jan 19 09:19:07 2026] [::1]:53655 Accepted
+[Mon Jan 19 09:19:07 2026] [::1]:53655 [200]: GET /index.php?c=variedad&a=crear
+[Mon Jan 19 09:19:07 2026] [::1]:53655 Closing
+[Mon Jan 19 09:19:07 2026] [::1]:61997 Accepted
+[Mon Jan 19 09:19:07 2026] [::1]:61997 [404]: GET /favicon.ico - No such file or directory
+[Mon Jan 19 09:19:07 2026] [::1]:61997 Closing
+[Mon Jan 19 09:23:24 2026] [::1]:62419 Accepted
+[Mon Jan 19 09:23:24 2026] [::1]:62419 [200]: GET /index.php?c=variedad&a=index
+[Mon Jan 19 09:23:24 2026] [::1]:62419 Closing
+[Mon Jan 19 09:23:24 2026] [::1]:56816 Accepted
+[Mon Jan 19 09:23:28 2026] [::1]:56816 [200]: GET /index.php?c=variedad&a=crear
+[Mon Jan 19 09:23:28 2026] [::1]:56816 Closing
+[Mon Jan 19 09:23:28 2026] [::1]:50218 Accepted
+[Mon Jan 19 09:24:35 2026] [::1]:50218 Closed without sending a request; it was probably just an unused speculative preconnection
+[Mon Jan 19 09:24:35 2026] [::1]:50218 Closing
+[Mon Jan 19 09:25:59 2026] [::1]:53573 Accepted
+[Mon Jan 19 09:25:59 2026] [::1]:63463 Accepted
+[Mon Jan 19 09:25:59 2026] [::1]:53573 [200]: GET /index.php?c=variedad&a=crear
+[Mon Jan 19 09:25:59 2026] [::1]:53573 Closing
+[Mon Jan 19 09:25:59 2026] [::1]:63463 [404]: GET /favicon.ico - No such file or directory
+[Mon Jan 19 09:25:59 2026] [::1]:63463 Closing
+[Mon Jan 19 09:26:57 2026] [::1]:49694 Accepted
+[Mon Jan 19 09:26:57 2026] [::1]:58242 Accepted
+[Mon Jan 19 09:26:57 2026] [::1]:49694 [200]: GET /index.php?c=variedad&a=crear
+[Mon Jan 19 09:26:57 2026] [::1]:49694 Closing
+[Mon Jan 19 09:26:57 2026] [::1]:58242 [404]: GET /favicon.ico - No such file or directory
+[Mon Jan 19 09:26:57 2026] [::1]:58242 Closing

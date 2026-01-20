@@ -22,7 +22,7 @@
         </div>
         
         <div class="form-group">
-            <label for="producto_padre_id">Producto Padre</label>
+            <label for="producto_padre_id">Producto</label>
             <select id="producto_padre_id" name="producto_padre_id">
                 <option value="">Todos</option>
                 <?php foreach ($productos_padre as $pp): ?>
@@ -48,7 +48,7 @@
         <table>
             <thead>
                 <tr>
-                    <th>Producto Padre</th>
+                    <th>Producto</th>
                     <th>Variedad</th>
                     <th>Stock</th>
                     <th>Costo Unit.</th>

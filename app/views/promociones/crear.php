@@ -22,7 +22,7 @@
         <h4 style="margin-bottom: 10px;">Información del Producto</h4>
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
             <div>
-                <strong>Producto Padre:</strong><br>
+                <strong>Producto:</strong><br>
                 <span id="info_padre">-</span>
             </div>
             <div>

@@ -1,5 +1,5 @@
 <!-- app/views/productos_padre/crear.php -->
-<h2>Crear Producto Padre</h2>
+<h2>Crear Producto</h2>
 
 <form method="POST" action="index.php?c=productoPadre&a=crear">
     <div class="form-group">
@@ -54,7 +54,7 @@
     </div> -->
     
     <div class="form-actions">
-        <button type="submit" class="btn btn-primary">Guardar Producto Padre</button>
+        <button type="submit" class="btn btn-primary">Guardar Producto</button>
         <a href="index.php?c=productoPadre&a=index" class="btn btn-secondary">Cancelar</a>
     </div>
 </form>

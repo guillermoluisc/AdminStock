@@ -1,7 +1,7 @@
 <!-- app/views/productos_padre/index.php -->
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-    <h2>Productos Padre</h2>
-    <a href="index.php?c=productoPadre&a=crear" class="btn btn-primary">+ Nuevo Producto Padre</a>
+    <h2>Productos</h2>
+    <a href="index.php?c=productoPadre&a=crear" class="btn btn-primary">+ Nuevo Producto</a>
 </div>
 
 <p style="color: #666; margin-bottom: 20px;">

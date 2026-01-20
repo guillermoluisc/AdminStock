@@ -1,5 +1,5 @@
 <!-- app/views/productos_padre/editar.php -->
-<h2>Editar Producto Padre</h2>
+<h2>Editar Producto</h2>
 
 <form method="POST" action="index.php?c=productoPadre&a=editar&id=<?= $producto['id'] ?>">
     <div class="form-group">

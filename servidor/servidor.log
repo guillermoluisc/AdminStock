@@ -1,117 +1,274 @@
-[Mon Jan 19 17:02:24 2026] PHP 8.2.30 Development Server (http://localhost:8080) started
-[Mon Jan 19 17:02:26 2026] [::1]:56321 Accepted
-[Mon Jan 19 17:02:26 2026] [::1]:56321 [200]: GET /
-[Mon Jan 19 17:02:26 2026] [::1]:56321 Closing
-[Mon Jan 19 17:02:26 2026] [::1]:65412 Accepted
-[Mon Jan 19 17:02:27 2026] [::1]:65412 Closed without sending a request; it was probably just an unused speculative preconnection
-[Mon Jan 19 17:02:27 2026] [::1]:65412 Closing
-[Mon Jan 19 17:02:27 2026] [::1]:61014 Accepted
-[Mon Jan 19 17:02:27 2026] [::1]:61014 [404]: GET /favicon.ico - No such file or directory
-[Mon Jan 19 17:02:27 2026] [::1]:61014 Closing
-[Mon Jan 19 17:02:29 2026] [::1]:64015 Accepted
-[Mon Jan 19 17:02:29 2026] PHP Warning:  Undefined variable $exportUrl in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\index.php on line 16
-[Mon Jan 19 17:02:29 2026] [::1]:64015 [200]: GET /index.php?c=venta&a=index
-[Mon Jan 19 17:02:29 2026] [::1]:64015 Closing
-[Mon Jan 19 17:02:29 2026] [::1]:58837 Accepted
-[Mon Jan 19 17:03:49 2026] [::1]:58837 Closed without sending a request; it was probably just an unused speculative preconnection
-[Mon Jan 19 17:03:49 2026] [::1]:58837 Closing
-[Mon Jan 19 17:13:18 2026] [::1]:56690 Accepted
-[Mon Jan 19 17:13:18 2026] PHP Warning:  Undefined variable $exportUrl in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\index.php on line 16
-[Mon Jan 19 17:13:18 2026] [::1]:56690 [200]: GET /index.php?c=venta&a=index
-[Mon Jan 19 17:13:18 2026] [::1]:56690 Closing
-[Mon Jan 19 17:13:18 2026] [::1]:55496 Accepted
-[Mon Jan 19 17:13:20 2026] [::1]:55496 [200]: GET /index.php?c=venta&a=nueva
-[Mon Jan 19 17:13:20 2026] [::1]:55496 Closing
-[Mon Jan 19 17:13:20 2026] [::1]:62081 Accepted
-[Mon Jan 19 17:16:25 2026] [::1]:62081 Closed without sending a request; it was probably just an unused speculative preconnection
-[Mon Jan 19 17:16:25 2026] [::1]:62081 Closing
-[Mon Jan 19 17:16:25 2026] [::1]:59109 Accepted
-[Mon Jan 19 17:16:25 2026] [::1]:59109 [200]: GET /index.php?c=venta&a=nueva
-[Mon Jan 19 17:16:25 2026] [::1]:59109 Closing
-[Mon Jan 19 17:16:25 2026] [::1]:51336 Accepted
-[Mon Jan 19 17:16:25 2026] [::1]:51336 [404]: GET /favicon.ico - No such file or directory
-[Mon Jan 19 17:16:25 2026] [::1]:51336 Closing
-[Mon Jan 19 17:17:01 2026] [::1]:56107 Accepted
-[Mon Jan 19 17:17:01 2026] [::1]:56107 [200]: GET /index.php?c=venta&a=nueva
-[Mon Jan 19 17:17:01 2026] [::1]:56107 Closing
-[Mon Jan 19 17:17:01 2026] [::1]:55419 Accepted
-[Mon Jan 19 17:17:01 2026] [::1]:55419 [404]: GET /favicon.ico - No such file or directory
-[Mon Jan 19 17:17:01 2026] [::1]:55419 Closing
-[Mon Jan 19 17:17:56 2026] [::1]:50909 Accepted
-[Mon Jan 19 17:17:56 2026] [::1]:50909 [200]: GET /index.php?c=venta&a=nueva
-[Mon Jan 19 17:17:56 2026] [::1]:50909 Closing
-[Mon Jan 19 17:17:56 2026] [::1]:65437 Accepted
-[Mon Jan 19 17:17:56 2026] [::1]:65437 [404]: GET /favicon.ico - No such file or directory
-[Mon Jan 19 17:17:56 2026] [::1]:65437 Closing
-[Mon Jan 19 17:19:41 2026] [::1]:58578 Accepted
-[Mon Jan 19 17:19:41 2026] [::1]:58578 [200]: GET /index.php?c=venta&a=nueva
-[Mon Jan 19 17:19:41 2026] [::1]:58578 Closing
-[Mon Jan 19 17:19:41 2026] [::1]:56555 Accepted
-[Mon Jan 19 17:19:41 2026] [::1]:56555 [404]: GET /favicon.ico - No such file or directory
-[Mon Jan 19 17:19:41 2026] [::1]:56555 Closing
-[Mon Jan 19 17:19:54 2026] [::1]:64693 Accepted
-[Mon Jan 19 17:19:54 2026] [::1]:64693 [200]: GET /index.php?c=venta&a=nueva
-[Mon Jan 19 17:19:54 2026] [::1]:64693 Closing
-[Mon Jan 19 17:19:54 2026] [::1]:57734 Accepted
-[Mon Jan 19 17:19:54 2026] [::1]:57734 [404]: GET /favicon.ico - No such file or directory
-[Mon Jan 19 17:19:54 2026] [::1]:57734 Closing
-[Mon Jan 19 17:20:44 2026] [::1]:52659 Accepted
-[Mon Jan 19 17:20:44 2026] [::1]:52659 [200]: GET /index.php?c=venta&a=nueva
-[Mon Jan 19 17:20:44 2026] [::1]:52659 Closing
-[Mon Jan 19 17:20:44 2026] [::1]:61149 Accepted
-[Mon Jan 19 17:20:44 2026] [::1]:61149 [404]: GET /favicon.ico - No such file or directory
-[Mon Jan 19 17:20:44 2026] [::1]:61149 Closing
-[Mon Jan 19 17:21:20 2026] [::1]:58105 Accepted
-[Mon Jan 19 17:21:20 2026] [::1]:58105 [200]: GET /index.php?c=venta&a=nueva
-[Mon Jan 19 17:21:20 2026] [::1]:58105 Closing
-[Mon Jan 19 17:21:20 2026] [::1]:52224 Accepted
-[Mon Jan 19 17:21:20 2026] [::1]:52224 [404]: GET /favicon.ico - No such file or directory
-[Mon Jan 19 17:21:20 2026] [::1]:52224 Closing
-[Mon Jan 19 17:21:40 2026] [::1]:54850 Accepted
-[Mon Jan 19 17:21:40 2026] [::1]:54850 [302]: POST /index.php?c=venta&a=nueva
-[Mon Jan 19 17:21:40 2026] [::1]:54850 Closing
-[Mon Jan 19 17:21:40 2026] [::1]:64560 Accepted
-[Mon Jan 19 17:21:40 2026] [::1]:64560 [200]: GET /index.php?c=venta&a=detalle&id=29
-[Mon Jan 19 17:21:40 2026] [::1]:64560 Closing
-[Mon Jan 19 17:21:44 2026] [::1]:57147 Accepted
-[Mon Jan 19 17:21:44 2026] PHP Warning:  Undefined variable $exportUrl in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\index.php on line 16
-[Mon Jan 19 17:21:44 2026] [::1]:57147 [200]: GET /index.php?c=venta&a=index
-[Mon Jan 19 17:21:44 2026] [::1]:57147 Closing
-[Mon Jan 19 17:21:44 2026] [::1]:57867 Accepted
-[Mon Jan 19 17:21:50 2026] [::1]:57867 [200]: GET /index.php?c=venta&a=detalle&id=29
-[Mon Jan 19 17:21:50 2026] [::1]:57867 Closing
-[Mon Jan 19 17:21:50 2026] [::1]:59659 Accepted
-[Mon Jan 19 17:21:53 2026] PHP Warning:  Undefined variable $exportUrl in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\index.php on line 16
-[Mon Jan 19 17:21:53 2026] [::1]:59659 [200]: GET /index.php?c=venta&a=index
-[Mon Jan 19 17:21:53 2026] [::1]:59659 Closing
-[Mon Jan 19 17:21:53 2026] [::1]:53511 Accepted
-[Mon Jan 19 17:21:54 2026] [::1]:53511 [200]: GET /index.php?c=venta&a=nueva
-[Mon Jan 19 17:21:54 2026] [::1]:53511 Closing
-[Mon Jan 19 17:21:54 2026] [::1]:56927 Accepted
-[Mon Jan 19 17:21:57 2026] [::1]:56927 [200]: GET /index.php?c=pedido&a=index
-[Mon Jan 19 17:21:57 2026] [::1]:56927 Closing
-[Mon Jan 19 17:21:57 2026] [::1]:49406 Accepted
-[Mon Jan 19 17:21:59 2026] [::1]:49406 [200]: GET /index.php?c=pedido&a=detalle&id=5
-[Mon Jan 19 17:21:59 2026] [::1]:49406 Closing
-[Mon Jan 19 17:21:59 2026] [::1]:51753 Accepted
-[Mon Jan 19 17:22:01 2026] [::1]:51753 [200]: GET /index.php?c=pedido&a=index
-[Mon Jan 19 17:22:01 2026] [::1]:51753 Closing
-[Mon Jan 19 17:22:01 2026] [::1]:63054 Accepted
-[Mon Jan 19 17:22:02 2026] [::1]:63054 [200]: GET /index.php?c=egreso&a=index
-[Mon Jan 19 17:22:02 2026] [::1]:63054 Closing
-[Mon Jan 19 17:22:02 2026] [::1]:49670 Accepted
-[Mon Jan 19 17:22:04 2026] [::1]:49670 [200]: GET /index.php?c=egreso&a=crear
-[Mon Jan 19 17:22:04 2026] [::1]:49670 Closing
-[Mon Jan 19 17:22:04 2026] [::1]:62515 Accepted
-[Mon Jan 19 17:22:15 2026] [::1]:62515 [200]: GET /index.php?c=egreso&a=index
-[Mon Jan 19 17:22:15 2026] [::1]:62515 Closing
-[Mon Jan 19 17:22:15 2026] [::1]:53161 Accepted
-[Mon Jan 19 17:22:17 2026] [::1]:53161 [200]: GET /index.php?c=egreso&a=editar&id=1
-[Mon Jan 19 17:22:17 2026] [::1]:53161 Closing
-[Mon Jan 19 17:22:17 2026] [::1]:59914 Accepted
-[Mon Jan 19 17:22:20 2026] [::1]:59914 [200]: GET /index.php?c=egreso&a=index
-[Mon Jan 19 17:22:20 2026] [::1]:59914 Closing
-[Mon Jan 19 17:22:20 2026] [::1]:60655 Accepted
-[Mon Jan 19 17:22:23 2026] [::1]:60655 [200]: GET /index.php?c=egreso&a=crear
-[Mon Jan 19 17:22:23 2026] [::1]:60655 Closing
-[Mon Jan 19 17:22:23 2026] [::1]:54387 Accepted
+[Tue Jan 20 08:22:07 2026] PHP 8.2.30 Development Server (http://localhost:8080) started
+[Tue Jan 20 08:22:09 2026] [::1]:53780 Accepted
+[Tue Jan 20 08:22:09 2026] [::1]:53780 [200]: GET /
+[Tue Jan 20 08:22:09 2026] [::1]:53780 Closing
+[Tue Jan 20 08:22:09 2026] [::1]:56771 Accepted
+[Tue Jan 20 08:22:09 2026] [::1]:56771 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 08:22:09 2026] [::1]:56771 Closing
+[Tue Jan 20 08:26:01 2026] [::1]:57468 Accepted
+[Tue Jan 20 08:26:01 2026] [::1]:57468 [200]: GET /
+[Tue Jan 20 08:26:01 2026] [::1]:57468 Closing
+[Tue Jan 20 08:26:01 2026] [::1]:60554 Accepted
+[Tue Jan 20 08:26:01 2026] [::1]:60554 [404]: GET /public/logo.png - No such file or directory
+[Tue Jan 20 08:26:01 2026] [::1]:60554 Closing
+[Tue Jan 20 08:26:01 2026] [::1]:62828 Accepted
+[Tue Jan 20 08:26:01 2026] [::1]:62828 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 08:26:01 2026] [::1]:62828 Closing
+[Tue Jan 20 08:26:27 2026] [::1]:57361 Accepted
+[Tue Jan 20 08:26:27 2026] [::1]:57361 [200]: GET /
+[Tue Jan 20 08:26:27 2026] [::1]:57361 Closing
+[Tue Jan 20 08:26:27 2026] [::1]:55547 Accepted
+[Tue Jan 20 08:26:27 2026] [::1]:55547 [200]: GET /public/logo.jpeg
+[Tue Jan 20 08:26:27 2026] [::1]:55547 Closing
+[Tue Jan 20 08:26:27 2026] [::1]:65508 Accepted
+[Tue Jan 20 08:26:27 2026] [::1]:65508 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 08:26:27 2026] [::1]:65508 Closing
+[Tue Jan 20 08:31:35 2026] [::1]:54632 Accepted
+[Tue Jan 20 08:31:35 2026] [::1]:54632 [200]: GET /
+[Tue Jan 20 08:31:35 2026] [::1]:54632 Closing
+[Tue Jan 20 08:31:35 2026] [::1]:62118 Accepted
+[Tue Jan 20 08:31:35 2026] [::1]:62118 [200]: GET /public/logo.svg
+[Tue Jan 20 08:31:35 2026] [::1]:62118 Closing
+[Tue Jan 20 08:31:35 2026] [::1]:64740 Accepted
+[Tue Jan 20 08:31:35 2026] [::1]:64740 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 08:31:35 2026] [::1]:64740 Closing
+[Tue Jan 20 08:31:54 2026] [::1]:51060 Accepted
+[Tue Jan 20 08:31:54 2026] [::1]:51060 [200]: GET /
+[Tue Jan 20 08:31:54 2026] [::1]:51060 Closing
+[Tue Jan 20 08:31:54 2026] [::1]:61033 Accepted
+[Tue Jan 20 08:31:54 2026] [::1]:61033 [200]: GET /public/logo.svg
+[Tue Jan 20 08:31:54 2026] [::1]:61033 Closing
+[Tue Jan 20 08:31:54 2026] [::1]:56041 Accepted
+[Tue Jan 20 08:31:54 2026] [::1]:56041 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 08:31:54 2026] [::1]:56041 Closing
+[Tue Jan 20 08:33:33 2026] [::1]:57734 Accepted
+[Tue Jan 20 08:33:33 2026] [::1]:57734 [200]: GET /
+[Tue Jan 20 08:33:33 2026] [::1]:57734 Closing
+[Tue Jan 20 08:33:33 2026] [::1]:50918 Accepted
+[Tue Jan 20 08:33:33 2026] [::1]:50918 [200]: GET /public/logo.svg
+[Tue Jan 20 08:33:33 2026] [::1]:50918 Closing
+[Tue Jan 20 08:33:33 2026] [::1]:50987 Accepted
+[Tue Jan 20 08:33:33 2026] [::1]:50987 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 08:33:33 2026] [::1]:50987 Closing
+[Tue Jan 20 08:33:36 2026] [::1]:58629 Accepted
+[Tue Jan 20 08:33:36 2026] [::1]:58629 [200]: GET /
+[Tue Jan 20 08:33:36 2026] [::1]:58629 Closing
+[Tue Jan 20 08:33:36 2026] [::1]:52817 Accepted
+[Tue Jan 20 08:33:36 2026] [::1]:52817 [200]: GET /public/logo.svg
+[Tue Jan 20 08:33:36 2026] [::1]:52817 Closing
+[Tue Jan 20 08:33:36 2026] [::1]:55326 Accepted
+[Tue Jan 20 08:33:36 2026] [::1]:55326 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 08:33:36 2026] [::1]:55326 Closing
+[Tue Jan 20 08:34:00 2026] [::1]:51317 Accepted
+[Tue Jan 20 08:34:00 2026] [::1]:51317 [200]: GET /
+[Tue Jan 20 08:34:00 2026] [::1]:51317 Closing
+[Tue Jan 20 08:34:00 2026] [::1]:60992 Accepted
+[Tue Jan 20 08:34:00 2026] [::1]:60992 [200]: GET /public/logo.svg
+[Tue Jan 20 08:34:00 2026] [::1]:60992 Closing
+[Tue Jan 20 08:34:00 2026] [::1]:64597 Accepted
+[Tue Jan 20 08:34:00 2026] [::1]:64597 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 08:34:00 2026] [::1]:64597 Closing
+[Tue Jan 20 08:34:16 2026] [::1]:55883 Accepted
+[Tue Jan 20 08:34:16 2026] [::1]:55883 [200]: GET /
+[Tue Jan 20 08:34:16 2026] [::1]:55883 Closing
+[Tue Jan 20 08:34:16 2026] [::1]:51809 Accepted
+[Tue Jan 20 08:34:16 2026] [::1]:51809 [200]: GET /public/logo.svg
+[Tue Jan 20 08:34:16 2026] [::1]:51809 Closing
+[Tue Jan 20 08:34:16 2026] [::1]:53439 Accepted
+[Tue Jan 20 08:34:16 2026] [::1]:53439 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 08:34:16 2026] [::1]:53439 Closing
+[Tue Jan 20 08:34:27 2026] [::1]:49859 Accepted
+[Tue Jan 20 08:34:27 2026] [::1]:49859 [200]: GET /
+[Tue Jan 20 08:34:27 2026] [::1]:49859 Closing
+[Tue Jan 20 08:34:27 2026] [::1]:49670 Accepted
+[Tue Jan 20 08:34:27 2026] [::1]:49670 [200]: GET /public/logo.svg
+[Tue Jan 20 08:34:27 2026] [::1]:49670 Closing
+[Tue Jan 20 08:34:27 2026] [::1]:52985 Accepted
+[Tue Jan 20 08:34:27 2026] [::1]:52985 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 08:34:27 2026] [::1]:52985 Closing
+[Tue Jan 20 08:34:38 2026] [::1]:56876 Accepted
+[Tue Jan 20 08:34:38 2026] [::1]:56876 [200]: GET /
+[Tue Jan 20 08:34:38 2026] [::1]:56876 Closing
+[Tue Jan 20 08:34:38 2026] [::1]:53996 Accepted
+[Tue Jan 20 08:34:38 2026] [::1]:53996 [200]: GET /public/logo.svg
+[Tue Jan 20 08:34:38 2026] [::1]:53996 Closing
+[Tue Jan 20 08:34:38 2026] [::1]:54223 Accepted
+[Tue Jan 20 08:34:38 2026] [::1]:54223 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 08:34:38 2026] [::1]:54223 Closing
+[Tue Jan 20 08:34:42 2026] [::1]:58185 Accepted
+[Tue Jan 20 08:34:42 2026] [::1]:58185 [200]: GET /index.php?c=variedad&a=index
+[Tue Jan 20 08:34:42 2026] [::1]:58185 Closing
+[Tue Jan 20 08:34:42 2026] [::1]:53151 Accepted
+[Tue Jan 20 08:34:42 2026] [::1]:53151 [200]: GET /public/logo.svg
+[Tue Jan 20 08:34:42 2026] [::1]:53151 Closing
+[Tue Jan 20 08:34:43 2026] [::1]:52980 Accepted
+[Tue Jan 20 08:34:44 2026] [::1]:52980 [200]: GET /index.php?c=productoPadre&a=index
+[Tue Jan 20 08:34:44 2026] [::1]:52980 Closing
+[Tue Jan 20 08:34:44 2026] [::1]:59876 Accepted
+[Tue Jan 20 08:34:44 2026] [::1]:59876 [200]: GET /public/logo.svg
+[Tue Jan 20 08:34:44 2026] [::1]:59876 Closing
+[Tue Jan 20 08:34:45 2026] [::1]:51498 Accepted
+[Tue Jan 20 08:34:45 2026] PHP Warning:  Undefined variable $exportUrl in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\index.php on line 16
+[Tue Jan 20 08:34:45 2026] [::1]:51498 [200]: GET /index.php?c=venta&a=index
+[Tue Jan 20 08:34:45 2026] [::1]:51498 Closing
+[Tue Jan 20 08:34:45 2026] [::1]:59479 Accepted
+[Tue Jan 20 08:34:45 2026] [::1]:59479 [200]: GET /public/logo.svg
+[Tue Jan 20 08:34:45 2026] [::1]:59479 Closing
+[Tue Jan 20 08:34:53 2026] [::1]:59362 Accepted
+[Tue Jan 20 08:34:53 2026] [::1]:59862 Accepted
+[Tue Jan 20 08:34:53 2026] [::1]:59362 [200]: GET /index.php?c=venta&a=nueva
+[Tue Jan 20 08:34:53 2026] [::1]:59362 Closing
+[Tue Jan 20 08:34:53 2026] [::1]:59862 [200]: GET /public/logo.svg
+[Tue Jan 20 08:34:53 2026] [::1]:59862 Closing
+[Tue Jan 20 08:34:55 2026] [::1]:62331 Accepted
+[Tue Jan 20 08:34:55 2026] [::1]:62331 [200]: GET /index.php?c=pedido&a=index
+[Tue Jan 20 08:34:55 2026] [::1]:62331 Closing
+[Tue Jan 20 08:34:55 2026] [::1]:62899 Accepted
+[Tue Jan 20 08:34:55 2026] [::1]:62899 [200]: GET /public/logo.svg
+[Tue Jan 20 08:34:55 2026] [::1]:62899 Closing
+[Tue Jan 20 08:34:57 2026] [::1]:59621 Accepted
+[Tue Jan 20 08:34:57 2026] [::1]:59621 [200]: GET /index.php?c=pedido&a=nuevo
+[Tue Jan 20 08:34:57 2026] [::1]:59621 Closing
+[Tue Jan 20 08:34:57 2026] [::1]:63462 Accepted
+[Tue Jan 20 08:34:57 2026] [::1]:63462 [200]: GET /public/logo.svg
+[Tue Jan 20 08:34:57 2026] [::1]:63462 Closing
+[Tue Jan 20 08:34:59 2026] [::1]:58272 Accepted
+[Tue Jan 20 08:35:00 2026] [::1]:58272 [200]: GET /index.php?c=egreso&a=index
+[Tue Jan 20 08:35:00 2026] [::1]:58272 Closing
+[Tue Jan 20 08:35:00 2026] [::1]:51349 Accepted
+[Tue Jan 20 08:35:00 2026] [::1]:51349 [200]: GET /public/logo.svg
+[Tue Jan 20 08:35:00 2026] [::1]:51349 Closing
+[Tue Jan 20 08:35:02 2026] [::1]:59470 Accepted
+[Tue Jan 20 08:35:02 2026] [::1]:59470 [200]: GET /index.php?c=variedad&a=index
+[Tue Jan 20 08:35:02 2026] [::1]:59470 Closing
+[Tue Jan 20 08:35:02 2026] [::1]:57511 Accepted
+[Tue Jan 20 08:35:02 2026] [::1]:57511 [200]: GET /public/logo.svg
+[Tue Jan 20 08:35:02 2026] [::1]:57511 Closing
+[Tue Jan 20 08:35:05 2026] [::1]:62311 Accepted
+[Tue Jan 20 08:35:05 2026] PHP Warning:  Undefined variable $exportUrl in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\index.php on line 16
+[Tue Jan 20 08:35:05 2026] [::1]:62311 [200]: GET /index.php?c=venta&a=index
+[Tue Jan 20 08:35:05 2026] [::1]:62311 Closing
+[Tue Jan 20 08:35:05 2026] [::1]:58067 Accepted
+[Tue Jan 20 08:35:05 2026] [::1]:58067 [200]: GET /public/logo.svg
+[Tue Jan 20 08:35:05 2026] [::1]:58067 Closing
+[Tue Jan 20 08:35:09 2026] [::1]:64246 Accepted
+[Tue Jan 20 08:35:09 2026] [::1]:64246 [200]: GET /index.php?c=productoPadre&a=index
+[Tue Jan 20 08:35:09 2026] [::1]:64246 Closing
+[Tue Jan 20 08:35:09 2026] [::1]:57921 Accepted
+[Tue Jan 20 08:35:09 2026] [::1]:57921 [200]: GET /public/logo.svg
+[Tue Jan 20 08:35:09 2026] [::1]:57921 Closing
+[Tue Jan 20 08:35:17 2026] [::1]:64797 Accepted
+[Tue Jan 20 08:35:17 2026] [::1]:64797 [200]: GET /index.php?c=productoPadre&a=index
+[Tue Jan 20 08:35:17 2026] [::1]:64797 Closing
+[Tue Jan 20 08:35:17 2026] [::1]:59807 Accepted
+[Tue Jan 20 08:35:17 2026] [::1]:59807 [200]: GET /public/logo.svg
+[Tue Jan 20 08:35:17 2026] [::1]:59807 Closing
+[Tue Jan 20 08:35:17 2026] [::1]:49331 Accepted
+[Tue Jan 20 08:35:17 2026] [::1]:49331 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 08:35:17 2026] [::1]:49331 Closing
+[Tue Jan 20 08:35:19 2026] [::1]:53234 Accepted
+[Tue Jan 20 08:35:19 2026] [::1]:53234 [200]: GET /index.php?c=productoPadre&a=index
+[Tue Jan 20 08:35:19 2026] [::1]:53234 Closing
+[Tue Jan 20 08:35:19 2026] [::1]:51294 Accepted
+[Tue Jan 20 08:35:19 2026] [::1]:51294 [200]: GET /public/logo.svg
+[Tue Jan 20 08:35:19 2026] [::1]:51294 Closing
+[Tue Jan 20 08:35:19 2026] [::1]:54996 Accepted
+[Tue Jan 20 08:35:19 2026] [::1]:54996 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 08:35:19 2026] [::1]:54996 Closing
+[Tue Jan 20 08:35:26 2026] [::1]:64759 Accepted
+[Tue Jan 20 08:35:26 2026] [::1]:64759 [200]: GET /index.php?c=productoPadre&a=index
+[Tue Jan 20 08:35:26 2026] [::1]:64759 Closing
+[Tue Jan 20 08:35:26 2026] [::1]:64022 Accepted
+[Tue Jan 20 08:35:26 2026] [::1]:64022 [200]: GET /public/logo.svg
+[Tue Jan 20 08:35:26 2026] [::1]:64022 Closing
+[Tue Jan 20 08:35:26 2026] [::1]:50886 Accepted
+[Tue Jan 20 08:35:26 2026] [::1]:50886 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 08:35:26 2026] [::1]:50886 Closing
+[Tue Jan 20 08:35:36 2026] [::1]:49675 Accepted
+[Tue Jan 20 08:35:36 2026] [::1]:49675 [200]: GET /index.php?c=productoPadre&a=index
+[Tue Jan 20 08:35:36 2026] [::1]:49675 Closing
+[Tue Jan 20 08:35:36 2026] [::1]:61734 Accepted
+[Tue Jan 20 08:35:36 2026] [::1]:61734 [200]: GET /public/logo.svg
+[Tue Jan 20 08:35:36 2026] [::1]:61734 Closing
+[Tue Jan 20 08:35:36 2026] [::1]:63371 Accepted
+[Tue Jan 20 08:35:36 2026] [::1]:63371 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 08:35:36 2026] [::1]:63371 Closing
+[Tue Jan 20 08:35:50 2026] [::1]:53311 Accepted
+[Tue Jan 20 08:35:50 2026] [::1]:53311 [200]: GET /index.php?c=productoPadre&a=index
+[Tue Jan 20 08:35:50 2026] [::1]:53311 Closing
+[Tue Jan 20 08:35:50 2026] [::1]:57727 Accepted
+[Tue Jan 20 08:35:50 2026] [::1]:57727 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 08:35:50 2026] [::1]:57727 Closing
+[Tue Jan 20 08:36:06 2026] [::1]:59563 Accepted
+[Tue Jan 20 08:36:06 2026] [::1]:59563 [200]: GET /index.php?c=productoPadre&a=index
+[Tue Jan 20 08:36:06 2026] [::1]:59563 Closing
+[Tue Jan 20 08:36:06 2026] [::1]:55638 Accepted
+[Tue Jan 20 08:36:06 2026] [::1]:55638 [200]: GET /public/logo.svg
+[Tue Jan 20 08:36:06 2026] [::1]:55638 Closing
+[Tue Jan 20 08:36:06 2026] [::1]:65393 Accepted
+[Tue Jan 20 08:36:06 2026] [::1]:65393 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 08:36:06 2026] [::1]:65393 Closing
+[Tue Jan 20 08:36:24 2026] [::1]:58399 Accepted
+[Tue Jan 20 08:36:24 2026] [::1]:52919 Accepted
+[Tue Jan 20 08:36:24 2026] [::1]:58399 [200]: GET /index.php?c=productoPadre&a=index
+[Tue Jan 20 08:36:24 2026] [::1]:58399 Closing
+[Tue Jan 20 08:36:24 2026] [::1]:52919 [200]: GET /public/logo.svg
+[Tue Jan 20 08:36:24 2026] [::1]:52919 Closing
+[Tue Jan 20 08:36:24 2026] [::1]:52881 Accepted
+[Tue Jan 20 08:36:24 2026] [::1]:52881 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 08:36:24 2026] [::1]:52881 Closing
+[Tue Jan 20 08:36:39 2026] [::1]:59267 Accepted
+[Tue Jan 20 08:36:39 2026] [::1]:59267 [200]: GET /index.php?c=productoPadre&a=index
+[Tue Jan 20 08:36:39 2026] [::1]:59267 Closing
+[Tue Jan 20 08:36:39 2026] [::1]:60297 Accepted
+[Tue Jan 20 08:36:39 2026] [::1]:60297 [200]: GET /public/logo.svg
+[Tue Jan 20 08:36:39 2026] [::1]:60297 Closing
+[Tue Jan 20 08:36:39 2026] [::1]:63655 Accepted
+[Tue Jan 20 08:36:39 2026] [::1]:63655 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 08:36:39 2026] [::1]:63655 Closing
+[Tue Jan 20 08:36:56 2026] [::1]:55335 Accepted
+[Tue Jan 20 08:36:56 2026] PHP Warning:  Undefined variable $exportUrl in C:\Users\guill\OneDrive\Escritorio\AdminStock\app\views\ventas\index.php on line 16
+[Tue Jan 20 08:36:56 2026] [::1]:55335 [200]: GET /index.php?c=venta&a=index
+[Tue Jan 20 08:36:56 2026] [::1]:55335 Closing
+[Tue Jan 20 08:36:56 2026] [::1]:63982 Accepted
+[Tue Jan 20 08:36:57 2026] [::1]:63982 [200]: GET /public/logo.svg
+[Tue Jan 20 08:36:57 2026] [::1]:63982 Closing
+[Tue Jan 20 08:36:59 2026] [::1]:60524 Accepted
+[Tue Jan 20 08:37:00 2026] [::1]:60524 [200]: GET /index.php?c=variedad&a=index
+[Tue Jan 20 08:37:00 2026] [::1]:60524 Closing
+[Tue Jan 20 08:37:00 2026] [::1]:59870 Accepted
+[Tue Jan 20 08:37:00 2026] [::1]:59870 [200]: GET /public/logo.svg
+[Tue Jan 20 08:37:00 2026] [::1]:59870 Closing
+[Tue Jan 20 08:37:15 2026] [::1]:53972 Accepted
+[Tue Jan 20 08:37:15 2026] [::1]:53972 [200]: GET /index.php?c=variedad&a=index
+[Tue Jan 20 08:37:15 2026] [::1]:53972 Closing
+[Tue Jan 20 08:37:15 2026] [::1]:53293 Accepted
+[Tue Jan 20 08:37:16 2026] [::1]:53293 [200]: GET /public/logo.svg
+[Tue Jan 20 08:37:16 2026] [::1]:53293 Closing
+[Tue Jan 20 08:37:16 2026] [::1]:62574 Accepted
+[Tue Jan 20 08:37:16 2026] [::1]:62574 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 08:37:16 2026] [::1]:62574 Closing
+[Tue Jan 20 08:37:17 2026] [::1]:49799 Accepted
+[Tue Jan 20 08:37:17 2026] [::1]:49799 [200]: GET /index.php?c=productoPadre&a=index
+[Tue Jan 20 08:37:17 2026] [::1]:49799 Closing
+[Tue Jan 20 08:37:17 2026] [::1]:60051 Accepted
+[Tue Jan 20 08:37:17 2026] [::1]:60051 [200]: GET /public/logo.svg
+[Tue Jan 20 08:37:17 2026] [::1]:60051 Closing
+[Tue Jan 20 08:38:47 2026] [::1]:54961 Accepted
+[Tue Jan 20 08:38:47 2026] [::1]:54961 [200]: GET /index.php?c=productoPadre&a=index
+[Tue Jan 20 08:38:47 2026] [::1]:54961 Closing
+[Tue Jan 20 08:38:47 2026] [::1]:54981 Accepted
+[Tue Jan 20 08:38:47 2026] [::1]:54981 [200]: GET /public/logo.svg
+[Tue Jan 20 08:38:47 2026] [::1]:54981 Closing
+[Tue Jan 20 08:38:47 2026] [::1]:58957 Accepted
+[Tue Jan 20 08:38:47 2026] [::1]:58957 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 08:38:47 2026] [::1]:58957 Closing
+[Tue Jan 20 08:38:58 2026] [::1]:63549 Accepted
+[Tue Jan 20 08:38:58 2026] [::1]:63549 [200]: GET /index.php?c=productoPadre&a=index
+[Tue Jan 20 08:38:58 2026] [::1]:63549 Closing
+[Tue Jan 20 08:38:58 2026] [::1]:64867 Accepted
+[Tue Jan 20 08:38:58 2026] [::1]:64867 [200]: GET /public/logo.svg
+[Tue Jan 20 08:38:58 2026] [::1]:64867 Closing
+[Tue Jan 20 08:38:58 2026] [::1]:53020 Accepted
+[Tue Jan 20 08:38:58 2026] [::1]:53020 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 08:38:58 2026] [::1]:53020 Closing

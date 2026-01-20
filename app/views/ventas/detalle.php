@@ -135,7 +135,7 @@ document.getElementById('modal_cancelacion')?.addEventListener('click', function
 <table>
     <thead>
         <tr>
-            <th>Producto Padre</th>
+            <th>Producto</th>
             <th>Variedad</th>
             <th>Cantidad</th>
             <th>Precio Unit.</th>

@@ -10,7 +10,7 @@
     <table>
         <thead>
             <tr>
-                <th>Producto Padre</th>
+                <th>Producto</th>
                 <th>Variedad</th>
                 <th>Cantidad</th>
                 <th>Precio Promocional</th>

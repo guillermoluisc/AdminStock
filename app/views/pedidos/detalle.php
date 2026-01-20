@@ -72,7 +72,7 @@
 <table>
     <thead>
         <tr>
-            <th>Producto Padre</th>
+            <th>Producto</th>
             <th>Variedad</th>
             <th>Stock Actual</th>
             <th>Cant. Solicitada</th>

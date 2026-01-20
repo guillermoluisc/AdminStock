@@ -3,7 +3,7 @@
 
 <form method="POST" action="index.php?c=variedad&a=crear">
     <div class="form-group">
-        <label for="producto_padre_id">Producto Padre *</label>
+        <label for="producto_padre_id">Producto *</label>
         <select id="producto_padre_id" name="producto_padre_id" required onchange="cargarPorcentajes()">
             <option value="">Seleccione...</option>
             <?php foreach ($productos_padre as $pp): ?>
@@ -68,7 +68,7 @@
     <div class="card" style="background: #e8f5e9;">
         <h3 style="margin-bottom: 15px;">📊 Precios de Venta Calculados Automáticamente</h3>
         <p style="color: #666; margin-bottom: 15px;">
-            Los precios se calculan según los porcentajes configurados en el Producto Padre
+            Los precios se calculan según los porcentajes configurados en el Producto Base
         </p>
         
         <div class="grid-2">

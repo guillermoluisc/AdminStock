@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Gestión</title>
+    <title>Donna</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: #f5f5f5; }
-        .header { background: #9c3b9e; color: white; padding: 15px 0; margin-bottom: 20px; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; padding-top: 80px; }
+        .header { background: #da48dc; color: white; padding: 15px 0; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .header .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        .header h1 { font-size: 24px; margin-bottom: 10px; }
-        .nav { display: flex; gap: 10px; flex-wrap: wrap; }
+        .header-content { display: flex; align-items: center; gap: 20px; }
+        .header-logo { display: flex; align-items: center; }
+        .header-logo img { height: 65px; width: auto; object-fit: contain; }
+        .nav { display: flex; gap: 10px; flex-wrap: wrap; flex: 1; }
         .nav a { color: white; text-decoration: none; padding: 8px 15px; background: rgba(255,255,255,0.2); border-radius: 4px; font-size: 14px; }
         .nav a:hover { background: rgba(255,255,255,0.3); }
         .nav a.active { background: rgba(255,255,255,0.4); }
@@ -63,16 +65,19 @@
 <body>
     <div class="header">
         <div class="container">
-            <h1>📦 Sistema de Gestión</h1>
-            <div class="nav">
-                <a href="index.php?c=productoPadre&a=index">📁 Productos Padre</a>
-                <a href="index.php?c=variedad&a=index">🏷️ Variedades</a>
-                <!-- <a href="index.php?c=promocion&a=index">🎁 Promociones</a> -->
-                <a href="index.php?c=venta&a=index">💰 Ventas</a>
-                <a href="index.php?c=venta&a=nueva">➕ Nueva Venta</a>
-                <a href="index.php?c=pedido&a=index">📋 Pedidos</a>
-                <a href="index.php?c=pedido&a=nuevo">🛒 Nuevo Pedido</a>
-                <a href="index.php?c=egreso&a=index">💸 Egresos</a>
+            <div class="header-content">
+                <div class="header-logo">
+                    <img src="../public/logo.svg" alt="Logo">
+                </div>
+                <div class="nav">
+                    <a href="index.php?c=productoPadre&a=index">📁 Productos</a>
+                    <a href="index.php?c=variedad&a=index">🏷️ Variedades</a>
+                    <a href="index.php?c=venta&a=index">💰 Ventas</a>
+                    <a href="index.php?c=venta&a=nueva">➕ Nueva Venta</a>
+                    <a href="index.php?c=pedido&a=index">📋 Pedidos</a>
+                    <a href="index.php?c=pedido&a=nuevo">🛒 Nuevo Pedido</a>
+                    <a href="index.php?c=egreso&a=index">💸 Egresos</a>
+                </div>
             </div>
         </div>
     </div>

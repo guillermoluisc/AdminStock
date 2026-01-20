@@ -5,7 +5,7 @@
 </div>
 
 <p style="color: #666; margin-bottom: 20px;">
-    Los productos padre son las categorías generales que agrupan variedades. Aquí se configuran los descuentos que se aplicarán a todas sus variedades.
+    Los productos son las categorías generales que agrupan variedades. Aquí se configuran los descuentos que se aplicarán a todas sus variedades.
 </p>
 
 <?php if (empty($productos)): ?>

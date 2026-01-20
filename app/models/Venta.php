@@ -7,42 +7,107 @@ class Venta {
         $this->db = Database::getInstance()->getConnection();
     }
     
-    public function getAll($filtros = []) {
-        $sql = "SELECT * FROM ventas WHERE 1=1";
-        $params = [];
-        
-        // Filtro por fecha
-        if (!empty($filtros['fecha_desde'])) {
-            $sql .= " AND DATE(fecha) >= ?";
-            $params[] = $filtros['fecha_desde'];
-        }
-        
-        if (!empty($filtros['fecha_hasta'])) {
-            $sql .= " AND DATE(fecha) <= ?";
-            $params[] = $filtros['fecha_hasta'];
-        }
-        
-        // Filtro por método de pago
-        if (!empty($filtros['metodo_pago'])) {
-            $sql .= " AND metodo_pago = ?";
-            $params[] = $filtros['metodo_pago'];
-        }
-        
-        // Filtro por estado
-        if (!empty($filtros['estado'])) {
-            $sql .= " AND estado = ?";
-            $params[] = $filtros['estado'];
-        } else {
-            // Por defecto no mostrar canceladas
-            $sql .= " AND estado != 'cancelada'";
-        }
-        
-        $sql .= " ORDER BY fecha DESC";
-        
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute($params);
-        return $stmt->fetchAll();
+
+// REEMPLAZA completamente el método getAll() en Venta.php:
+
+public function getAll($filtros = [], $limit = null, $offset = null) {
+    $sql = "SELECT * FROM ventas WHERE 1=1";
+    $params = [];
+    
+    // Filtro por fecha
+    if (!empty($filtros['fecha_desde'])) {
+        $sql .= " AND DATE(fecha) >= ?";
+        $params[] = $filtros['fecha_desde'];
     }
+    
+    if (!empty($filtros['fecha_hasta'])) {
+        $sql .= " AND DATE(fecha) <= ?";
+        $params[] = $filtros['fecha_hasta'];
+    }
+    
+    // Filtro por método de pago
+    if (!empty($filtros['metodo_pago'])) {
+        $sql .= " AND metodo_pago = ?";
+        $params[] = $filtros['metodo_pago'];
+    }
+    
+    // Filtro por estado
+    if (!empty($filtros['estado'])) {
+        $sql .= " AND estado = ?";
+        $params[] = $filtros['estado'];
+    } else {
+        // Por defecto no mostrar canceladas
+        $sql .= " AND estado != 'cancelada'";
+    }
+    
+    $sql .= " ORDER BY fecha DESC";
+    
+    // Preparar el statement
+    $stmt = $this->db->prepare($sql);
+    
+    // Bind de parámetros
+    foreach ($params as $key => $value) {
+        $stmt->bindValue($key + 1, $value);
+    }
+    
+    // Agregar paginación si se especifica
+    if ($limit !== null && $offset !== null) {
+        $sql .= " LIMIT :limit OFFSET :offset";
+        $stmt = $this->db->prepare($sql);
+        
+        // Re-bind de parámetros anteriores
+        foreach ($params as $key => $value) {
+            $stmt->bindValue($key + 1, $value);
+        }
+        
+        // Bind de LIMIT y OFFSET como enteros
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+    }
+    
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+// REEMPLAZA el método countAll() en Venta.php:
+
+public function countAll($filtros = []) {
+    $sql = "SELECT COUNT(*) as total FROM ventas WHERE 1=1";
+    $params = [];
+    
+    // Filtro por fecha
+    if (!empty($filtros['fecha_desde'])) {
+        $sql .= " AND DATE(fecha) >= ?";
+        $params[] = $filtros['fecha_desde'];
+    }
+    
+    if (!empty($filtros['fecha_hasta'])) {
+        $sql .= " AND DATE(fecha) <= ?";
+        $params[] = $filtros['fecha_hasta'];
+    }
+    
+    // Filtro por método de pago
+    if (!empty($filtros['metodo_pago'])) {
+        $sql .= " AND metodo_pago = ?";
+        $params[] = $filtros['metodo_pago'];
+    }
+    
+    // Filtro por estado
+    if (!empty($filtros['estado'])) {
+        $sql .= " AND estado = ?";
+        $params[] = $filtros['estado'];
+    } else {
+        // Por defecto no mostrar canceladas
+        $sql .= " AND estado != 'cancelada'";
+    }
+    
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute($params);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    return (int)($result['total'] ?? 0);
+}
     
     public function getById($id) {
         $stmt = $this->db->prepare("SELECT * FROM ventas WHERE id = ?");

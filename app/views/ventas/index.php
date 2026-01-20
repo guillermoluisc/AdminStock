@@ -3,20 +3,6 @@
     <h2>Historial de Ventas</h2>
     <a href="index.php?c=venta&a=nueva" class="btn btn-primary">+ Nueva Venta</a>
 </div>
-<!-- <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-    <h2>Historial de Ventas</h2>
-    <div style="display: flex; gap: 10px;">
-        <?php
-        // Construir URL con filtros actuales
-        // $exportUrl = 'index.php?c=venta&a=exportarExcel';
-        // if (!empty($filtros['fecha_desde'])) $exportUrl .= '&fecha_desde=' . $filtros['fecha_desde'];
-        // if (!empty($filtros['fecha_hasta'])) $exportUrl .= '&fecha_hasta=' . $filtros['fecha_hasta'];
-        // if (!empty($filtros['metodo_pago'])) $exportUrl .= '&metodo_pago=' . $filtros['metodo_pago'];
-        ?>
-        <a href="<?= $exportUrl ?>" class="btn btn-success">📊 Exportar a Excel</a>
-        <a href="index.php?c=venta&a=nueva" class="btn btn-primary">+ Nueva Venta</a>
-    </div>
-</div> -->
 
 <!-- Estadísticas -->
 <div class="grid-3" style="margin-bottom: 20px;">
@@ -58,7 +44,6 @@
         </small>
     </div>
     
-    <!-- NUEVO: Total Stock Disponible -->
     <div class="card" style="background: #f3e5f5;">
         <h4 style="margin-bottom: 10px; color: #9c27b0;">📦 Total Stock Disponible</h4>
         <div style="font-size: 28px; font-weight: bold; color: #9c27b0;">
@@ -100,6 +85,7 @@
         </div>
     </div>
 </div>
+
 <!-- Filtros -->
 <div class="filtros">
     <form method="GET" action="index.php">
@@ -154,54 +140,222 @@
         <p style="text-align: center; color: #95a5a6; padding: 20px;">No hay ventas registradas.</p>
     </div>
 <?php else: ?>
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Fecha</th>
-            <th>Cliente</th>
-            <th>Estado</th>
-            <th>Método de Pago</th>
-            <th>Total</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($ventas as $venta): ?>
-            <tr style="<?= $venta['estado'] == 'cancelada' ? 'opacity: 0.6;' : '' ?>">
-                <td><strong>#<?= $venta['id'] ?></strong></td>
-                <td><?= date('d/m/Y H:i', strtotime($venta['fecha'])) ?></td>
-                <td>
-                    <?php if ($venta['nombre_cliente']): ?>
-                        <strong>👤 <?= htmlspecialchars($venta['nombre_cliente']) ?></strong>
-                    <?php else: ?>
-                        <span style="color: #95a5a6;">Anónimo</span>
-                    <?php endif; ?>
-                </td>
-                <td>
-                    <?php if ($venta['estado'] == 'completada'): ?>
-                        <span class="badge" style="background: #27ae60;">✅ Completada</span>
-                    <?php elseif ($venta['estado'] == 'preventa'): ?>
-                        <span class="badge" style="background: #f39c12;">⏳ Pre-venta</span>
-                    <?php else: ?>
-                        <span class="badge" style="background: #e74c3c;">❌ Cancelada</span>
-                    <?php endif; ?>
-                </td>
-                <td>
-                    <?php if ($venta['metodo_pago'] == 'efectivo'): ?>
-                        <span class="badge" style="background: #27ae60;">💵 Efectivo</span>
-                    <?php elseif ($venta['metodo_pago'] == 'tarjeta'): ?>
-                        <span class="badge" style="background: #3498db;">💳 Tarjeta</span>
-                    <?php else: ?>
-                        <span class="badge" style="background: #9b59b6;">🔄 Transferencia</span>
-                    <?php endif; ?>
-                </td>
-                <td><strong style="color: #27ae60; font-size: 16px;"><?= FormatHelper::precio($venta['total']) ?></strong></td>
-                <td>
-                    <a href="index.php?c=venta&a=detalle&id=<?= $venta['id'] ?>" class="btn btn-primary" style="padding: 5px 10px;">Ver Detalle</a>
-                </td>
+    <!-- Información de paginación -->
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Fecha</th>
+                <th>Cliente</th>
+                <th>Estado</th>
+                <th>Método de Pago</th>
+                <th>Total</th>
+                <th>Acciones</th>
             </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            <?php foreach ($ventas as $venta): ?>
+                <tr style="<?= $venta['estado'] == 'cancelada' ? 'opacity: 0.6;' : '' ?>">
+                    <td><strong>#<?= $venta['id'] ?></strong></td>
+                    <td><?= date('d/m/Y H:i', strtotime($venta['fecha'])) ?></td>
+                    <td>
+                        <?php if ($venta['nombre_cliente']): ?>
+                            <strong>👤 <?= htmlspecialchars($venta['nombre_cliente']) ?></strong>
+                        <?php else: ?>
+                            <span style="color: #95a5a6;">Anónimo</span>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <?php if ($venta['estado'] == 'completada'): ?>
+                            <span class="badge" style="background: #27ae60;">✅ Completada</span>
+                        <?php elseif ($venta['estado'] == 'preventa'): ?>
+                            <span class="badge" style="background: #f39c12;">⏳ Pre-venta</span>
+                        <?php else: ?>
+                            <span class="badge" style="background: #e74c3c;">❌ Cancelada</span>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <?php if ($venta['metodo_pago'] == 'efectivo'): ?>
+                            <span class="badge" style="background: #27ae60;">💵 Efectivo</span>
+                        <?php elseif ($venta['metodo_pago'] == 'tarjeta'): ?>
+                            <span class="badge" style="background: #3498db;">💳 Tarjeta</span>
+                        <?php else: ?>
+                            <span class="badge" style="background: #9b59b6;">🔄 Transferencia</span>
+                        <?php endif; ?>
+                    </td>
+                    <td><strong style="color: #27ae60; font-size: 16px;"><?= FormatHelper::precio($venta['total']) ?></strong></td>
+                    <td>
+                        <a href="index.php?c=venta&a=detalle&id=<?= $venta['id'] ?>" class="btn btn-primary" style="padding: 5px 10px;">Ver Detalle</a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <!-- Paginación -->
+<!-- Sección de paginación - REEMPLAZA todo el bloque de paginación con esto -->
+
+<!-- Paginación - Siempre visible -->
+<!-- Paginación - Siempre visible con diseño mejorado -->
+<?php if (isset($paginacion)): ?>
+    <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #ecf0f1;">
+        
+        <!-- Navegación entre páginas (solo si hay más de 1 página) -->
+        <?php if ($paginacion['total_paginas'] > 1): ?>
+            <div style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 15px; flex-wrap: wrap;">
+                <?php
+                $pagina_actual = $paginacion['pagina_actual'];
+                $total_paginas = $paginacion['total_paginas'];
+                
+                // Construir URL base con filtros actuales
+                $url_base = 'index.php?c=venta&a=index';
+                if (!empty($filtros['fecha_desde'])) $url_base .= '&fecha_desde=' . $filtros['fecha_desde'];
+                if (!empty($filtros['fecha_hasta'])) $url_base .= '&fecha_hasta=' . $filtros['fecha_hasta'];
+                if (!empty($filtros['metodo_pago'])) $url_base .= '&metodo_pago=' . $filtros['metodo_pago'];
+                if (!empty($filtros['estado'])) $url_base .= '&estado=' . $filtros['estado'];
+                if (!empty($_GET['por_pagina'])) $url_base .= '&por_pagina=' . $_GET['por_pagina'];
+                ?>
+                
+                <!-- Botón Primera Página -->
+                <?php if ($pagina_actual > 1): ?>
+                    <a href="<?= $url_base ?>&pagina=1" 
+                       style="padding: 10px 15px; background: #9c27b0; color: white; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 500; transition: background 0.3s; display: inline-block;">
+                        ⏮️ Primera
+                    </a>
+                <?php else: ?>
+                    <span style="padding: 10px 15px; background: #e0e0e0; color: #999; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: not-allowed; display: inline-block;">
+                        ⏮️ Primera
+                    </span>
+                <?php endif; ?>
+                
+                <!-- Botón Anterior -->
+                <?php if ($pagina_actual > 1): ?>
+                    <a href="<?= $url_base ?>&pagina=<?= $pagina_actual - 1 ?>" 
+                       style="padding: 10px 15px; background: #7b1fa2; color: white; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 500; transition: background 0.3s; display: inline-block;">
+                        ◀️ Anterior
+                    </a>
+                <?php else: ?>
+                    <span style="padding: 10px 15px; background: #e0e0e0; color: #999; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: not-allowed; display: inline-block;">
+                        ◀️ Anterior
+                    </span>
+                <?php endif; ?>
+                
+                <!-- Números de página -->
+                <?php
+                $rango = 2;
+                $inicio = max(1, $pagina_actual - $rango);
+                $fin = min($total_paginas, $pagina_actual + $rango);
+                
+                if ($pagina_actual <= $rango) {
+                    $fin = min($total_paginas, $rango * 2 + 1);
+                }
+                
+                if ($pagina_actual > $total_paginas - $rango) {
+                    $inicio = max(1, $total_paginas - ($rango * 2));
+                }
+                
+                if ($inicio > 1): ?>
+                    <span style="padding: 10px 8px; color: #666; font-weight: bold;">...</span>
+                <?php endif;
+                
+                for ($i = $inicio; $i <= $fin; $i++):
+                    if ($i == $pagina_actual): ?>
+                        <span style="padding: 10px 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: default; display: inline-block; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);">
+                            <?= $i ?>
+                        </span>
+                    <?php else: ?>
+                        <a href="<?= $url_base ?>&pagina=<?= $i ?>" 
+                           style="padding: 10px 15px; background: white; color: #9c27b0; border: 2px solid #9c27b0; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 500; transition: all 0.3s; display: inline-block;">
+                            <?= $i ?>
+                        </a>
+                    <?php endif;
+                endfor;
+                
+                if ($fin < $total_paginas): ?>
+                    <span style="padding: 10px 8px; color: #666; font-weight: bold;">...</span>
+                <?php endif; ?>
+                
+                <!-- Botón Siguiente -->
+                <?php if ($pagina_actual < $total_paginas): ?>
+                    <a href="<?= $url_base ?>&pagina=<?= $pagina_actual + 1 ?>" 
+                       style="padding: 10px 15px; background: #7b1fa2; color: white; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 500; transition: background 0.3s; display: inline-block;">
+                        Siguiente ▶️
+                    </a>
+                <?php else: ?>
+                    <span style="padding: 10px 15px; background: #e0e0e0; color: #999; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: not-allowed; display: inline-block;">
+                        Siguiente ▶️
+                    </span>
+                <?php endif; ?>
+                
+                <!-- Botón Última Página -->
+                <?php if ($pagina_actual < $total_paginas): ?>
+                    <a href="<?= $url_base ?>&pagina=<?= $total_paginas ?>" 
+                       style="padding: 10px 15px; background: #9c27b0; color: white; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 500; transition: background 0.3s; display: inline-block;">
+                        Última ⏭️
+                    </a>
+                <?php else: ?>
+                    <span style="padding: 10px 15px; background: #e0e0e0; color: #999; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: not-allowed; display: inline-block;">
+                        Última ⏭️
+                    </span>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+        
+        <!-- Selector de registros por página - SIEMPRE VISIBLE -->
+        <div style="display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+            <div style="font-size: 14px; color: #333; font-weight: 500;">
+                Mostrando <strong style="color: #9c27b0;"><?= count($ventas) ?></strong> de <strong style="color: #9c27b0;"><?= $paginacion['total'] ?></strong> ventas
+                <?php if ($paginacion['total_paginas'] > 1): ?>
+                    <span style="color: #666;">(Página <strong style="color: #7b1fa2;"><?= $paginacion['pagina_actual'] ?></strong> de <strong style="color: #7b1fa2;"><?= $paginacion['total_paginas'] ?></strong>)</span>
+                <?php endif; ?>
+            </div>
+            
+            <form method="GET" action="index.php" style="display: inline-flex; align-items: center; gap: 10px;">
+                <input type="hidden" name="c" value="venta">
+                <input type="hidden" name="a" value="index">
+                <?php if (!empty($filtros['fecha_desde'])): ?>
+                    <input type="hidden" name="fecha_desde" value="<?= $filtros['fecha_desde'] ?>">
+                <?php endif; ?>
+                <?php if (!empty($filtros['fecha_hasta'])): ?>
+                    <input type="hidden" name="fecha_hasta" value="<?= $filtros['fecha_hasta'] ?>">
+                <?php endif; ?>
+                <?php if (!empty($filtros['metodo_pago'])): ?>
+                    <input type="hidden" name="metodo_pago" value="<?= $filtros['metodo_pago'] ?>">
+                <?php endif; ?>
+                <?php if (!empty($filtros['estado'])): ?>
+                    <input type="hidden" name="estado" value="<?= $filtros['estado'] ?>">
+                <?php endif; ?>
+                
+                <label for="por_pagina" style="font-size: 14px; color: #333; font-weight: 600;">Mostrar:</label>
+                <select name="por_pagina" id="por_pagina" onchange="this.form.submit()" 
+                        style="padding: 8px 12px; border: 2px solid #9c27b0; border-radius: 6px; font-size: 14px; cursor: pointer; background: white; color: #333; font-weight: 500;">
+                    <option value="5" <?= ($paginacion['por_pagina'] ?? 10) == 5 ? 'selected' : '' ?>>5</option>
+                    <option value="10" <?= ($paginacion['por_pagina'] ?? 10) == 10 ? 'selected' : '' ?>>10</option>
+                    <option value="20" <?= ($paginacion['por_pagina'] ?? 10) == 20 ? 'selected' : '' ?>>20</option>
+                    <option value="50" <?= ($paginacion['por_pagina'] ?? 10) == 50 ? 'selected' : '' ?>>50</option>
+                    <option value="100" <?= ($paginacion['por_pagina'] ?? 10) == 100 ? 'selected' : '' ?>>100</option>
+                </select>
+                <span style="font-size: 14px; color: #333; font-weight: 500;">por página</span>
+            </form>
+        </div>
+    </div>
+    
+    <style>
+        /* Efectos hover para los botones de paginación */
+        a[href*="pagina"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3) !important;
+        }
+        
+        a[href*="pagina"][style*="border: 2px"]:hover {
+            background: #9c27b0 !important;
+            color: white !important;
+        }
+        
+        a[href*="pagina"][style*="background: #9c27b0"]:hover,
+        a[href*="pagina"][style*="background: #7b1fa2"]:hover {
+            background: #6a1b9a !important;
+        }
+    </style>
+<?php endif; ?>
 <?php endif; ?>

@@ -512,3 +512,384 @@
 [Tue Jan 20 08:59:44 2026] [::1]:65086 Accepted
 [Tue Jan 20 08:59:44 2026] [::1]:65086 [200]: GET /public/logo.svg
 [Tue Jan 20 08:59:44 2026] [::1]:65086 Closing
+[Tue Jan 20 09:03:34 2026] [::1]:58919 Accepted
+[Tue Jan 20 09:03:34 2026] [::1]:58919 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=20
+[Tue Jan 20 09:03:34 2026] [::1]:58919 Closing
+[Tue Jan 20 09:03:34 2026] [::1]:49670 Accepted
+[Tue Jan 20 09:03:34 2026] [::1]:49670 [200]: GET /public/logo.svg
+[Tue Jan 20 09:03:34 2026] [::1]:49670 Closing
+[Tue Jan 20 09:03:34 2026] [::1]:59848 Accepted
+[Tue Jan 20 09:03:34 2026] [::1]:59848 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 09:03:34 2026] [::1]:59848 Closing
+[Tue Jan 20 09:03:53 2026] [::1]:63644 Accepted
+[Tue Jan 20 09:03:53 2026] [::1]:63644 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=20
+[Tue Jan 20 09:03:53 2026] [::1]:63644 Closing
+[Tue Jan 20 09:03:53 2026] [::1]:59355 Accepted
+[Tue Jan 20 09:03:53 2026] [::1]:59355 [200]: GET /public/logo.svg
+[Tue Jan 20 09:03:53 2026] [::1]:59355 Closing
+[Tue Jan 20 09:03:53 2026] [::1]:58946 Accepted
+[Tue Jan 20 09:03:53 2026] [::1]:58946 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 09:03:53 2026] [::1]:58946 Closing
+[Tue Jan 20 09:03:57 2026] [::1]:59898 Accepted
+[Tue Jan 20 09:03:57 2026] [::1]:59898 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=10
+[Tue Jan 20 09:03:57 2026] [::1]:59898 Closing
+[Tue Jan 20 09:03:57 2026] [::1]:62430 Accepted
+[Tue Jan 20 09:03:57 2026] [::1]:62430 [200]: GET /public/logo.svg
+[Tue Jan 20 09:03:57 2026] [::1]:62430 Closing
+[Tue Jan 20 09:04:03 2026] [::1]:58291 Accepted
+[Tue Jan 20 09:04:03 2026] [::1]:58291 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=10&pagina=2
+[Tue Jan 20 09:04:03 2026] [::1]:58291 Closing
+[Tue Jan 20 09:04:03 2026] [::1]:60568 Accepted
+[Tue Jan 20 09:04:03 2026] [::1]:60568 [200]: GET /public/logo.svg
+[Tue Jan 20 09:04:03 2026] [::1]:60568 Closing
+[Tue Jan 20 09:04:05 2026] [::1]:64810 Accepted
+[Tue Jan 20 09:04:06 2026] [::1]:64810 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=10&pagina=1
+[Tue Jan 20 09:04:06 2026] [::1]:64810 Closing
+[Tue Jan 20 09:04:06 2026] [::1]:56211 Accepted
+[Tue Jan 20 09:04:06 2026] [::1]:56211 [200]: GET /public/logo.svg
+[Tue Jan 20 09:04:06 2026] [::1]:56211 Closing
+[Tue Jan 20 09:04:10 2026] [::1]:52567 Accepted
+[Tue Jan 20 09:04:10 2026] [::1]:52567 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=20
+[Tue Jan 20 09:04:10 2026] [::1]:52567 Closing
+[Tue Jan 20 09:04:10 2026] [::1]:64614 Accepted
+[Tue Jan 20 09:04:10 2026] [::1]:64614 [200]: GET /public/logo.svg
+[Tue Jan 20 09:04:10 2026] [::1]:64614 Closing
+[Tue Jan 20 09:04:42 2026] [::1]:55153 Accepted
+[Tue Jan 20 09:04:42 2026] [::1]:55153 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=10
+[Tue Jan 20 09:04:42 2026] [::1]:55153 Closing
+[Tue Jan 20 09:04:42 2026] [::1]:62602 Accepted
+[Tue Jan 20 09:04:42 2026] [::1]:62602 [200]: GET /public/logo.svg
+[Tue Jan 20 09:04:42 2026] [::1]:62602 Closing
+[Tue Jan 20 09:04:45 2026] [::1]:58598 Accepted
+[Tue Jan 20 09:04:45 2026] [::1]:58598 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=10
+[Tue Jan 20 09:04:45 2026] [::1]:58598 Closing
+[Tue Jan 20 09:04:45 2026] [::1]:59089 Accepted
+[Tue Jan 20 09:04:45 2026] [::1]:59089 [200]: GET /public/logo.svg
+[Tue Jan 20 09:04:45 2026] [::1]:59089 Closing
+[Tue Jan 20 09:04:45 2026] [::1]:59843 Accepted
+[Tue Jan 20 09:04:45 2026] [::1]:59843 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 09:04:45 2026] [::1]:59843 Closing
+[Tue Jan 20 09:04:47 2026] [::1]:55420 Accepted
+[Tue Jan 20 09:04:47 2026] [::1]:55420 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=10
+[Tue Jan 20 09:04:47 2026] [::1]:55420 Closing
+[Tue Jan 20 09:04:47 2026] [::1]:63231 Accepted
+[Tue Jan 20 09:04:47 2026] [::1]:63231 [200]: GET /public/logo.svg
+[Tue Jan 20 09:04:47 2026] [::1]:63231 Closing
+[Tue Jan 20 09:04:47 2026] [::1]:55726 Accepted
+[Tue Jan 20 09:04:47 2026] [::1]:55726 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 09:04:47 2026] [::1]:55726 Closing
+[Tue Jan 20 09:05:04 2026] [::1]:61312 Accepted
+[Tue Jan 20 09:05:04 2026] [::1]:61312 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=10
+[Tue Jan 20 09:05:04 2026] [::1]:61312 Closing
+[Tue Jan 20 09:05:04 2026] [::1]:52648 Accepted
+[Tue Jan 20 09:05:04 2026] [::1]:52648 [200]: GET /public/logo.svg
+[Tue Jan 20 09:05:04 2026] [::1]:52648 Closing
+[Tue Jan 20 09:05:04 2026] [::1]:52806 Accepted
+[Tue Jan 20 09:05:04 2026] [::1]:52806 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 09:05:04 2026] [::1]:52806 Closing
+[Tue Jan 20 09:05:05 2026] [::1]:59857 Accepted
+[Tue Jan 20 09:05:05 2026] [::1]:59857 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=10
+[Tue Jan 20 09:05:05 2026] [::1]:59857 Closing
+[Tue Jan 20 09:05:05 2026] [::1]:62734 Accepted
+[Tue Jan 20 09:05:05 2026] [::1]:62734 [200]: GET /public/logo.svg
+[Tue Jan 20 09:05:05 2026] [::1]:62734 Closing
+[Tue Jan 20 09:05:05 2026] [::1]:53912 Accepted
+[Tue Jan 20 09:05:05 2026] [::1]:53912 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 09:05:05 2026] [::1]:53912 Closing
+[Tue Jan 20 09:05:25 2026] [::1]:52517 Accepted
+[Tue Jan 20 09:05:25 2026] [::1]:52517 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=10&pagina=2
+[Tue Jan 20 09:05:25 2026] [::1]:52517 Closing
+[Tue Jan 20 09:05:25 2026] [::1]:58936 Accepted
+[Tue Jan 20 09:05:25 2026] [::1]:58936 [200]: GET /public/logo.svg
+[Tue Jan 20 09:05:25 2026] [::1]:58936 Closing
+[Tue Jan 20 09:05:27 2026] [::1]:50935 Accepted
+[Tue Jan 20 09:05:27 2026] [::1]:50935 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=10&pagina=1
+[Tue Jan 20 09:05:27 2026] [::1]:50935 Closing
+[Tue Jan 20 09:05:27 2026] [::1]:62579 Accepted
+[Tue Jan 20 09:05:27 2026] [::1]:62579 [200]: GET /public/logo.svg
+[Tue Jan 20 09:05:27 2026] [::1]:62579 Closing
+[Tue Jan 20 09:05:42 2026] [::1]:54596 Accepted
+[Tue Jan 20 09:05:42 2026] [::1]:54596 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=10&pagina=1
+[Tue Jan 20 09:05:42 2026] [::1]:54596 Closing
+[Tue Jan 20 09:05:42 2026] [::1]:49918 Accepted
+[Tue Jan 20 09:05:42 2026] [::1]:49918 [200]: GET /public/logo.svg
+[Tue Jan 20 09:05:42 2026] [::1]:49918 Closing
+[Tue Jan 20 09:05:42 2026] [::1]:56105 Accepted
+[Tue Jan 20 09:05:42 2026] [::1]:56105 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 09:05:42 2026] [::1]:56105 Closing
+[Tue Jan 20 09:06:09 2026] [::1]:53952 Accepted
+[Tue Jan 20 09:06:09 2026] [::1]:53952 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=10&pagina=1
+[Tue Jan 20 09:06:09 2026] [::1]:53952 Closing
+[Tue Jan 20 09:06:09 2026] [::1]:49261 Accepted
+[Tue Jan 20 09:06:09 2026] [::1]:49261 [200]: GET /public/logo.svg
+[Tue Jan 20 09:06:09 2026] [::1]:49261 Closing
+[Tue Jan 20 09:06:09 2026] [::1]:56420 Accepted
+[Tue Jan 20 09:06:09 2026] [::1]:56420 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 09:06:09 2026] [::1]:56420 Closing
+[Tue Jan 20 09:06:18 2026] [::1]:60966 Accepted
+[Tue Jan 20 09:06:18 2026] [::1]:60966 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=10&pagina=1
+[Tue Jan 20 09:06:18 2026] [::1]:60966 Closing
+[Tue Jan 20 09:06:18 2026] [::1]:64243 Accepted
+[Tue Jan 20 09:06:18 2026] [::1]:64243 [200]: GET /public/logo.svg
+[Tue Jan 20 09:06:18 2026] [::1]:64243 Closing
+[Tue Jan 20 09:06:18 2026] [::1]:64515 Accepted
+[Tue Jan 20 09:06:18 2026] [::1]:64515 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 09:06:18 2026] [::1]:64515 Closing
+[Tue Jan 20 09:06:26 2026] [::1]:56003 Accepted
+[Tue Jan 20 09:06:26 2026] [::1]:56003 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=10&pagina=1
+[Tue Jan 20 09:06:26 2026] [::1]:56003 Closing
+[Tue Jan 20 09:06:26 2026] [::1]:56286 Accepted
+[Tue Jan 20 09:06:26 2026] [::1]:56286 [200]: GET /public/logo.svg
+[Tue Jan 20 09:06:26 2026] [::1]:56286 Closing
+[Tue Jan 20 09:06:26 2026] [::1]:60627 Accepted
+[Tue Jan 20 09:06:26 2026] [::1]:60627 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 09:06:26 2026] [::1]:60627 Closing
+[Tue Jan 20 09:06:38 2026] [::1]:63968 Accepted
+[Tue Jan 20 09:06:38 2026] [::1]:63968 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=10&pagina=1
+[Tue Jan 20 09:06:38 2026] [::1]:63968 Closing
+[Tue Jan 20 09:06:38 2026] [::1]:53448 Accepted
+[Tue Jan 20 09:06:38 2026] [::1]:53448 [200]: GET /public/logo.svg
+[Tue Jan 20 09:06:38 2026] [::1]:53448 Closing
+[Tue Jan 20 09:06:38 2026] [::1]:56703 Accepted
+[Tue Jan 20 09:06:38 2026] [::1]:56703 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 09:06:38 2026] [::1]:56703 Closing
+[Tue Jan 20 09:07:06 2026] [::1]:54512 Accepted
+[Tue Jan 20 09:07:06 2026] [::1]:54512 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=10&pagina=1
+[Tue Jan 20 09:07:06 2026] [::1]:54512 Closing
+[Tue Jan 20 09:07:06 2026] [::1]:58469 Accepted
+[Tue Jan 20 09:07:06 2026] [::1]:58469 [200]: GET /public/logo.svg
+[Tue Jan 20 09:07:06 2026] [::1]:58469 Closing
+[Tue Jan 20 09:07:06 2026] [::1]:61573 Accepted
+[Tue Jan 20 09:07:06 2026] [::1]:61573 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 09:07:06 2026] [::1]:61573 Closing
+[Tue Jan 20 09:07:44 2026] [::1]:55294 Accepted
+[Tue Jan 20 09:07:44 2026] [::1]:55294 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=10&pagina=1
+[Tue Jan 20 09:07:44 2026] [::1]:55294 Closing
+[Tue Jan 20 09:07:44 2026] [::1]:57331 Accepted
+[Tue Jan 20 09:07:44 2026] [::1]:57331 [200]: GET /public/logo.svg
+[Tue Jan 20 09:07:44 2026] [::1]:57331 Closing
+[Tue Jan 20 09:07:44 2026] [::1]:50186 Accepted
+[Tue Jan 20 09:07:44 2026] [::1]:50186 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 09:07:44 2026] [::1]:50186 Closing
+[Tue Jan 20 09:07:46 2026] [::1]:51653 Accepted
+[Tue Jan 20 09:07:46 2026] [::1]:51653 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=10&pagina=2
+[Tue Jan 20 09:07:46 2026] [::1]:51653 Closing
+[Tue Jan 20 09:07:46 2026] [::1]:60181 Accepted
+[Tue Jan 20 09:07:46 2026] [::1]:60181 [200]: GET /public/logo.svg
+[Tue Jan 20 09:07:46 2026] [::1]:60181 Closing
+[Tue Jan 20 09:07:48 2026] [::1]:57404 Accepted
+[Tue Jan 20 09:07:49 2026] [::1]:57404 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=10&pagina=1
+[Tue Jan 20 09:07:49 2026] [::1]:57404 Closing
+[Tue Jan 20 09:07:49 2026] [::1]:54096 Accepted
+[Tue Jan 20 09:07:49 2026] [::1]:54096 [200]: GET /public/logo.svg
+[Tue Jan 20 09:07:49 2026] [::1]:54096 Closing
+[Tue Jan 20 09:08:25 2026] [::1]:60092 Accepted
+[Tue Jan 20 09:08:25 2026] [::1]:60092 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=10&pagina=1
+[Tue Jan 20 09:08:25 2026] [::1]:60092 Closing
+[Tue Jan 20 09:08:25 2026] [::1]:53925 Accepted
+[Tue Jan 20 09:08:25 2026] [::1]:53925 [200]: GET /public/logo.svg
+[Tue Jan 20 09:08:25 2026] [::1]:53925 Closing
+[Tue Jan 20 09:08:25 2026] [::1]:54798 Accepted
+[Tue Jan 20 09:08:25 2026] [::1]:54798 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 09:08:25 2026] [::1]:54798 Closing
+[Tue Jan 20 09:08:42 2026] [::1]:59168 Accepted
+[Tue Jan 20 09:08:42 2026] [::1]:59693 Accepted
+[Tue Jan 20 09:08:42 2026] [::1]:59168 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=10&pagina=1
+[Tue Jan 20 09:08:42 2026] [::1]:59168 Closing
+[Tue Jan 20 09:08:42 2026] [::1]:59693 [200]: GET /public/logo.svg
+[Tue Jan 20 09:08:42 2026] [::1]:59693 Closing
+[Tue Jan 20 09:08:42 2026] [::1]:52920 Accepted
+[Tue Jan 20 09:08:42 2026] [::1]:52920 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 09:08:42 2026] [::1]:52920 Closing
+[Tue Jan 20 09:11:19 2026] [::1]:51818 Accepted
+[Tue Jan 20 09:11:19 2026] [::1]:51818 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=10&pagina=1
+[Tue Jan 20 09:11:19 2026] [::1]:51818 Closing
+[Tue Jan 20 09:11:19 2026] [::1]:50284 Accepted
+[Tue Jan 20 09:11:19 2026] [::1]:50284 [200]: GET /public/logo.svg
+[Tue Jan 20 09:11:19 2026] [::1]:50284 Closing
+[Tue Jan 20 09:11:19 2026] [::1]:54887 Accepted
+[Tue Jan 20 09:11:19 2026] [::1]:54887 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 09:11:19 2026] [::1]:54887 Closing
+[Tue Jan 20 09:11:29 2026] [::1]:52085 Accepted
+[Tue Jan 20 09:11:29 2026] [::1]:52085 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=10&pagina=2
+[Tue Jan 20 09:11:29 2026] [::1]:52085 Closing
+[Tue Jan 20 09:11:29 2026] [::1]:55070 Accepted
+[Tue Jan 20 09:11:29 2026] [::1]:55070 [200]: GET /public/logo.svg
+[Tue Jan 20 09:11:29 2026] [::1]:55070 Closing
+[Tue Jan 20 09:11:31 2026] [::1]:62572 Accepted
+[Tue Jan 20 09:11:31 2026] [::1]:62572 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=10&pagina=1
+[Tue Jan 20 09:11:31 2026] [::1]:62572 Closing
+[Tue Jan 20 09:11:31 2026] [::1]:51667 Accepted
+[Tue Jan 20 09:11:31 2026] [::1]:51667 [200]: GET /public/logo.svg
+[Tue Jan 20 09:11:31 2026] [::1]:51667 Closing
+[Tue Jan 20 09:11:34 2026] [::1]:53808 Accepted
+[Tue Jan 20 09:11:34 2026] [::1]:50227 Accepted
+[Tue Jan 20 09:11:34 2026] [::1]:53808 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=20
+[Tue Jan 20 09:11:34 2026] [::1]:53808 Closing
+[Tue Jan 20 09:11:34 2026] [::1]:50227 [200]: GET /public/logo.svg
+[Tue Jan 20 09:11:34 2026] [::1]:50227 Closing
+[Tue Jan 20 09:11:42 2026] [::1]:58492 Accepted
+[Tue Jan 20 09:11:42 2026] [::1]:58492 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=5
+[Tue Jan 20 09:11:42 2026] [::1]:58492 Closing
+[Tue Jan 20 09:11:42 2026] [::1]:65425 Accepted
+[Tue Jan 20 09:11:42 2026] [::1]:65425 [200]: GET /public/logo.svg
+[Tue Jan 20 09:11:42 2026] [::1]:65425 Closing
+[Tue Jan 20 09:11:44 2026] [::1]:56257 Accepted
+[Tue Jan 20 09:11:44 2026] [::1]:56257 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&por_pagina=5&pagina=2
+[Tue Jan 20 09:11:44 2026] [::1]:56257 Closing
+[Tue Jan 20 09:11:44 2026] [::1]:58532 Accepted
+[Tue Jan 20 09:11:44 2026] [::1]:58532 [200]: GET /public/logo.svg
+[Tue Jan 20 09:11:44 2026] [::1]:58532 Closing
+[Tue Jan 20 09:11:52 2026] [::1]:51600 Accepted
+[Tue Jan 20 09:11:52 2026] [::1]:51600 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&metodo_pago=tarjeta&estado=
+[Tue Jan 20 09:11:52 2026] [::1]:51600 Closing
+[Tue Jan 20 09:11:52 2026] [::1]:50313 Accepted
+[Tue Jan 20 09:11:52 2026] [::1]:50313 [200]: GET /public/logo.svg
+[Tue Jan 20 09:11:52 2026] [::1]:50313 Closing
+[Tue Jan 20 09:11:56 2026] [::1]:51324 Accepted
+[Tue Jan 20 09:11:56 2026] [::1]:51324 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&metodo_pago=tarjeta&por_pagina=20
+[Tue Jan 20 09:11:56 2026] [::1]:51324 Closing
+[Tue Jan 20 09:11:56 2026] [::1]:55403 Accepted
+[Tue Jan 20 09:11:56 2026] [::1]:55403 [200]: GET /public/logo.svg
+[Tue Jan 20 09:11:56 2026] [::1]:55403 Closing
+[Tue Jan 20 09:11:59 2026] [::1]:51346 Accepted
+[Tue Jan 20 09:11:59 2026] [::1]:51346 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&metodo_pago=&estado=
+[Tue Jan 20 09:11:59 2026] [::1]:51346 Closing
+[Tue Jan 20 09:11:59 2026] [::1]:64397 Accepted
+[Tue Jan 20 09:11:59 2026] [::1]:64397 [200]: GET /public/logo.svg
+[Tue Jan 20 09:11:59 2026] [::1]:64397 Closing
+[Tue Jan 20 09:12:20 2026] [::1]:64976 Accepted
+[Tue Jan 20 09:12:20 2026] [::1]:64976 [200]: GET /index.php?c=venta&a=index&fecha_desde=2026-01-01&fecha_hasta=2026-01-31&metodo_pago=&estado=
+[Tue Jan 20 09:12:20 2026] [::1]:64976 Closing
+[Tue Jan 20 09:12:20 2026] [::1]:54997 Accepted
+[Tue Jan 20 09:12:20 2026] [::1]:54997 [200]: GET /public/logo.svg
+[Tue Jan 20 09:12:20 2026] [::1]:54997 Closing
+[Tue Jan 20 09:12:20 2026] [::1]:54967 Accepted
+[Tue Jan 20 09:12:20 2026] [::1]:54967 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 09:12:20 2026] [::1]:54967 Closing
+[Tue Jan 20 09:12:23 2026] [::1]:51309 Accepted
+[Tue Jan 20 09:12:23 2026] [::1]:51309 [200]: GET /index.php?c=productoPadre&a=index
+[Tue Jan 20 09:12:23 2026] [::1]:51309 Closing
+[Tue Jan 20 09:12:23 2026] [::1]:58442 Accepted
+[Tue Jan 20 09:12:23 2026] [::1]:58442 [200]: GET /public/logo.svg
+[Tue Jan 20 09:12:23 2026] [::1]:58442 Closing
+[Tue Jan 20 09:12:24 2026] [::1]:62798 Accepted
+[Tue Jan 20 09:12:24 2026] [::1]:62798 [200]: GET /index.php?c=variedad&a=index
+[Tue Jan 20 09:12:24 2026] [::1]:62798 Closing
+[Tue Jan 20 09:12:24 2026] [::1]:56585 Accepted
+[Tue Jan 20 09:12:24 2026] [::1]:56585 [200]: GET /public/logo.svg
+[Tue Jan 20 09:12:24 2026] [::1]:56585 Closing
+[Tue Jan 20 09:12:25 2026] [::1]:60896 Accepted
+[Tue Jan 20 09:12:25 2026] [::1]:60896 [200]: GET /index.php?c=venta&a=index
+[Tue Jan 20 09:12:25 2026] [::1]:60896 Closing
+[Tue Jan 20 09:12:25 2026] [::1]:53813 Accepted
+[Tue Jan 20 09:12:25 2026] [::1]:53813 [200]: GET /public/logo.svg
+[Tue Jan 20 09:12:25 2026] [::1]:53813 Closing
+[Tue Jan 20 09:12:25 2026] [::1]:49670 Accepted
+[Tue Jan 20 09:12:26 2026] [::1]:49670 [200]: GET /index.php?c=venta&a=nueva
+[Tue Jan 20 09:12:26 2026] [::1]:49670 Closing
+[Tue Jan 20 09:12:26 2026] [::1]:51127 Accepted
+[Tue Jan 20 09:12:26 2026] [::1]:51127 [200]: GET /public/logo.svg
+[Tue Jan 20 09:12:26 2026] [::1]:51127 Closing
+[Tue Jan 20 09:12:26 2026] [::1]:60487 Accepted
+[Tue Jan 20 09:12:27 2026] [::1]:60487 [200]: GET /index.php?c=pedido&a=index
+[Tue Jan 20 09:12:27 2026] [::1]:60487 Closing
+[Tue Jan 20 09:12:27 2026] [::1]:61306 Accepted
+[Tue Jan 20 09:12:27 2026] [::1]:61306 [200]: GET /public/logo.svg
+[Tue Jan 20 09:12:27 2026] [::1]:61306 Closing
+[Tue Jan 20 09:12:27 2026] [::1]:62854 Accepted
+[Tue Jan 20 09:12:28 2026] [::1]:62854 [200]: GET /index.php?c=pedido&a=nuevo
+[Tue Jan 20 09:12:28 2026] [::1]:62854 Closing
+[Tue Jan 20 09:12:28 2026] [::1]:52181 Accepted
+[Tue Jan 20 09:12:28 2026] [::1]:52181 [200]: GET /public/logo.svg
+[Tue Jan 20 09:12:28 2026] [::1]:52181 Closing
+[Tue Jan 20 09:12:29 2026] [::1]:59862 Accepted
+[Tue Jan 20 09:12:29 2026] [::1]:59862 [200]: GET /index.php?c=egreso&a=index
+[Tue Jan 20 09:12:29 2026] [::1]:59862 Closing
+[Tue Jan 20 09:12:29 2026] [::1]:64719 Accepted
+[Tue Jan 20 09:12:29 2026] [::1]:64719 [200]: GET /public/logo.svg
+[Tue Jan 20 09:12:29 2026] [::1]:64719 Closing
+[Tue Jan 20 09:12:31 2026] [::1]:60409 Accepted
+[Tue Jan 20 09:12:31 2026] [::1]:60409 [200]: GET /index.php?c=egreso&a=crear
+[Tue Jan 20 09:12:31 2026] [::1]:60409 Closing
+[Tue Jan 20 09:12:31 2026] [::1]:49943 Accepted
+[Tue Jan 20 09:12:31 2026] [::1]:49943 [200]: GET /public/logo.svg
+[Tue Jan 20 09:12:31 2026] [::1]:49943 Closing
+[Tue Jan 20 09:12:43 2026] [::1]:54213 Accepted
+[Tue Jan 20 09:12:43 2026] [::1]:54213 [302]: POST /index.php?c=egreso&a=crear
+[Tue Jan 20 09:12:43 2026] [::1]:54213 Closing
+[Tue Jan 20 09:12:43 2026] [::1]:63006 Accepted
+[Tue Jan 20 09:12:43 2026] [::1]:63006 [200]: GET /index.php?c=egreso&a=index
+[Tue Jan 20 09:12:43 2026] [::1]:63006 Closing
+[Tue Jan 20 09:12:43 2026] [::1]:62048 Accepted
+[Tue Jan 20 09:12:43 2026] [::1]:62048 [200]: GET /public/logo.svg
+[Tue Jan 20 09:12:43 2026] [::1]:62048 Closing
+[Tue Jan 20 09:12:45 2026] [::1]:55418 Accepted
+[Tue Jan 20 09:12:45 2026] [::1]:55418 [200]: GET /index.php?c=venta&a=index
+[Tue Jan 20 09:12:45 2026] [::1]:55418 Closing
+[Tue Jan 20 09:12:45 2026] [::1]:52451 Accepted
+[Tue Jan 20 09:12:45 2026] [::1]:52451 [200]: GET /public/logo.svg
+[Tue Jan 20 09:12:45 2026] [::1]:52451 Closing
+[Tue Jan 20 09:12:47 2026] [::1]:58405 Accepted
+[Tue Jan 20 09:12:47 2026] [::1]:58405 [200]: GET /index.php?c=pedido&a=nuevo
+[Tue Jan 20 09:12:47 2026] [::1]:58405 Closing
+[Tue Jan 20 09:12:47 2026] [::1]:49670 Accepted
+[Tue Jan 20 09:12:47 2026] [::1]:49670 [200]: GET /public/logo.svg
+[Tue Jan 20 09:12:47 2026] [::1]:49670 Closing
+[Tue Jan 20 09:12:48 2026] [::1]:64550 Accepted
+[Tue Jan 20 09:12:48 2026] [::1]:64550 [200]: GET /index.php?c=pedido&a=index
+[Tue Jan 20 09:12:48 2026] [::1]:64550 Closing
+[Tue Jan 20 09:12:48 2026] [::1]:51813 Accepted
+[Tue Jan 20 09:12:48 2026] [::1]:51813 [200]: GET /public/logo.svg
+[Tue Jan 20 09:12:48 2026] [::1]:51813 Closing
+[Tue Jan 20 09:12:49 2026] [::1]:52800 Accepted
+[Tue Jan 20 09:12:49 2026] [::1]:52800 [200]: GET /index.php?c=venta&a=index
+[Tue Jan 20 09:12:49 2026] [::1]:52800 Closing
+[Tue Jan 20 09:12:49 2026] [::1]:62057 Accepted
+[Tue Jan 20 09:12:49 2026] [::1]:62057 [200]: GET /public/logo.svg
+[Tue Jan 20 09:12:49 2026] [::1]:62057 Closing
+[Tue Jan 20 09:12:51 2026] [::1]:62979 Accepted
+[Tue Jan 20 09:12:51 2026] [::1]:62979 [200]: GET /index.php?c=venta&a=nueva
+[Tue Jan 20 09:12:51 2026] [::1]:62979 Closing
+[Tue Jan 20 09:12:51 2026] [::1]:53027 Accepted
+[Tue Jan 20 09:12:51 2026] [::1]:53027 [200]: GET /public/logo.svg
+[Tue Jan 20 09:12:51 2026] [::1]:53027 Closing
+[Tue Jan 20 09:12:57 2026] [::1]:57649 Accepted
+[Tue Jan 20 09:12:57 2026] [::1]:57649 [200]: GET /index.php?c=productoPadre&a=index
+[Tue Jan 20 09:12:57 2026] [::1]:57649 Closing
+[Tue Jan 20 09:12:57 2026] [::1]:58305 Accepted
+[Tue Jan 20 09:12:57 2026] [::1]:58305 [200]: GET /public/logo.svg
+[Tue Jan 20 09:12:57 2026] [::1]:58305 Closing
+[Tue Jan 20 09:12:58 2026] [::1]:52150 Accepted
+[Tue Jan 20 09:12:58 2026] [::1]:49670 Accepted
+[Tue Jan 20 09:12:58 2026] [::1]:52150 [200]: GET /index.php?c=variedad&a=index
+[Tue Jan 20 09:12:58 2026] [::1]:52150 Closing
+[Tue Jan 20 09:12:58 2026] [::1]:49670 [200]: GET /public/logo.svg
+[Tue Jan 20 09:12:58 2026] [::1]:49670 Closing
+[Tue Jan 20 09:12:59 2026] [::1]:61388 Accepted
+[Tue Jan 20 09:12:59 2026] [::1]:61388 [200]: GET /index.php?c=venta&a=index
+[Tue Jan 20 09:12:59 2026] [::1]:61388 Closing
+[Tue Jan 20 09:12:59 2026] [::1]:49670 Accepted
+[Tue Jan 20 09:13:00 2026] [::1]:49670 [200]: GET /public/logo.svg
+[Tue Jan 20 09:13:00 2026] [::1]:49670 Closing
+[Tue Jan 20 09:16:19 2026] [::1]:57202 Accepted
+[Tue Jan 20 09:16:19 2026] [::1]:57202 [200]: GET /index.php?c=venta&a=index
+[Tue Jan 20 09:16:19 2026] [::1]:57202 Closing
+[Tue Jan 20 09:16:19 2026] [::1]:52204 Accepted
+[Tue Jan 20 09:16:19 2026] [::1]:52204 [200]: GET /public/logo.svg
+[Tue Jan 20 09:16:19 2026] [::1]:52204 Closing
+[Tue Jan 20 09:16:19 2026] [::1]:50888 Accepted
+[Tue Jan 20 09:16:19 2026] [::1]:50888 [404]: GET /favicon.ico - No such file or directory
+[Tue Jan 20 09:16:19 2026] [::1]:50888 Closing
+[Tue Jan 20 09:16:23 2026] [::1]:61655 Accepted
+[Tue Jan 20 09:16:23 2026] [::1]:61655 [200]: GET /index.php?c=productoPadre&a=index
+[Tue Jan 20 09:16:23 2026] [::1]:61655 Closing
+[Tue Jan 20 09:16:23 2026] [::1]:52714 Accepted
+[Tue Jan 20 09:16:23 2026] [::1]:52714 [200]: GET /public/logo.svg
+[Tue Jan 20 09:16:23 2026] [::1]:52714 Closing
+[Tue Jan 20 09:16:23 2026] [::1]:57882 Accepted
+[Tue Jan 20 09:16:24 2026] [::1]:57882 [200]: GET /index.php?c=variedad&a=index
+[Tue Jan 20 09:16:24 2026] [::1]:57882 Closing
+[Tue Jan 20 09:16:24 2026] [::1]:57873 Accepted
+[Tue Jan 20 09:16:24 2026] [::1]:57873 [200]: GET /public/logo.svg
+[Tue Jan 20 09:16:24 2026] [::1]:57873 Closing

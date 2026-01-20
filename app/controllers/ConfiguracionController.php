@@ -5,14 +5,7 @@ class ConfiguracionController {
     private $saborModel;
     private $variedadSaladoModel;
     private $tipoSaladoModel;
-    
-    public function __construct() {
-        $this->tamanoModel = new Tamano();
-        $this->saborModel = new Sabor();
-        $this->variedadSaladoModel = new VariedadSalado();
-        $this->tipoSaladoModel = new TipoSalado();
-    }
-    
+        
     public function index() {
         $this->render('configuracion/index', [
             'tamanos' => $this->tamanoModel->getAll(false),

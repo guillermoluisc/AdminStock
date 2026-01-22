@@ -11,7 +11,7 @@ class VariedadController {
         $this->promocionModel = new Promocion();
     }
     
-    public function index() {
+        public function index() {
         // Obtener filtros
         $filtros = [];
         if (isset($_GET['stock_estado'])) {
@@ -24,10 +24,15 @@ class VariedadController {
         $variedades = $this->variedadModel->getAllConFiltros($filtros);
         $productos_padre = $this->productoPadreModel->getAll();
         
+        // ✅ AGREGAR ESTA LÍNEA
+        $cajaModel = new MovimientoCaja();
+        $total_stock_disponible = $cajaModel->getTotalCaja();
+        
         $this->render('variedades/index', [
             'variedades' => $variedades,
             'productos_padre' => $productos_padre,
-            'filtros' => $filtros
+            'filtros' => $filtros,
+            'total_stock_disponible' => $total_stock_disponible  // ✅ AGREGAR ESTA LÍNEA
         ]);
     }
     

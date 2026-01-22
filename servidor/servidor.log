@@ -1,1 +1,11 @@
-[Tue Jan 20 21:08:01 2026] PHP 8.2.30 Development Server (http://localhost:8080) started
+[Wed Jan 21 21:17:04 2026] PHP 8.2.30 Development Server (http://localhost:8080) started
+[Wed Jan 21 21:17:07 2026] [::1]:63875 Accepted
+[Wed Jan 21 21:17:07 2026] [::1]:53225 Accepted
+[Wed Jan 21 21:17:07 2026] [::1]:63875 [200]: GET /
+[Wed Jan 21 21:17:07 2026] [::1]:63875 Closing
+[Wed Jan 21 21:17:07 2026] [::1]:53225 [200]: GET /public/logo.svg
+[Wed Jan 21 21:17:07 2026] [::1]:53225 Closing
+[Wed Jan 21 21:17:07 2026] [::1]:63815 Accepted
+[Wed Jan 21 21:17:07 2026] [::1]:63815 [404]: GET /favicon.ico - No such file or directory
+[Wed Jan 21 21:17:07 2026] [::1]:63815 Closing
+^C

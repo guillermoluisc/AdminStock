@@ -283,4 +283,3 @@ Sistema de uso libre para proyectos personales y comerciales.
 
 ---
 
-**¿Necesitas ayuda?** Consulta este README o revisa los comentarios en el código.

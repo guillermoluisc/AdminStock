@@ -45,12 +45,14 @@
     </div>
     
     <div class="card" style="background: #f3e5f5;">
-        <h4 style="margin-bottom: 10px; color: #9c27b0;">📦 Total Stock Disponible</h4>
+        <h4 style="margin-bottom: 10px; color: #9c27b0;">💼 Total en Stock</h4>
         <div style="font-size: 28px; font-weight: bold; color: #9c27b0;">
             <?= FormatHelper::precio($total_stock_disponible ?? 0) ?>
         </div>
-        <small style="color: #666;">Valor total del inventario</small>
+        <small style="color: #666;">A precio de costo</small>
     </div>
+    
+
     
     <div class="card" style="background: #ffebee;">
         <h4 style="margin-bottom: 10px; color: #c62828;">💸 Egresos</h4>
@@ -63,20 +65,20 @@
     </div>
 </div>
 
-<div class="card" style="background: <?= $balance >= 0 ? '#e8f5e9' : '#ffebee' ?>; margin-bottom: 20px; border: 2px solid <?= $balance >= 0 ? '#27ae60' : '#c62828' ?>;">
+<div class="card" style="background: <?= $estadisticas['total_vendido'] - $total_egresos >= 0 ? '#e8f5e9' : '#ffebee' ?>; margin-bottom: 20px; border: 2px solid <?= $estadisticas['total_vendido'] - $total_egresos >= 0 ? '#27ae60' : '#c62828' ?>;">
     <div style="display: flex; justify-content: space-between; align-items: center;">
         <div>
-            <h3 style="margin-bottom: 5px; color: <?= $balance >= 0 ? '#27ae60' : '#c62828' ?>;">
-                <?= $balance >= 0 ? '📈' : '📉' ?> Balance del Período
+            <h3 style="margin-bottom: 5px; color: <?= $estadisticas['total_vendido'] - $total_egresos >= 0 ? '#27ae60' : '#c62828' ?>;">
+                <?= $estadisticas['total_vendido'] - $total_egresos >= 0 ? '📈' : '📉' ?> Caja total del Período
             </h3>
-            <small style="color: #666;">Ingresos - Egresos</small>
+            <small style="color: #666;">Total Vendido - Egresos</small>
         </div>
         <div style="text-align: right;">
-            <div style="font-size: 32px; font-weight: bold; color: <?= $balance >= 0 ? '#27ae60' : '#c62828' ?>;">
-                <?= FormatHelper::precio($balance) ?>
+            <div style="font-size: 32px; font-weight: bold; color: <?= $estadisticas['total_vendido'] - $total_egresos >= 0 ? '#27ae60' : '#c62828' ?>;">
+                <?= FormatHelper::precio($estadisticas['total_vendido'] - $total_egresos) ?>
             </div>
             <small style="color: #666;">
-                <?php if ($balance >= 0): ?>
+                <?php if ($estadisticas['total_vendido'] - $total_egresos >= 0): ?>
                     ✅ Resultado positivo
                 <?php else: ?>
                     ⚠️ Resultado negativo
@@ -140,7 +142,6 @@
         <p style="text-align: center; color: #95a5a6; padding: 20px;">No hay ventas registradas.</p>
     </div>
 <?php else: ?>
-    <!-- Información de paginación -->
     <table>
         <thead>
             <tr>
@@ -193,21 +194,15 @@
     </table>
 
     <!-- Paginación -->
-<!-- Sección de paginación - REEMPLAZA todo el bloque de paginación con esto -->
-
-<!-- Paginación - Siempre visible -->
-<!-- Paginación - Siempre visible con diseño mejorado -->
-<?php if (isset($paginacion)): ?>
+    <?php if (isset($paginacion)): ?>
     <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #ecf0f1;">
         
-        <!-- Navegación entre páginas (solo si hay más de 1 página) -->
         <?php if ($paginacion['total_paginas'] > 1): ?>
             <div style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 15px; flex-wrap: wrap;">
                 <?php
                 $pagina_actual = $paginacion['pagina_actual'];
                 $total_paginas = $paginacion['total_paginas'];
                 
-                // Construir URL base con filtros actuales
                 $url_base = 'index.php?c=venta&a=index';
                 if (!empty($filtros['fecha_desde'])) $url_base .= '&fecha_desde=' . $filtros['fecha_desde'];
                 if (!empty($filtros['fecha_hasta'])) $url_base .= '&fecha_hasta=' . $filtros['fecha_hasta'];
@@ -216,98 +211,37 @@
                 if (!empty($_GET['por_pagina'])) $url_base .= '&por_pagina=' . $_GET['por_pagina'];
                 ?>
                 
-                <!-- Botón Primera Página -->
                 <?php if ($pagina_actual > 1): ?>
                     <a href="<?= $url_base ?>&pagina=1" 
-                       style="padding: 10px 15px; background: #9c27b0; color: white; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 500; transition: background 0.3s; display: inline-block;">
-                        ⏮️ Primera
+                       style="padding: 10px 15px; background: #9c27b0; color: white; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 500;">
+                        ⮪️ Primera
                     </a>
-                <?php else: ?>
-                    <span style="padding: 10px 15px; background: #e0e0e0; color: #999; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: not-allowed; display: inline-block;">
-                        ⏮️ Primera
-                    </span>
-                <?php endif; ?>
-                
-                <!-- Botón Anterior -->
-                <?php if ($pagina_actual > 1): ?>
                     <a href="<?= $url_base ?>&pagina=<?= $pagina_actual - 1 ?>" 
-                       style="padding: 10px 15px; background: #7b1fa2; color: white; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 500; transition: background 0.3s; display: inline-block;">
+                       style="padding: 10px 15px; background: #7b1fa2; color: white; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 500;">
                         ◀️ Anterior
                     </a>
-                <?php else: ?>
-                    <span style="padding: 10px 15px; background: #e0e0e0; color: #999; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: not-allowed; display: inline-block;">
-                        ◀️ Anterior
-                    </span>
                 <?php endif; ?>
                 
-                <!-- Números de página -->
-                <?php
-                $rango = 2;
-                $inicio = max(1, $pagina_actual - $rango);
-                $fin = min($total_paginas, $pagina_actual + $rango);
+                <span style="padding: 10px 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 6px; font-size: 14px; font-weight: bold;">
+                    Página <?= $pagina_actual ?> de <?= $total_paginas ?>
+                </span>
                 
-                if ($pagina_actual <= $rango) {
-                    $fin = min($total_paginas, $rango * 2 + 1);
-                }
-                
-                if ($pagina_actual > $total_paginas - $rango) {
-                    $inicio = max(1, $total_paginas - ($rango * 2));
-                }
-                
-                if ($inicio > 1): ?>
-                    <span style="padding: 10px 8px; color: #666; font-weight: bold;">...</span>
-                <?php endif;
-                
-                for ($i = $inicio; $i <= $fin; $i++):
-                    if ($i == $pagina_actual): ?>
-                        <span style="padding: 10px 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: default; display: inline-block; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);">
-                            <?= $i ?>
-                        </span>
-                    <?php else: ?>
-                        <a href="<?= $url_base ?>&pagina=<?= $i ?>" 
-                           style="padding: 10px 15px; background: white; color: #9c27b0; border: 2px solid #9c27b0; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 500; transition: all 0.3s; display: inline-block;">
-                            <?= $i ?>
-                        </a>
-                    <?php endif;
-                endfor;
-                
-                if ($fin < $total_paginas): ?>
-                    <span style="padding: 10px 8px; color: #666; font-weight: bold;">...</span>
-                <?php endif; ?>
-                
-                <!-- Botón Siguiente -->
                 <?php if ($pagina_actual < $total_paginas): ?>
                     <a href="<?= $url_base ?>&pagina=<?= $pagina_actual + 1 ?>" 
-                       style="padding: 10px 15px; background: #7b1fa2; color: white; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 500; transition: background 0.3s; display: inline-block;">
+                       style="padding: 10px 15px; background: #7b1fa2; color: white; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 500;">
                         Siguiente ▶️
                     </a>
-                <?php else: ?>
-                    <span style="padding: 10px 15px; background: #e0e0e0; color: #999; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: not-allowed; display: inline-block;">
-                        Siguiente ▶️
-                    </span>
-                <?php endif; ?>
-                
-                <!-- Botón Última Página -->
-                <?php if ($pagina_actual < $total_paginas): ?>
                     <a href="<?= $url_base ?>&pagina=<?= $total_paginas ?>" 
-                       style="padding: 10px 15px; background: #9c27b0; color: white; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 500; transition: background 0.3s; display: inline-block;">
-                        Última ⏭️
+                       style="padding: 10px 15px; background: #9c27b0; color: white; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 500;">
+                        Última ⭐️
                     </a>
-                <?php else: ?>
-                    <span style="padding: 10px 15px; background: #e0e0e0; color: #999; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: not-allowed; display: inline-block;">
-                        Última ⏭️
-                    </span>
                 <?php endif; ?>
             </div>
         <?php endif; ?>
         
-        <!-- Selector de registros por página - SIEMPRE VISIBLE -->
-        <div style="display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+        <div style="display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); padding: 15px; border-radius: 8px;">
             <div style="font-size: 14px; color: #333; font-weight: 500;">
                 Mostrando <strong style="color: #9c27b0;"><?= count($ventas) ?></strong> de <strong style="color: #9c27b0;"><?= $paginacion['total'] ?></strong> ventas
-                <?php if ($paginacion['total_paginas'] > 1): ?>
-                    <span style="color: #666;">(Página <strong style="color: #7b1fa2;"><?= $paginacion['pagina_actual'] ?></strong> de <strong style="color: #7b1fa2;"><?= $paginacion['total_paginas'] ?></strong>)</span>
-                <?php endif; ?>
             </div>
             
             <form method="GET" action="index.php" style="display: inline-flex; align-items: center; gap: 10px;">
@@ -328,8 +262,7 @@
                 
                 <label for="por_pagina" style="font-size: 14px; color: #333; font-weight: 600;">Mostrar:</label>
                 <select name="por_pagina" id="por_pagina" onchange="this.form.submit()" 
-                        style="padding: 8px 12px; border: 2px solid #9c27b0; border-radius: 6px; font-size: 14px; cursor: pointer; background: white; color: #333; font-weight: 500;">
-                    <option value="5" <?= ($paginacion['por_pagina'] ?? 10) == 5 ? 'selected' : '' ?>>5</option>
+                        style="padding: 8px 12px; border: 2px solid #9c27b0; border-radius: 6px; font-size: 14px; cursor: pointer;">
                     <option value="10" <?= ($paginacion['por_pagina'] ?? 10) == 10 ? 'selected' : '' ?>>10</option>
                     <option value="20" <?= ($paginacion['por_pagina'] ?? 10) == 20 ? 'selected' : '' ?>>20</option>
                     <option value="50" <?= ($paginacion['por_pagina'] ?? 10) == 50 ? 'selected' : '' ?>>50</option>
@@ -339,23 +272,5 @@
             </form>
         </div>
     </div>
-    
-    <style>
-        /* Efectos hover para los botones de paginación */
-        a[href*="pagina"]:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3) !important;
-        }
-        
-        a[href*="pagina"][style*="border: 2px"]:hover {
-            background: #9c27b0 !important;
-            color: white !important;
-        }
-        
-        a[href*="pagina"][style*="background: #9c27b0"]:hover,
-        a[href*="pagina"][style*="background: #7b1fa2"]:hover {
-            background: #6a1b9a !important;
-        }
-    </style>
-<?php endif; ?>
+    <?php endif; ?>
 <?php endif; ?>

@@ -2,6 +2,7 @@
 // app/index.php - Router principal
 session_start();
 
+date_default_timezone_set('America/Argentina/Buenos_Aires');
 define('BASE_PATH', __DIR__);
 define('DB_PATH', BASE_PATH . '/database/database.db');
 

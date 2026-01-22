@@ -58,6 +58,7 @@
             <div style="display: flex; align-items: center; gap: 15px;">
                 <label for="unidades_por_pack" style="margin: 0; font-weight: bold;">📦 Unidades por Pack:</label>
                 <select id="unidades_por_pack" name="unidades_por_pack" onchange="calcularCostoYPrecios()" style="padding: 8px; font-size: 16px; border-radius: 4px; border: 2px solid #f39c12;">
+                    <option value="1">x1 (Pack de 1 unidades)</option>
                     <option value="2">x2 (Pack de 2 unidades)</option>
                     <option value="3" selected>x3 (Pack de 3 unidades)</option>
                 </select>

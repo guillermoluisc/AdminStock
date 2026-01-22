@@ -33,7 +33,7 @@ class Database {
         
         $db = self::getInstance()->getConnection();
         
-        // Tabla de PRODUCTOS PADRE (categorías generales)
+        // Tabla de PRODUCTOS PADRE
         $sql = "CREATE TABLE IF NOT EXISTS productos_padre (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nombre VARCHAR(200) NOT NULL,
@@ -46,7 +46,7 @@ class Database {
         )";
         $db->exec($sql);
         
-        // Tabla de VARIEDADES (productos hijos) - ACTUALIZADA CON 4 PRECIOS
+        // Tabla de VARIEDADES
         $sql = "CREATE TABLE IF NOT EXISTS variedades (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             producto_padre_id INTEGER NOT NULL,
@@ -69,11 +69,10 @@ class Database {
         )";
         $db->exec($sql);
         
-        // Verificar si las columnas ya existen (para bases de datos existentes)
+        // Agregar columnas si no existen
         try {
             $db->exec("SELECT precio_pack3_tarjeta FROM variedades LIMIT 1");
         } catch(PDOException $e) {
-            // Si no existe, agregar las columnas
             $db->exec("ALTER TABLE variedades ADD COLUMN precio_pack3_tarjeta DECIMAL(10,2) DEFAULT 0");
             $db->exec("ALTER TABLE variedades ADD COLUMN precio_pack3_efectivo DECIMAL(10,2) DEFAULT 0");
             $db->exec("ALTER TABLE variedades ADD COLUMN precio_unidad_tarjeta DECIMAL(10,2) DEFAULT 0");
@@ -144,14 +143,15 @@ class Database {
         )";
         $db->exec($sql);
 
+        // Tabla de EGRESOS
         $sql = "CREATE TABLE IF NOT EXISTS egresos (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                fecha DATE NOT NULL,
-                monto DECIMAL(10,2) NOT NULL,
-                descripcion TEXT NOT NULL,
-                categoria VARCHAR(100),
-                fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP
-            )";
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            fecha DATE NOT NULL,
+            monto DECIMAL(10,2) NOT NULL,
+            descripcion TEXT NOT NULL,
+            categoria VARCHAR(100),
+            fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP
+        )";
         $db->exec($sql);
         
         // Tabla de DETALLE DE PEDIDOS
@@ -168,6 +168,91 @@ class Database {
         )";
         $db->exec($sql);
         
+        // ===================================
+        // NUEVO: Sistema de Caja
+        // ===================================
+        
+        // Tabla de MOVIMIENTOS DE CAJA
+        $sql = "CREATE TABLE IF NOT EXISTS movimientos_caja (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            tipo VARCHAR(20) NOT NULL,
+            referencia_id INTEGER,
+            monto_costo DECIMAL(10,2) NOT NULL,
+            monto_venta DECIMAL(10,2) DEFAULT 0,
+            descripcion TEXT,
+            fecha DATETIME DEFAULT CURRENT_TIMESTAMP
+        )";
+        $db->exec($sql);
+        
+        // Índices
+        $db->exec("CREATE INDEX IF NOT EXISTS idx_movimientos_tipo ON movimientos_caja(tipo)");
+        $db->exec("CREATE INDEX IF NOT EXISTS idx_movimientos_fecha ON movimientos_caja(fecha)");
+        
+        // Vista: Total en caja
+        $db->exec("DROP VIEW IF EXISTS vista_total_caja");
+        $db->exec("
+            CREATE VIEW vista_total_caja AS
+            SELECT 
+                SUM(monto_costo) as total_caja
+            FROM movimientos_caja
+        ");
+        
+        // Vista: Desglose de movimientos
+        $db->exec("DROP VIEW IF EXISTS vista_movimientos_detalle");
+        $db->exec("
+            CREATE VIEW vista_movimientos_detalle AS
+            SELECT 
+                m.id,
+                m.tipo,
+                m.fecha,
+                m.descripcion,
+                m.monto_costo,
+                m.monto_venta,
+                CASE 
+                    WHEN m.tipo = 'venta' AND m.monto_venta > 0 
+                    THEN m.monto_venta - m.monto_costo 
+                    ELSE 0 
+                END as ganancia,
+                v.nombre_cliente,
+                v.metodo_pago
+            FROM movimientos_caja m
+            LEFT JOIN ventas v ON m.tipo = 'venta' AND m.referencia_id = v.id
+            ORDER BY m.fecha DESC
+        ");
+        
+        // TRIGGERS para movimientos automáticos
+        
+        // Trigger: Compra de variedad
+        $db->exec("DROP TRIGGER IF EXISTS trigger_compra_variedad");
+        $db->exec("
+            CREATE TRIGGER trigger_compra_variedad
+            AFTER INSERT ON variedades
+            BEGIN
+                INSERT INTO movimientos_caja (tipo, referencia_id, monto_costo, descripcion)
+                VALUES (
+                    'compra',
+                    NEW.id,
+                    NEW.precio_compra_total,
+                    'Compra: ' || NEW.nombre || ' (Stock: ' || NEW.stock || ')'
+                );
+            END
+        ");
+        
+        // Trigger: Venta completada
+        $db->exec("DROP TRIGGER IF EXISTS trigger_venta_caja");
+        
+        
+        // Trigger: Formalización de pre-venta
+        $db->exec("DROP TRIGGER IF EXISTS trigger_formalizar_preventa");
+       
+        
+        // Trigger: Cancelación de venta
+        $db->exec("DROP TRIGGER IF EXISTS trigger_cancelar_venta");
+       
+        
+        // Trigger: Egreso
+        $db->exec("DROP TRIGGER IF EXISTS trigger_egreso_caja");
+        
         // Tabla de MIGRACIONES
         $sql = "CREATE TABLE IF NOT EXISTS migraciones (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -176,8 +261,57 @@ class Database {
         )";
         $db->exec($sql);
         
-        // Insertar datos iniciales de ejemplo
-        self::insertarDatosIniciales($db);
+        // Inicializar movimientos de caja con datos existentes
+        self::inicializarMovimientosCaja($db);
+        
+        // NO insertar datos de ejemplo en producción
+        // self::insertarDatosIniciales($db);
+    }
+    
+    private static function inicializarMovimientosCaja($db) {
+        // Insertar compras de variedades existentes
+        $db->exec("
+            INSERT OR IGNORE INTO movimientos_caja (tipo, referencia_id, monto_costo, descripcion, fecha)
+            SELECT 
+                'compra',
+                id,
+                precio_compra_total,
+                'Inventario inicial: ' || nombre,
+                fecha_creacion
+            FROM variedades
+            WHERE id NOT IN (SELECT COALESCE(referencia_id, 0) FROM movimientos_caja WHERE tipo = 'compra')
+        ");
+        
+        // Insertar ventas completadas existentes
+        $db->exec("
+            INSERT OR IGNORE INTO movimientos_caja (tipo, referencia_id, monto_costo, monto_venta, descripcion, fecha)
+            SELECT 
+                'venta',
+                v.id,
+                (SELECT SUM(vd.cantidad * var.precio_costo_unitario)
+                 FROM venta_detalles vd
+                 JOIN variedades var ON vd.variedad_id = var.id
+                 WHERE vd.venta_id = v.id),
+                v.total,
+                'Venta #' || v.id || COALESCE(' - ' || v.nombre_cliente, ''),
+                v.fecha
+            FROM ventas v
+            WHERE v.estado = 'completada'
+            AND v.id NOT IN (SELECT COALESCE(referencia_id, 0) FROM movimientos_caja WHERE tipo = 'venta')
+        ");
+        
+        // Insertar egresos existentes
+        // $db->exec("
+        //     INSERT OR IGNORE INTO movimientos_caja (tipo, referencia_id, monto_costo, descripcion, fecha)
+        //     SELECT 
+        //         'egreso',
+        //         id,
+        //         monto,
+        //         'Egreso: ' || descripcion,
+        //         fecha
+        //     FROM egresos
+        //     WHERE id NOT IN (SELECT COALESCE(referencia_id, 0) FROM movimientos_caja WHERE tipo = 'egreso')
+        // ");
     }
     
     private static function insertarDatosIniciales($db) {
@@ -190,12 +324,6 @@ class Database {
             ('Colaless/Vedetina/Culot', 100, 80, 100, 80),
             ('Remera Básica', 100, 80, 100, 80),
             ('Pantalón Jean', 100, 85, 100, 85)");
-        
-        // Variedades de ejemplo
-        $db->exec("INSERT INTO variedades (producto_padre_id, nombre, descripcion, precio_compra_total, cantidad_comprada, precio_costo_unitario, precio_pack3_tarjeta, precio_pack3_efectivo, precio_unidad_tarjeta, precio_unidad_efectivo, precio_venta_unitario, stock, stock_minimo) VALUES 
-            (1, 'Colaless VINTAGE Negro M', 'Colaless negra talle M', 100000, 10, 10000, 20000, 18000, 6666.67, 6000, 10000, 10, 5),
-            (2, 'Remera Básica Blanca L', 'Remera blanca talle L', 100000, 10, 10000, 20000, 18000, 6666.67, 6000, 12000, 8, 5),
-            (3, 'Jean Azul 32', 'Jean azul talle 32', 150000, 8, 18750, 37500, 34687.5, 12500, 11562.5, 22000, 8, 3)");
     }
     
     public static function runMigration($version, $sql) {
@@ -211,6 +339,38 @@ class Database {
             return true;
         }
         return false;
+    }
+    
+    /**
+     * NUEVO: Limpiar base de datos para distribución
+     */
+    public static function limpiarParaDistribucion() {
+        $db = self::getInstance()->getConnection();
+        
+        try {
+            $db->beginTransaction();
+            
+            // Limpiar todas las tablas de datos
+            $db->exec("DELETE FROM movimientos_caja");
+            $db->exec("DELETE FROM venta_detalles");
+            $db->exec("DELETE FROM ventas");
+            $db->exec("DELETE FROM pedido_detalles");
+            $db->exec("DELETE FROM pedidos");
+            $db->exec("DELETE FROM egresos");
+            $db->exec("DELETE FROM promociones");
+            $db->exec("DELETE FROM variedades");
+            $db->exec("DELETE FROM productos_padre");
+            $db->exec("DELETE FROM migraciones");
+            
+            // Reiniciar autoincrement
+            $db->exec("DELETE FROM sqlite_sequence");
+            
+            $db->commit();
+            return true;
+        } catch (PDOException $e) {
+            $db->rollBack();
+            return false;
+        }
     }
 }
 ?>

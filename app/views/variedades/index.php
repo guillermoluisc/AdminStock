@@ -60,20 +60,13 @@
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <?php
-                $total_costo_compra = 0;
-                foreach ($variedades as $var) {
-                    $total_costo_compra += $var['precio_compra_total'];
-                }
-            ?>
-            <!-- Estadísticas -->
             <div class="grid-3" style="margin-bottom: 20px;">
-                <div class="card" style="background: #e8f5e9;">
-                    <h4 style="margin-bottom: 10px; color: #27ae60;">💲 Costo Total de las compras</h4>
-                    <div style="font-size: 28px; font-weight: bold; color: #27ae60;">
-                        <?= FormatHelper::precio($total_costo_compra) ?>
+                <div class="card" style="background: #f3e5f5;">
+                    <h4 style="margin-bottom: 10px; color: #9c27b0;">💼 Total en Stock</h4>
+                    <div style="font-size: 28px; font-weight: bold; color: #9c27b0;">
+                        <?= FormatHelper::precio($total_stock_disponible ?? 0) ?>
                     </div>
-                    <small style="color: #666;"><?= count($variedades) ?? 0 ?> compras realizadas</small>
+                    <small style="color: #666;">A precio de costo</small>
                 </div>
             </div>
             <tbody>

@@ -123,7 +123,7 @@ class Variedad {
                 $datos['precio_venta_unitario'],
                 $datos['stock'] ?? $datos['cantidad_comprada'],
                 $datos['stock_minimo'] ?? 10,
-                $datos['unidades_por_pack'] ?? 3,
+                $datos['unidades_por_pack'],
             ]);
             
             return $this->db->lastInsertId();

@@ -150,88 +150,182 @@ public function countAll($filtros = []) {
         return $stmt->fetch();
     }
     
-    public function crear($total, $metodo_pago, $descuento_aplicado, $detalles, $nombre_cliente = null, $es_preventa = false) {
-        try {
-            $this->db->beginTransaction();
+public function crear($total, $metodo_pago, $descuento_aplicado, $detalles, $nombre_cliente = null, $es_preventa = false) {
+    try {
+        $this->db->beginTransaction();
+        
+        // Determinar estado inicial
+        $estado = $es_preventa ? 'preventa' : 'completada';
+        $fecha_formalizacion = $es_preventa ? null : date('Y-m-d H:i:s');
+        $fecha_creacion = date('Y-m-d H:i:s');
+        
+        // Crear venta
+        $stmt = $this->db->prepare("INSERT INTO ventas (total, metodo_pago, descuento_aplicado, nombre_cliente, estado, fecha, fecha_formalizacion) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$total, $metodo_pago, $descuento_aplicado, $nombre_cliente, $estado, $fecha_creacion, $fecha_formalizacion]);
+        $venta_id = $this->db->lastInsertId();
+        
+        // Variables para el movimiento de caja
+        $total_costo = 0;
+        
+        // Insertar detalles y actualizar stock
+        $stmtDetalle = $this->db->prepare(
+            "INSERT INTO venta_detalles (venta_id, variedad_id, cantidad, precio_unitario, descuento_unitario, subtotal) VALUES (?, ?, ?, ?, ?, ?)"
+        );
+        
+        $stmtStock = $this->db->prepare("UPDATE variedades SET stock = stock - ? WHERE id = ?");
+        
+        foreach ($detalles as $detalle) {
+            // Insertar detalle
+            $stmtDetalle->execute([
+                $venta_id,
+                $detalle['variedad_id'],
+                $detalle['cantidad'],
+                $detalle['precio_unitario'],
+                $detalle['descuento_unitario'] ?? 0,
+                $detalle['subtotal']
+            ]);
             
-            // Determinar estado inicial
-            $estado = $es_preventa ? 'preventa' : 'completada';
-            $fecha_formalizacion = $es_preventa ? null : date('Y-m-d H:i:s');
+            // Descontar stock
+            $stmtStock->execute([
+                $detalle['cantidad'],
+                $detalle['variedad_id']
+            ]);
             
-            // Crear venta
-            $stmt = $this->db->prepare("INSERT INTO ventas (total, metodo_pago, descuento_aplicado, nombre_cliente, estado, fecha_formalizacion) VALUES (?, ?, ?, ?, ?, ?)");
-            $stmt->execute([$total, $metodo_pago, $descuento_aplicado, $nombre_cliente, $estado, $fecha_formalizacion]);
-            $venta_id = $this->db->lastInsertId();
+            // Obtener el costo unitario de la variedad
+            $stmtCosto = $this->db->prepare("SELECT precio_costo_unitario FROM variedades WHERE id = ?");
+            $stmtCosto->execute([$detalle['variedad_id']]);
+            $variedad = $stmtCosto->fetch();
             
-            // Insertar detalles y actualizar stock
-            $stmtDetalle = $this->db->prepare(
-                "INSERT INTO venta_detalles (venta_id, variedad_id, cantidad, precio_unitario, descuento_unitario, subtotal) VALUES (?, ?, ?, ?, ?, ?)"
-            );
+            // Obtener el unidades por pack
+            $stmtUnidades = $this->db->prepare("SELECT unidades_por_pack FROM variedades WHERE id = ?");
+            $stmtUnidades->execute([$detalle['variedad_id']]);
+            $variedadUnidad = $stmtUnidades->fetch();
             
-            $stmtStock = $this->db->prepare("UPDATE variedades SET stock = stock - ? WHERE id = ?");
-            
-            foreach ($detalles as $detalle) {
-                $stmtDetalle->execute([
-                    $venta_id,
-                    $detalle['variedad_id'],
-                    $detalle['cantidad'],
-                    $detalle['precio_unitario'],
-                    $detalle['descuento_unitario'] ?? 0,
-                    $detalle['subtotal']
-                ]);
-                
-                // Descontar stock (tanto para venta completa como pre-venta)
-                $stmtStock->execute([
-                    $detalle['cantidad'],
-                    $detalle['variedad_id']
-                ]);
+            // pack de 3 o dos
+            if($detalle['tipo_venta'] == 'Pack x3'){
+                echo "Entro al tipo de venta pack";
+                $precioUnitarioPorPack = $variedad['precio_costo_unitario'];
+            }else{
+                echo "Entro al tipo de venta unidad";
+                $precioUnitarioPorPack = ($variedad['precio_costo_unitario'] / $variedadUnidad['unidades_por_pack'])* $detalle['cantidad'];
+            }
+
+            // Acumular el costo total
+            $total_costo += $precioUnitarioPorPack;
+        }
+        
+        // REGISTRAR MOVIMIENTO DE CAJA (solo si es venta completada)
+        if ($estado == 'completada') {
+            $descripcion = 'Venta #' . $venta_id;
+            if ($nombre_cliente) {
+                $descripcion .= ' - ' . $nombre_cliente;
             }
             
-            $this->db->commit();
-            return $venta_id;
-        } catch (PDOException $e) {
-            $this->db->rollBack();
-            return false;
-        }
-    }
-    
-    public function formalizarPreventa($id) {
-        try {
-            $stmt = $this->db->prepare(
-                "UPDATE ventas SET estado = 'completada', fecha_formalizacion = ? WHERE id = ? AND estado = 'preventa'"
+            $stmtCaja = $this->db->prepare(
+                "INSERT INTO movimientos_caja (tipo, referencia_id, monto_costo, monto_venta, descripcion) VALUES (?, ?, ?, ?, ?)"
             );
-            return $stmt->execute([date('Y-m-d H:i:s'), $id]);
-        } catch (PDOException $e) {
-            return false;
+            
+            // IMPORTANTE: monto_costo va NEGATIVO para descontar de la caja
+            $stmtCaja->execute([
+                'venta',
+                $venta_id,
+                -$total_costo,  // NEGATIVO para restar
+                $total,         // Total de la venta
+                $descripcion
+            ]);
         }
+        
+        $this->db->commit();
+        return $venta_id;
+    } catch (PDOException $e) {
+        $this->db->rollBack();
+        error_log("Error en Venta::crear() - " . $e->getMessage());
+        return false;
     }
+}
     
-    public function cancelarPreventa($id) {
-        try {
-            $this->db->beginTransaction();
+public function formalizarPreventa($id) {
+    try {
+        $this->db->beginTransaction();
+        
+        // Actualizar estado de la venta
+        $stmt = $this->db->prepare(
+            "UPDATE ventas SET estado = 'completada', fecha_formalizacion = ? WHERE id = ? AND estado = 'preventa'"
+        );
+        $stmt->execute([date('Y-m-d H:i:s'), $id]);
+        
+        // Obtener información de la venta
+        $venta = $this->getById($id);
+        $detalles = $this->getDetalles($id);
+        
+        // Calcular costo total
+        $total_costo = 0;
+        foreach ($detalles as $detalle) {
+            $stmtCosto = $this->db->prepare("SELECT precio_costo_unitario FROM variedades WHERE id = ?");
+            $stmtCosto->execute([$detalle['variedad_id']]);
+            $variedad = $stmtCosto->fetch();
             
-            // Obtener detalles de la venta
-            $detalles = $this->getDetalles($id);
-            
-            // Devolver stock
-            $stmtStock = $this->db->prepare("UPDATE variedades SET stock = stock + ? WHERE id = ?");
-            foreach ($detalles as $detalle) {
-                $stmtStock->execute([$detalle['cantidad'], $detalle['variedad_id']]);
-            }
-            
-            // Marcar venta como cancelada
-            $stmt = $this->db->prepare(
-                "UPDATE ventas SET estado = 'cancelada' WHERE id = ? AND estado = 'preventa'"
-            );
-            $stmt->execute([$id]);
-            
-            $this->db->commit();
-            return true;
-        } catch (PDOException $e) {
-            $this->db->rollBack();
-            return false;
+            $total_costo += ($variedad['precio_costo_unitario'] * $detalle['cantidad']);
         }
+        
+        // REGISTRAR MOVIMIENTO DE CAJA
+        $descripcion = 'Venta #' . $id . ' (Formalizada)';
+        if ($venta['nombre_cliente']) {
+            $descripcion .= ' - ' . $venta['nombre_cliente'];
+        }
+        
+        $stmtCaja = $this->db->prepare(
+            "INSERT INTO movimientos_caja (tipo, referencia_id, monto_costo, monto_venta, descripcion) VALUES (?, ?, ?, ?, ?)"
+        );
+        
+        $stmtCaja->execute([
+            'venta',
+            $id,
+            -$total_costo,  // NEGATIVO para restar de caja
+            $venta['total'],
+            $descripcion
+        ]);
+        
+        $this->db->commit();
+        return true;
+    } catch (PDOException $e) {
+        $this->db->rollBack();
+        error_log("Error en formalizarPreventa: " . $e->getMessage());
+        return false;
     }
+}
+    
+public function cancelarPreventa($id) {
+    try {
+        $this->db->beginTransaction();
+        
+        // Obtener detalles de la venta ANTES de cancelar
+        $venta = $this->getById($id);
+        $detalles = $this->getDetalles($id);
+        
+        // Devolver stock
+        $stmtStock = $this->db->prepare("UPDATE variedades SET stock = stock + ? WHERE id = ?");
+        foreach ($detalles as $detalle) {
+            $stmtStock->execute([$detalle['cantidad'], $detalle['variedad_id']]);
+        }
+        
+        // Marcar venta como cancelada
+        $stmt = $this->db->prepare(
+            "UPDATE ventas SET estado = 'cancelada' WHERE id = ? AND estado = 'preventa'"
+        );
+        $stmt->execute([$id]);
+        
+        // Si la pre-venta ya había sido formalizada antes (no debería pasar, pero por seguridad)
+        // NO registramos movimiento porque las pre-ventas NO afectan caja hasta formalizarse
+        
+        $this->db->commit();
+        return true;
+    } catch (PDOException $e) {
+        $this->db->rollBack();
+        error_log("Error en cancelarPreventa: " . $e->getMessage());
+        return false;
+    }
+}
     
     public function getTotalVentas($filtros = []) {
         $sql = "SELECT SUM(total) as total FROM ventas WHERE estado != 'cancelada'";

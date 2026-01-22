@@ -79,7 +79,6 @@
             <th>Cant. Recibida</th>
             <th>Observaciones</th>
             <?php if ($pedido['estado'] == 'pendiente'): ?>
-            <th>Acciones</th>
             <?php endif; ?>
         </tr>
     </thead>
@@ -118,12 +117,7 @@
                     <?php endif; ?>
                 </td>
                 <?php if ($pedido['estado'] == 'pendiente'): ?>
-                <td>
-                    <button type="button" class="btn btn-info" style="padding: 5px 10px;" 
-                            onclick="mostrarFormRecepcion(<?= $detalle['id'] ?>, '<?= htmlspecialchars($detalle['variedad_nombre']) ?>', <?= $detalle['cantidad_solicitada'] ?>)">
-                        Recibir
-                    </button>
-                </td>
+
                 <?php endif; ?>
             </tr>
         <?php endforeach; ?>

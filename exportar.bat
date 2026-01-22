@@ -14,7 +14,7 @@ echo Procesando archivos en: %BASEDIR%
 echo.
 
 REM Buscar archivos .bat y .php recursivamente
-for /r "%BASEDIR%" %%F in (*.bat *.php) do (
+for /r "%BASEDIR%" %%F in (*.bat *.sql *.php) do (
     echo Ruta del archivo: %%F>>"%OUTPUT%"
     echo Contenido:>>"%OUTPUT%"
     echo ---------------------------------------->>"%OUTPUT%"

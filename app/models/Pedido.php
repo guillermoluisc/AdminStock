@@ -66,8 +66,8 @@ class Pedido {
             $this->db->beginTransaction();
             
             // Crear pedido
-            $stmt = $this->db->prepare("INSERT INTO pedidos (observaciones) VALUES (?)");
-            $stmt->execute([$observaciones]);
+            $stmt = $this->db->prepare("INSERT INTO pedidos (observaciones, fecha_creacion) VALUES (?, ?)");
+            $stmt->execute([$observaciones, date('Y-m-d H:i:s')]);
             $pedido_id = $this->db->lastInsertId();
             
             // Insertar detalles
@@ -144,11 +144,54 @@ class Pedido {
         }
     }
     
+    //Boton Grande Marcar como Realizado
     public function marcarComoRealizado($id) {
+
+
         $stmt = $this->db->prepare(
             "UPDATE pedidos SET estado = 'realizado', fecha_realizacion = ? WHERE id = ?"
         );
-        return $stmt->execute([date('Y-m-d H:i:s'), $id]);
+        
+        $stmt->execute([date('Y-m-d H:i:s'), $id]);
+        //Luego de actualizar el pedido_________
+
+        $stmt = $this->db->prepare(
+            "SELECT * FROM pedido_detalles WHERE pedido_id = ?"
+        );
+        $stmt->execute([$id]);
+        $pedidos = $stmt->fetchAll(); // Me traigo todos los elementos del pedido (con sus costos unitarios y cantidades pedidas)
+
+
+        //una vez que tengo los detalles del pedido, recorro cada uno para actualizar el stock
+        //actualizo la tabla egresos ¿y movimientos_venta?
+        foreach ($pedidos as $detalle) {
+            $stmt = $this->db->prepare(
+                "INSERT INTO egresos (fecha, monto, descripcion, categoria, fecha_creacion) VALUES (?, ?, 'pedido_realizado', 'pedido-compra', ?)"
+            );
+            $stmt->execute([date('Y-m-d H:i:s'), $detalle['precio_estimado'], date('Y-m-d H:i:s')]);
+            
+            $stmt = $this->db->prepare(
+                "INSERT INTO movimientos_caja (tipo, referencia_id, monto_costo, monto_venta, descripcion, fecha) VALUES (?, ?, ?, ?, 'Compra realizada por pedido', ?)"
+            );
+            $stmt->execute(['compra', $detalle['variedad_id'], $detalle['precio_estimado'], 0, date('Y-m-d H:i:s')]);
+
+            $stmt = $this->db->prepare(
+                "SELECT unidades_por_pack FROM variedades WHERE id = ?"
+            );
+            $stmt->execute([$detalle['variedad_id']]);
+            $variedad = $stmt->fetch();
+
+            $stmt = $this->db->prepare(
+                "UPDATE variedades SET stock = stock + ? WHERE id = ?"
+            );
+
+            $stockTotal = $detalle['cantidad_solicitada']*$variedad['unidades_por_pack'];
+
+            $stmt->execute([$stockTotal, $detalle['variedad_id']]);
+            
+        }
+        
+        return true;
     }
     
     public function marcarComoFaltante($id, $observaciones = '') {

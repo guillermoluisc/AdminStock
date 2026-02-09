@@ -1,11 +1,25 @@
-[Wed Jan 21 21:17:04 2026] PHP 8.2.30 Development Server (http://localhost:8080) started
-[Wed Jan 21 21:17:07 2026] [::1]:63875 Accepted
-[Wed Jan 21 21:17:07 2026] [::1]:53225 Accepted
-[Wed Jan 21 21:17:07 2026] [::1]:63875 [200]: GET /
-[Wed Jan 21 21:17:07 2026] [::1]:63875 Closing
-[Wed Jan 21 21:17:07 2026] [::1]:53225 [200]: GET /public/logo.svg
-[Wed Jan 21 21:17:07 2026] [::1]:53225 Closing
-[Wed Jan 21 21:17:07 2026] [::1]:63815 Accepted
-[Wed Jan 21 21:17:07 2026] [::1]:63815 [404]: GET /favicon.ico - No such file or directory
-[Wed Jan 21 21:17:07 2026] [::1]:63815 Closing
-^C
+[Mon Feb  9 08:56:26 2026] PHP 8.2.30 Development Server (http://localhost:8080) started
+[Mon Feb  9 08:56:29 2026] [::1]:60361 Accepted
+[Mon Feb  9 08:56:29 2026] [::1]:50128 Accepted
+[Mon Feb  9 08:56:30 2026] [::1]:60361 [200]: GET /
+[Mon Feb  9 08:56:30 2026] [::1]:60361 Closing
+[Mon Feb  9 08:56:30 2026] [::1]:50128 Closed without sending a request; it was probably just an unused speculative preconnection
+[Mon Feb  9 08:56:30 2026] [::1]:50128 Closing
+[Mon Feb  9 08:56:30 2026] [::1]:51170 Accepted
+[Mon Feb  9 08:56:30 2026] [::1]:51170 [200]: GET /public/logo.svg
+[Mon Feb  9 08:56:30 2026] [::1]:51170 Closing
+[Mon Feb  9 08:56:30 2026] [::1]:58693 Accepted
+[Mon Feb  9 08:56:30 2026] [::1]:58693 [404]: GET /favicon.ico - No such file or directory
+[Mon Feb  9 08:56:30 2026] [::1]:58693 Closing
+[Mon Feb  9 08:56:31 2026] [::1]:50780 Accepted
+[Mon Feb  9 08:56:32 2026] [::1]:50780 [200]: GET /index.php?c=variedad&a=index
+[Mon Feb  9 08:56:32 2026] [::1]:50780 Closing
+[Mon Feb  9 08:56:32 2026] [::1]:62264 Accepted
+[Mon Feb  9 08:56:32 2026] [::1]:62264 [200]: GET /public/logo.svg
+[Mon Feb  9 08:56:32 2026] [::1]:62264 Closing
+[Mon Feb  9 08:56:33 2026] [::1]:58368 Accepted
+[Mon Feb  9 08:56:33 2026] [::1]:58368 [200]: GET /index.php?c=venta&a=index
+[Mon Feb  9 08:56:33 2026] [::1]:58368 Closing
+[Mon Feb  9 08:56:33 2026] [::1]:49750 Accepted
+[Mon Feb  9 08:56:33 2026] [::1]:49750 [200]: GET /public/logo.svg
+[Mon Feb  9 08:56:33 2026] [::1]:49750 Closing

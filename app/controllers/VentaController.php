@@ -173,21 +173,36 @@ public function nueva() {
     ]);
 }
     
-    public function detalle($id) {
-        $venta = $this->ventaModel->getById($id);
-        
-        if (!$venta) {
-            header('Location: index.php?c=venta&a=index');
-            exit;
-        }
-        
-        $detalles = $this->ventaModel->getDetalles($id);
-        
-        $this->render('ventas/detalle', [
-            'venta' => $venta,
-            'detalles' => $detalles
-        ]);
+public function detalle($id) {
+    $venta = $this->ventaModel->getById($id);
+    
+    if (!$venta) {
+        header('Location: index.php?c=venta&a=index');
+        exit;
     }
+    
+    $detalles = $this->ventaModel->getDetalles($id);
+    
+    // Calcular adelantos y saldo restante para preventas
+    $adelantos_registrados = 0;
+    $saldo_restante = $venta['total'];
+    $historial_adelantos = [];
+    
+    if ($venta['estado'] == 'preventa') {
+        $adelantosData = $this->ventaModel->getAdelantosRegistrados($id);
+        $adelantos_registrados = $adelantosData['total'];
+        $historial_adelantos = $adelantosData['historial'];
+        $saldo_restante = $venta['total'] - $adelantos_registrados;
+    }
+    
+    $this->render('ventas/detalle', [
+        'venta' => $venta,
+        'detalles' => $detalles,
+        'adelantos_registrados' => $adelantos_registrados,
+        'saldo_restante' => $saldo_restante,
+        'historial_adelantos' => $historial_adelantos
+    ]);
+}
     
     public function formalizarPreventa($id) {
         $venta = $this->ventaModel->getById($id);
@@ -236,6 +251,46 @@ public function nueva() {
         header('Location: index.php?c=venta&a=detalle&id=' . $id);
         exit;
     }
+    public function registrarAdelanto($id) {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        header('Location: index.php?c=venta&a=detalle&id=' . $id);
+        exit;
+    }
+    
+    $venta = $this->ventaModel->getById($id);
+    
+    if (!$venta || $venta['estado'] != 'preventa') {
+        $_SESSION['mensaje'] = 'Esta venta no es una pre-venta válida';
+        $_SESSION['tipo_mensaje'] = 'error';
+        header('Location: index.php?c=venta&a=index');
+        exit;
+    }
+    
+    $monto_adelanto = floatval($_POST['monto_adelanto'] ?? 0);
+    
+    // Calcular saldo restante
+    $adelantosData = $this->ventaModel->getAdelantosRegistrados($id);
+    $adelantos_previos = $adelantosData['total'];
+    $saldo_restante = $venta['total'] - $adelantos_previos;
+    
+    if ($monto_adelanto <= 0 || $monto_adelanto > $saldo_restante) {
+        $_SESSION['mensaje'] = 'Monto de adelanto inválido. Saldo restante: ' . FormatHelper::precio($saldo_restante);
+        $_SESSION['tipo_mensaje'] = 'error';
+        header('Location: index.php?c=venta&a=detalle&id=' . $id);
+        exit;
+    }
+    
+    if ($this->ventaModel->registrarAdelanto($id, $monto_adelanto)) {
+        $_SESSION['mensaje'] = '✅ Adelanto de ' . FormatHelper::precio($monto_adelanto) . ' registrado exitosamente';
+        $_SESSION['tipo_mensaje'] = 'success';
+    } else {
+        $_SESSION['mensaje'] = 'Error al registrar el adelanto';
+        $_SESSION['tipo_mensaje'] = 'error';
+    }
+    
+    header('Location: index.php?c=venta&a=detalle&id=' . $id);
+    exit;
+}
     
     private function render($view, $data = []) {
         extract($data);

@@ -4,25 +4,30 @@
 <div class="card" style="margin-bottom: 20px;">
     <h3 style="margin-bottom: 15px;">Agregar Productos a la Venta</h3>
     
-    <div class="form-group">
-        <label for="variedad_select">Seleccionar Producto</label>
-        <select id="variedad_select" style="width: 100%; padding: 10px;">
-            <option value="">Seleccione un producto...</option>
-            <?php foreach ($variedades as $var): ?>
-                <option value="<?= $var['id'] ?>" 
-                        data-nombre="<?= htmlspecialchars($var['producto_padre_nombre'] . ' - ' . $var['nombre']) ?>"
-                        data-stock="<?= $var['stock'] ?>"
-                        data-unidades-pack="<?= $var['unidades_por_pack'] ?? 3 ?>"
-                        data-pack3-tarjeta="<?= $var['precio_pack3_tarjeta'] ?>"
-                        data-pack3-efectivo="<?= $var['precio_pack3_efectivo'] ?>"
-                        data-unidad-tarjeta="<?= $var['precio_unidad_tarjeta'] ?>"
-                        data-unidad-efectivo="<?= $var['precio_unidad_efectivo'] ?>">
-                    <?= htmlspecialchars($var['producto_padre_nombre']) ?> - <?= htmlspecialchars($var['nombre']) ?> 
-                    (Stock: <?= $var['stock'] ?>)
-                </option>
-            <?php endforeach; ?>
-        </select>
-    </div>
+<div class="form-group">
+    <label for="variedad_select">Seleccionar Producto</label>
+    <input type="text" 
+           id="search_producto" 
+           placeholder="Buscar producto..." 
+           style="width: 100%; padding: 10px; margin-bottom: 10px;">
+    <select id="variedad_select" style="width: 100%; padding: 10px;" size="8">
+        <option value="">Seleccione un producto...</option>
+        <?php foreach ($variedades as $var): ?>
+            <option value="<?= $var['id'] ?>" 
+                    data-nombre="<?= htmlspecialchars($var['producto_padre_nombre'] . ' - ' . $var['nombre']) ?>"
+                    data-search="<?= htmlspecialchars(strtolower($var['producto_padre_nombre'] . ' ' . $var['nombre'])) ?>"
+                    data-stock="<?= $var['stock'] ?>"
+                    data-unidades-pack="<?= $var['unidades_por_pack'] ?? 3 ?>"
+                    data-pack3-tarjeta="<?= $var['precio_pack3_tarjeta'] ?>"
+                    data-pack3-efectivo="<?= $var['precio_pack3_efectivo'] ?>"
+                    data-unidad-tarjeta="<?= $var['precio_unidad_tarjeta'] ?>"
+                    data-unidad-efectivo="<?= $var['precio_unidad_efectivo'] ?>">
+                <?= htmlspecialchars($var['producto_padre_nombre']) ?> - <?= htmlspecialchars($var['nombre']) ?> 
+                (Stock: <?= $var['stock'] ?>)
+            </option>
+        <?php endforeach; ?>
+    </select>
+</div>
     
     <div class="grid-3" style="margin-top: 15px;">
         <div class="form-group">
@@ -328,4 +333,61 @@ function formatPesos(valor) {
         minimumFractionDigits: 2
     }).format(valor);
 }
+// Funcionalidad de búsqueda de productos
+document.getElementById('search_producto').addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    const select = document.getElementById('variedad_select');
+    const options = select.querySelectorAll('option');
+    
+    options.forEach(option => {
+        if (option.value === '') {
+            option.style.display = 'block';
+            return;
+        }
+        
+        const searchText = option.dataset.search || '';
+        if (searchText.includes(searchTerm)) {
+            option.style.display = 'block';
+        } else {
+            option.style.display = 'none';
+        }
+    });
+    
+    // Si solo hay una opción visible (además de la vacía), seleccionarla automáticamente
+    const visibleOptions = Array.from(options).filter(opt => 
+        opt.value !== '' && opt.style.display !== 'none'
+    );
+    
+    if (visibleOptions.length === 1) {
+        select.value = visibleOptions[0].value;
+        actualizarPrecioVenta();
+    }
+});
+
+// Limpiar búsqueda al seleccionar un producto
+document.getElementById('variedad_select').addEventListener('change', function() {
+    if (this.value) {
+        document.getElementById('search_producto').value = '';
+        // Mostrar todas las opciones nuevamente
+        this.querySelectorAll('option').forEach(opt => opt.style.display = 'block');
+    }
+});
+
+// Permitir seleccionar con Enter en el campo de búsqueda
+document.getElementById('search_producto').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        const select = document.getElementById('variedad_select');
+        const visibleOptions = Array.from(select.options).filter(opt => 
+            opt.value !== '' && opt.style.display !== 'none'
+        );
+        
+        if (visibleOptions.length === 1) {
+            select.value = visibleOptions[0].value;
+            actualizarPrecioVenta();
+            this.value = '';
+            select.querySelectorAll('option').forEach(opt => opt.style.display = 'block');
+        }
+    }
+});
 </script>

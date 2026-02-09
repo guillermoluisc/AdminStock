@@ -40,16 +40,40 @@
                 <span class="badge" style="background: #3498db;">💳 Tarjeta</span>
             <?php endif; ?>
         </div>
+        
         <?php if ($venta['fecha_formalizacion']): ?>
-        <div style="margin-top: 15px; padding: 10px; background: #e8f5e9; border-radius: 4px;">
-            <strong>Fecha de Formalización:</strong> <?= date('d/m/Y H:i', strtotime($venta['fecha_formalizacion'])) ?>
+        <div>
+            <strong>Fecha de Formalización:</strong><br>
+            <?= date('d/m/Y H:i', strtotime($venta['fecha_formalizacion'])) ?>
         </div>
         <?php endif; ?>
+        
         <div>
             <strong>Total:</strong><br>
             <span style="color: #27ae60; font-size: 24px; font-weight: bold;"><?= FormatHelper::precio($venta['total']) ?></span>
         </div>
     </div>
+    
+    <?php if ($venta['estado'] == 'preventa'): ?>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
+        <div>
+            <strong>Monto Total:</strong><br>
+            <span style="color: #3498db; font-size: 20px; font-weight: bold;"><?= FormatHelper::precio($venta['total']) ?></span>
+        </div>
+        <div>
+            <strong>Adelantos Registrados:</strong><br>
+            <span style="color: #27ae60; font-size: 20px; font-weight: bold;">
+                <?= FormatHelper::precio($adelantos_registrados ?? 0) ?>
+            </span>
+        </div>
+        <div>
+            <strong>Saldo Pendiente:</strong><br>
+            <span style="color: #e74c3c; font-size: 24px; font-weight: bold;">
+                <?= FormatHelper::precio($saldo_restante ?? $venta['total']) ?>
+            </span>
+        </div>
+    </div>
+    <?php endif; ?>
     
 </div>
 
@@ -57,13 +81,86 @@
 <?php if ($venta['estado'] == 'preventa'): ?>
 <div class="card" style="margin-bottom: 20px; background: #fff3cd; border: 2px solid #f39c12;">
     <h3 style="margin-bottom: 15px; color: #856404;">⏳ Acciones de Pre-venta</h3>
+        
+    <!-- Historial de adelantos -->
+    <?php if (!empty($historial_adelantos) && count($historial_adelantos) > 0): ?>
+    <div style="background: #f8f9fa; padding: 15px; border-radius: 4px; margin-bottom: 15px;">
+        <h4 style="margin-bottom: 10px;">📋 Historial de Adelantos</h4>
+        <table style="width: 100%; font-size: 14px;">
+            <thead>
+                <tr style="background: #e9ecef;">
+                    <th style="padding: 8px; text-align: left;">Fecha</th>
+                    <th style="padding: 8px; text-align: right;">Monto</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($historial_adelantos as $adelanto): ?>
+                <tr>
+                    <td style="padding: 8px;"><?= date('d/m/Y H:i', strtotime($adelanto['fecha'])) ?></td>
+                    <td style="padding: 8px; text-align: right; color: #27ae60; font-weight: bold;">
+                        <?= FormatHelper::precio($adelanto['monto_venta']) ?>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <?php endif; ?>
+    
+    <!-- Formulario de adelanto -->
+    <?php 
+    $monto_restante = $saldo_restante ?? $venta['total'];
+    if ($monto_restante > 0): 
+    ?>
+    <div style="background: #e8f5e9; padding: 15px; border-radius: 4px; margin-bottom: 15px;">
+        <h4 style="margin-bottom: 10px;">💵 Registrar Adelanto</h4>
+        <form method="POST" action="index.php?c=venta&a=registrarAdelanto&id=<?= $venta['id'] ?>" 
+              onsubmit="return validarAdelanto(<?= $monto_restante ?>)">
+            <div style="display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: end;">
+                <div>
+                    <label for="monto_adelanto">Monto del Adelanto:</label>
+                    <input type="number" 
+                           id="monto_adelanto" 
+                           name="monto_adelanto" 
+                           step="0.01" 
+                           min="0.01" 
+                           max="<?= $monto_restante ?>"
+                           placeholder="Ingrese el monto"
+                           required
+                           style="width: 100%; padding: 10px; font-size: 16px;">
+                    <small style="color: #666;">Máximo: <?= FormatHelper::precio($monto_restante) ?></small>
+                </div>
+                <button type="submit" class="btn btn-success" style="height: fit-content;">
+                    ➕ Registrar Adelanto
+                </button>
+            </div>
+        </form>
+    </div>
+    <?php endif; ?>
+    
+    <!-- Botones de acción -->
     <p style="margin-bottom: 15px; color: #666;">
-        Esta es una pre-venta. El stock está reservado pero el ingreso no se ha registrado todavía.
+        <?php if ($monto_restante <= 0): ?>
+            ✅ <strong>El saldo está completo.</strong> Puede formalizar la venta.
+        <?php else: ?>
+            Esta pre-venta aún tiene saldo pendiente de <?= FormatHelper::precio($monto_restante) ?>. 
+            Puede registrar adelantos parciales o formalizar el total restante.
+        <?php endif; ?>
     </p>
+    
     <div style="display: flex; gap: 10px;">
-        <form method="POST" action="index.php?c=venta&a=formalizarPreventa&id=<?= $venta['id'] ?>" style="display: inline;" onsubmit="return confirm('¿Confirma FORMALIZAR esta pre-venta?\n\nSe registrará el ingreso de <?= FormatHelper::precio($venta['total']) ?>')">
+        <form method="POST" 
+              action="index.php?c=venta&a=formalizarPreventa&id=<?= $venta['id'] ?>" 
+              style="display: inline;" 
+              onsubmit="return confirm('¿Confirma FORMALIZAR esta pre-venta?\n\n<?php 
+                  if ($monto_restante > 0) {
+                      echo "Se registrará el pago del saldo restante de " . FormatHelper::precio($monto_restante);
+                  } else {
+                      echo "La venta ya está totalmente pagada.";
+                  }
+              ?>')">
             <button type="submit" class="btn btn-success">
-                ✅ Formalizar Venta
+                ✅ Formalizar Venta <?= $monto_restante > 0 ? '(' . FormatHelper::precio($monto_restante) . ')' : '' ?>
             </button>
         </form>
         
@@ -109,6 +206,28 @@ function mostrarConfirmacionCancelacion() {
 
 function cerrarModalCancelacion() {
     document.getElementById('modal_cancelacion').style.display = 'none';
+}
+
+function validarAdelanto(montoMaximo) {
+    const monto = parseFloat(document.getElementById('monto_adelanto').value);
+    
+    if (isNaN(monto) || monto <= 0) {
+        alert('Ingrese un monto válido mayor a cero');
+        return false;
+    }
+    
+    if (monto > montoMaximo) {
+        alert('El monto no puede ser mayor al saldo restante de ' + new Intl.NumberFormat('es-AR', {
+            style: 'currency',
+            currency: 'ARS'
+        }).format(montoMaximo));
+        return false;
+    }
+    
+    return confirm('¿Confirma registrar un adelanto de ' + new Intl.NumberFormat('es-AR', {
+        style: 'currency',
+        currency: 'ARS'
+    }).format(monto) + '?');
 }
 
 // Cerrar modal al hacer clic fuera

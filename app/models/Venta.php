@@ -246,51 +246,57 @@ public function crear($total, $metodo_pago, $descuento_aplicado, $detalles, $nom
     
 public function formalizarPreventa($id) {
     try {
-        $this->db->beginTransaction();
+        $db = Database::getInstance()->getConnection();
+        $db->beginTransaction();
         
-        // Actualizar estado de la venta
-        $stmt = $this->db->prepare(
-            "UPDATE ventas SET estado = 'completada', fecha_formalizacion = ? WHERE id = ? AND estado = 'preventa'"
-        );
-        $stmt->execute([date('Y-m-d H:i:s'), $id]);
-        
-        // Obtener información de la venta
         $venta = $this->getById($id);
-        $detalles = $this->getDetalles($id);
+        if (!$venta || $venta['estado'] != 'preventa') {
+            throw new Exception('Venta no válida');
+        }
         
-        // Calcular costo total
-        $total_costo = 0;
-        foreach ($detalles as $detalle) {
-            $stmtCosto = $this->db->prepare("SELECT precio_costo_unitario FROM variedades WHERE id = ?");
-            $stmtCosto->execute([$detalle['variedad_id']]);
-            $variedad = $stmtCosto->fetch();
+        // Calcular cuánto falta pagar
+        $adelantosData = $this->getAdelantosRegistrados($id);
+        $adelantos_previos = $adelantosData['total'];
+        $monto_restante = $venta['total'] - $adelantos_previos;
+        
+        // Solo registrar movimiento si hay saldo pendiente
+        if ($monto_restante > 0) {
+            $detalles = $this->getDetalles($id);
             
-            $total_costo += ($variedad['precio_costo_unitario'] * $detalle['cantidad']);
+            // Calcular el monto a costo proporcional al saldo restante
+            $proporcion = $monto_restante / $venta['total'];
+            $monto_costo = 0;
+            
+            foreach ($detalles as $detalle) {
+                $monto_costo_item = $detalle['precio_costo'] * $detalle['cantidad'] * $proporcion;
+                $monto_costo += $monto_costo_item;
+            }
+            
+            $query = "INSERT INTO movimientos_caja (tipo, referencia_id, monto_costo, monto_venta, descripcion) 
+                      VALUES ('venta', :referencia_id, :monto_costo, :monto_venta, :descripcion)";
+            $stmt = $db->prepare($query);
+            $stmt->execute([
+                ':referencia_id' => $id,
+                ':monto_costo' => $monto_costo,
+                ':monto_venta' => $monto_restante,
+                ':descripcion' => 'Formalización de pre-venta #' . $id . ' (saldo restante)'
+            ]);
         }
         
-        // REGISTRAR MOVIMIENTO DE CAJA
-        $descripcion = 'Venta #' . $id . ' (Formalizada)';
-        if ($venta['nombre_cliente']) {
-            $descripcion .= ' - ' . $venta['nombre_cliente'];
-        }
+        // Actualizar estado a completada
+        $query = "UPDATE ventas 
+                  SET estado = 'completada', 
+                      fecha_formalizacion = CURRENT_TIMESTAMP
+                  WHERE id = :id";
+        $stmt = $db->prepare($query);
+        $stmt->execute([':id' => $id]);
         
-        $stmtCaja = $this->db->prepare(
-            "INSERT INTO movimientos_caja (tipo, referencia_id, monto_costo, monto_venta, descripcion) VALUES (?, ?, ?, ?, ?)"
-        );
-        
-        $stmtCaja->execute([
-            'venta',
-            $id,
-            -$total_costo,  // NEGATIVO para restar de caja
-            $venta['total'],
-            $descripcion
-        ]);
-        
-        $this->db->commit();
+        $db->commit();
         return true;
-    } catch (PDOException $e) {
-        $this->db->rollBack();
-        error_log("Error en formalizarPreventa: " . $e->getMessage());
+        
+    } catch (Exception $e) {
+        $db->rollBack();
+        error_log("Error al formalizar pre-venta: " . $e->getMessage());
         return false;
     }
 }
@@ -386,5 +392,99 @@ public function cancelarPreventa($id) {
         
         return $result;
     }
+    /**
+ * Obtiene el total de adelantos registrados para una pre-venta
+ */
+public function getAdelantosRegistrados($venta_id) {
+    try {
+        $db = Database::getInstance()->getConnection();
+
+        
+        // Buscar movimientos de caja que sean adelantos de esta venta
+        $query = "SELECT 
+                    SUM(monto_venta) as total_adelantos,
+                    monto_venta,
+                    fecha
+                  FROM movimientos_caja 
+                  WHERE tipo = 'venta' 
+                    AND referencia_id = :venta_id
+                    AND descripcion LIKE '%Adelanto de pre-venta%'
+                  GROUP BY monto_venta, fecha
+                  ORDER BY fecha ASC";
+        
+        $stmt = $db->prepare($query);
+        $stmt->execute([':venta_id' => $venta_id]);
+        $historial = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Calcular total
+        $query_total = "SELECT COALESCE(SUM(monto_venta), 0) as total
+                        FROM movimientos_caja 
+                        WHERE tipo = 'venta' 
+                          AND referencia_id = :venta_id
+                          AND descripcion LIKE '%Adelanto de pre-venta%'";
+        
+        $stmt_total = $db->prepare($query_total);
+        $stmt_total->execute([':venta_id' => $venta_id]);
+        $total = $stmt_total->fetch(PDO::FETCH_ASSOC)['total'];
+        
+        return [
+            'total' => floatval($total),
+            'historial' => $historial
+        ];
+        
+    } catch (Exception $e) {
+        error_log("Error al obtener adelantos: " . $e->getMessage());
+        return [
+            'total' => 0,
+            'historial' => []
+        ];
+    }
+}
+
+/**
+ * Registra un adelanto para una pre-venta
+ */
+public function registrarAdelanto($venta_id, $monto_adelanto) {
+    try {
+        $db = Database::getInstance()->getConnection();
+        $db->beginTransaction();
+        
+        // Obtener venta y sus detalles
+        $venta = $this->getById($venta_id);
+        if (!$venta || $venta['estado'] != 'preventa') {
+            throw new Exception('Venta no válida');
+        }
+        
+        $detalles = $this->getDetalles($venta_id);
+        
+        // Calcular el monto a costo proporcional al adelanto
+        $proporcion = $monto_adelanto / $venta['total'];
+        $monto_costo = 0;
+        
+        foreach ($detalles as $detalle) {
+            $monto_costo_item = $detalle['precio_costo'] * $detalle['cantidad'] * $proporcion;
+            $monto_costo += $monto_costo_item;
+        }
+        
+        // Registrar en movimientos de caja
+        $query = "INSERT INTO movimientos_caja (tipo, referencia_id, monto_costo, monto_venta, descripcion) 
+                  VALUES ('venta', :referencia_id, :monto_costo, :monto_venta, :descripcion)";
+        $stmt = $db->prepare($query);
+        $stmt->execute([
+            ':referencia_id' => $venta_id,
+            ':monto_costo' => $monto_costo,
+            ':monto_venta' => $monto_adelanto,
+            ':descripcion' => 'Adelanto de pre-venta #' . $venta_id
+        ]);
+        
+        $db->commit();
+        return true;
+        
+    } catch (Exception $e) {
+        $db->rollBack();
+        error_log("Error al registrar adelanto: " . $e->getMessage());
+        return false;
+    }
+}
 }
 ?>

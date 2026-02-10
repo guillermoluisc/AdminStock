@@ -46,7 +46,6 @@
     </div>
 </div>
     </div>
-    
     <div class="card" style="background: #e8f5e9;">
         <h3 style="margin-bottom: 15px;">📊 Precios de Venta</h3>
         
@@ -108,7 +107,6 @@
             </div>
         </div>
     </div>
-    
     <?php if (!empty($promociones)): ?>
     <div class="card">
         <h3 style="margin-bottom: 15px;">🎁 Promociones Activas</h3>
@@ -137,7 +135,24 @@
         <a href="index.php?c=variedad&a=index" class="btn btn-secondary">Cancelar</a>
     </div>
 </form>
-
+        <!-- SECCIÓN REGALO -->
+<div class="card" style="background: #fdecea; border: 1px solid #e74c3c; margin-top: 20px;">
+    <h3 style="margin-bottom: 15px; color: #c0392b;">🎁 Registrar Regalo</h3>
+    <form method="POST" action="index.php?c=variedad&a=regalar&id=<?= $variedad['id'] ?>"
+          onsubmit="return confirm('¿Confirmar regalo de ' + document.getElementById('cantidad_regalo').value + ' unidades? Esto descontará stock y registrará un egreso en caja.')">
+        <div class="grid-2">
+            <div class="form-group">
+                <label for="cantidad_regalo">Cantidad a regalar</label>
+                <input type="number" id="cantidad_regalo" name="cantidad_regalo"
+                       min="1" max="<?= $variedad['stock'] ?>" value="1" required>
+                <small style="color: #666;">Stock disponible: <strong><?= $variedad['stock'] ?></strong> unidades</small>
+            </div>
+            <div class="form-group" style="display: flex; align-items: flex-end;">
+                <button type="submit" class="btn btn-danger">🎁 Registrar Regalo</button>
+            </div>
+        </div>
+    </form>
+</div>
 <script>
 // Obtener el producto_padre_id desde PHP
 const productoPadreId = <?= $variedad['producto_padre_id'] ?>;

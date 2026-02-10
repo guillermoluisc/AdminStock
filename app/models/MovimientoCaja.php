@@ -58,6 +58,19 @@ class MovimientoCaja {
             return false;
         }
     }
+
+    /**
+     * Registrar un movimiento manual (para ajustes)
+     */
+    public function registrarAjusteRegalo($monto, $descripcion) {
+        try {
+            $sql =  "INSERT INTO egresos (fecha, monto, descripcion, categoria, fecha_creacion) VALUES (?, ?, ?, ?, ?)";
+            $stmt = $this->db->prepare($sql);
+        return $stmt->execute([date('Y-m-d H:i:s'), $monto, $descripcion, 'Regalo', date('Y-m-d H:i:s')]);
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
     
     /**
      * Obtener resumen de movimientos por tipo

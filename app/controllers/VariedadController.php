@@ -182,5 +182,34 @@ class VariedadController {
         $content = ob_get_clean();
         require BASE_PATH . '/views/layout.php';
     }
+
+    public function regalar($id) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $cantidad = intval($_POST['cantidad_regalo']);
+        $variedad = $this->variedadModel->getById($id);
+
+        if (!$variedad || $cantidad <= 0 || $cantidad > $variedad['stock']) {
+            $_SESSION['mensaje'] = 'Cantidad inválida para regalo';
+            $_SESSION['tipo_mensaje'] = 'error';
+            header('Location: index.php?c=variedad&a=editar&id=' . $id);
+            exit;
+        }
+
+        // 1. Descontar stock (actualizarStock suma, entonces pasamos negativo)
+        $this->variedadModel->actualizarStock($id, -$cantidad);
+
+        // 2. Movimiento de caja negativo: cantidad * precio_costo_unitario
+        $monto = $cantidad * ($variedad['precio_costo_unitario']/$variedad['unidades_por_pack']);
+        $cajaModel = new MovimientoCaja();
+        $cajaModel->registrarAjuste(-$monto, 'Regalo: ' . $cantidad . ' u. de ' . $variedad['nombre']);
+        $cajaModel->registrarAjusteRegalo($monto, 'Regalo: ' . $cantidad . ' u. de ' . $variedad['nombre']);
+
+        $_SESSION['mensaje'] = 'Regalo registrado: ' . $cantidad . ' unidades de ' . $variedad['nombre'];
+        $_SESSION['tipo_mensaje'] = 'success';
+    }
+
+    header('Location: index.php?c=variedad&a=editar&id=' . $id);
+    exit;
+}
 }
 ?>

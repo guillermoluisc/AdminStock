@@ -215,25 +215,35 @@ public function crear($total, $metodo_pago, $descuento_aplicado, $detalles, $nom
         }
         
         // REGISTRAR MOVIMIENTO DE CAJA (solo si es venta completada)
-        if ($estado == 'completada') {
-            $descripcion = 'Venta #' . $venta_id;
-            if ($nombre_cliente) {
-                $descripcion .= ' - ' . $nombre_cliente;
-            }
-            
-            $stmtCaja = $this->db->prepare(
-                "INSERT INTO movimientos_caja (tipo, referencia_id, monto_costo, monto_venta, descripcion) VALUES (?, ?, ?, ?, ?)"
-            );
-            
-            // IMPORTANTE: monto_costo va NEGATIVO para descontar de la caja
-            $stmtCaja->execute([
-                'venta',
-                $venta_id,
-                -$total_costo,  // NEGATIVO para restar
-                $total,         // Total de la venta
-                $descripcion
-            ]);
-        }
+        $descripcion = ($es_preventa ? 'Pre-venta #' : 'Venta #') . $venta_id;
+                if ($nombre_cliente) {
+                    $descripcion .= ' - ' . $nombre_cliente;
+                }
+                
+                $stmtCaja = $this->db->prepare(
+                    "INSERT INTO movimientos_caja (tipo, referencia_id, monto_costo, monto_venta, descripcion) VALUES (?, ?, ?, ?, ?)"
+                );
+                
+                if ($estado == 'completada') {
+                    // VENTA NORMAL: descuenta costo Y suma venta
+                    $stmtCaja->execute([
+                        'venta',
+                        $venta_id,
+                        -$total_costo,  // NEGATIVO para restar del stock
+                        $total,         // Total suma a vendido
+                        $descripcion
+                    ]);
+                } else {
+                    // PRE-VENTA: descuenta SOLO el costo (refleja en Total en Stock)
+                    // NO suma a Total Vendido (eso se hace con adelantos)
+                    $stmtCaja->execute([
+                        'preventa',
+                        $venta_id,
+                        -$total_costo,  // NEGATIVO para restar del stock
+                        0,              // NO suma a vendido aún
+                        $descripcion
+                    ]);
+                }
         
         $this->db->commit();
         return $venta_id;
@@ -261,24 +271,13 @@ public function formalizarPreventa($id) {
         
         // Solo registrar movimiento si hay saldo pendiente
         if ($monto_restante > 0) {
-            $detalles = $this->getDetalles($id);
-            
-            // Calcular el monto a costo proporcional al saldo restante
-            $proporcion = $monto_restante / $venta['total'];
-            $monto_costo = 0;
-            
-            foreach ($detalles as $detalle) {
-                $monto_costo_item = $detalle['precio_costo'] * $detalle['cantidad'] * $proporcion;
-                $monto_costo += $monto_costo_item;
-            }
-            
             $query = "INSERT INTO movimientos_caja (tipo, referencia_id, monto_costo, monto_venta, descripcion) 
                       VALUES ('venta', :referencia_id, :monto_costo, :monto_venta, :descripcion)";
             $stmt = $db->prepare($query);
             $stmt->execute([
                 ':referencia_id' => $id,
-                ':monto_costo' => $monto_costo,
-                ':monto_venta' => $monto_restante,
+                ':monto_costo' => 0,  // CERO: el costo ya se descontó al crear la preventa
+                ':monto_venta' => $monto_restante,  // Solo suma el saldo a Total Vendido
                 ':descripcion' => 'Formalización de pre-venta #' . $id . ' (saldo restante)'
             ]);
         }

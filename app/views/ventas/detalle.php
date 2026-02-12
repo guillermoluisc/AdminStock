@@ -150,7 +150,7 @@
     
     <div style="display: flex; gap: 10px;">
         <form method="POST" 
-              action="index.php?c=venta&a=formalizarPreventa&id=<?= $venta['id'] ?>" 
+              action="index.php?c=venta&a=formalizarPreventa&id=<?= $venta['id'] ?>&montoRestante=<?= $monto_restante ?>" 
               style="display: inline;" 
               onsubmit="return confirm('¿Confirma FORMALIZAR esta pre-venta?\n\n<?php 
                   if ($monto_restante > 0) {

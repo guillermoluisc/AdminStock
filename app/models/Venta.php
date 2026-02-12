@@ -254,7 +254,7 @@ public function crear($total, $metodo_pago, $descuento_aplicado, $detalles, $nom
     }
 }
     
-public function formalizarPreventa($id) {
+public function formalizarPreventa($id, $montoRestante) {
     try {
         $db = Database::getInstance()->getConnection();
         $db->beginTransaction();
@@ -267,7 +267,7 @@ public function formalizarPreventa($id) {
         // Calcular cuánto falta pagar
         $adelantosData = $this->getAdelantosRegistrados($id);
         $adelantos_previos = $adelantosData['total'];
-        $monto_restante = $venta['total'] - $adelantos_previos;
+        $monto_restante = $montoRestante;
         
         // Solo registrar movimiento si hay saldo pendiente
         if ($monto_restante > 0) {
@@ -283,6 +283,12 @@ public function formalizarPreventa($id) {
         }
         
         // Actualizar estado a completada
+        $queryDelete = "DELETE FROM movimientos_caja 
+                        WHERE referencia_id = :referencia_id 
+                        AND descripcion LIKE '%Adelanto%'";
+        $stmtDelete = $db->prepare($queryDelete);
+        $stmtDelete->execute([':referencia_id' => $id]);
+
         $query = "UPDATE ventas 
                   SET estado = 'completada', 
                       fecha_formalizacion = CURRENT_TIMESTAMP
@@ -358,39 +364,66 @@ public function cancelarPreventa($id) {
         return $result['total'] ?? 0;
     }
     
-    public function getEstadisticas($fecha_desde = null, $fecha_hasta = null) {
-        $sql = "SELECT 
-                COUNT(*) as total_ventas,
-                SUM(total) as total_vendido,
-                AVG(total) as promedio_venta,
-                SUM(CASE WHEN metodo_pago = 'efectivo' THEN total ELSE 0 END) as total_efectivo,
-                SUM(CASE WHEN metodo_pago = 'tarjeta' THEN total ELSE 0 END) as total_tarjeta,
-                SUM(CASE WHEN metodo_pago = 'transferencia' THEN total ELSE 0 END) as total_transferencia
-                FROM ventas WHERE estado = 'completada'";
-        
-        $params = [];
-        
-        if ($fecha_desde) {
-            $sql .= " AND DATE(fecha) >= ?";
-            $params[] = $fecha_desde;
-        }
-        
-        if ($fecha_hasta) {
-            $sql .= " AND DATE(fecha) <= ?";
-            $params[] = $fecha_hasta;
-        }
-        
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute($params);
-        $result = $stmt->fetch();
-        
-        // Combinar tarjeta y transferencia en un solo campo para compatibilidad
-        if ($result) {
-            $result['total_tarjeta_combinado'] = ($result['total_tarjeta'] ?? 0) + ($result['total_transferencia'] ?? 0);
-        }
-        
-        return $result;
+public function getEstadisticas($fecha_desde = null, $fecha_hasta = null) {
+    // 1. Estadísticas de ventas completadas
+    $sql = "SELECT 
+            COUNT(*) as total_ventas,
+            SUM(total) as total_vendido,
+            AVG(total) as promedio_venta,
+            SUM(CASE WHEN metodo_pago = 'efectivo' THEN total ELSE 0 END) as total_efectivo,
+            SUM(CASE WHEN metodo_pago = 'tarjeta' THEN total ELSE 0 END) as total_tarjeta,
+            SUM(CASE WHEN metodo_pago = 'transferencia' THEN total ELSE 0 END) as total_transferencia
+            FROM ventas WHERE estado = 'completada'";
+    
+    $params = [];
+    
+    if ($fecha_desde) {
+        $sql .= " AND DATE(fecha) >= ?";
+        $params[] = $fecha_desde;
     }
+    
+    if ($fecha_hasta) {
+        $sql .= " AND DATE(fecha) <= ?";
+        $params[] = $fecha_hasta;
+    }
+    
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute($params);
+    $result = $stmt->fetch();
+    
+    // 2. SUMAR ADELANTOS DE PRE-VENTAS a Total Vendido
+    $sql_adelantos = "SELECT COALESCE(SUM(monto_venta), 0) as total_adelantos
+                      FROM movimientos_caja 
+                      WHERE tipo = 'venta' 
+                        AND descripcion LIKE '%Adelanto de pre-venta%'";
+    
+    $params_adelantos = [];
+    
+    if ($fecha_desde) {
+        $sql_adelantos .= " AND DATE(fecha) >= ?";
+        $params_adelantos[] = $fecha_desde;
+    }
+    
+    if ($fecha_hasta) {
+        $sql_adelantos .= " AND DATE(fecha) <= ?";
+        $params_adelantos[] = $fecha_hasta;
+    }
+    
+    $stmt_adelantos = $this->db->prepare($sql_adelantos);
+    $stmt_adelantos->execute($params_adelantos);
+    $total_adelantos = $stmt_adelantos->fetchColumn();
+    
+    // 3. Combinar resultados
+    if ($result) {
+        // Sumar adelantos al total vendido
+        $result['total_vendido'] = ($result['total_vendido'] ?? 0) + $total_adelantos;
+        
+        // Combinar tarjeta y transferencia
+        $result['total_tarjeta_combinado'] = ($result['total_tarjeta'] ?? 0) + ($result['total_transferencia'] ?? 0);
+    }
+    
+    return $result;
+}
     /**
  * Obtiene el total de adelantos registrados para una pre-venta
  */
@@ -448,31 +481,22 @@ public function registrarAdelanto($venta_id, $monto_adelanto) {
         $db = Database::getInstance()->getConnection();
         $db->beginTransaction();
         
-        // Obtener venta y sus detalles
+        // Obtener venta
         $venta = $this->getById($venta_id);
         if (!$venta || $venta['estado'] != 'preventa') {
             throw new Exception('Venta no válida');
         }
         
-        $detalles = $this->getDetalles($venta_id);
-        
-        // Calcular el monto a costo proporcional al adelanto
-        $proporcion = $monto_adelanto / $venta['total'];
-        $monto_costo = 0;
-        
-        foreach ($detalles as $detalle) {
-            $monto_costo_item = $detalle['precio_costo'] * $detalle['cantidad'] * $proporcion;
-            $monto_costo += $monto_costo_item;
-        }
-        
         // Registrar en movimientos de caja
+        // IMPORTANTE: tipo = 'venta' para que getAdelantosRegistrados lo encuentre
+        // monto_costo = 0 porque el costo YA se descontó al crear la preventa
         $query = "INSERT INTO movimientos_caja (tipo, referencia_id, monto_costo, monto_venta, descripcion) 
                   VALUES ('venta', :referencia_id, :monto_costo, :monto_venta, :descripcion)";
         $stmt = $db->prepare($query);
         $stmt->execute([
             ':referencia_id' => $venta_id,
-            ':monto_costo' => $monto_costo,
-            ':monto_venta' => $monto_adelanto,
+            ':monto_costo' => 0,  // CERO: el costo ya se descontó completo al crear la preventa
+            ':monto_venta' => $monto_adelanto,  // Este monto suma a Total Vendido
             ':descripcion' => 'Adelanto de pre-venta #' . $venta_id
         ]);
         

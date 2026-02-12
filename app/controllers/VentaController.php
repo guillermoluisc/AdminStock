@@ -206,7 +206,7 @@ public function detalle($id) {
     
     public function formalizarPreventa($id) {
         $venta = $this->ventaModel->getById($id);
-        
+        $montoRestante = floatval($_GET['montoRestante'] ?? 0);
         if (!$venta || $venta['estado'] != 'preventa') {
             $_SESSION['mensaje'] = 'Esta venta no es una pre-venta válida';
             $_SESSION['tipo_mensaje'] = 'error';
@@ -214,7 +214,7 @@ public function detalle($id) {
             exit;
         }
         
-        if ($this->ventaModel->formalizarPreventa($id)) {
+        if ($this->ventaModel->formalizarPreventa($id, $montoRestante)) {
             $_SESSION['mensaje'] = '✅ Pre-venta formalizada exitosamente. Total: ' . FormatHelper::precio($venta['total']);
             $_SESSION['tipo_mensaje'] = 'success';
         } else {

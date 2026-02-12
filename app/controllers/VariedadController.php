@@ -202,7 +202,6 @@ class VariedadController {
         $monto = $cantidad * ($variedad['precio_costo_unitario']/$variedad['unidades_por_pack']);
         $cajaModel = new MovimientoCaja();
         $cajaModel->registrarAjuste(-$monto, 'Regalo: ' . $cantidad . ' u. de ' . $variedad['nombre']);
-        $cajaModel->registrarAjusteRegalo($monto, 'Regalo: ' . $cantidad . ' u. de ' . $variedad['nombre']);
 
         $_SESSION['mensaje'] = 'Regalo registrado: ' . $cantidad . ' unidades de ' . $variedad['nombre'];
         $_SESSION['tipo_mensaje'] = 'success';

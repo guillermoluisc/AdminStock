@@ -115,22 +115,22 @@
     <div style="background: #e8f5e9; padding: 15px; border-radius: 4px; margin-bottom: 15px;">
         <h4 style="margin-bottom: 10px;">💵 Registrar Adelanto</h4>
         <form method="POST" action="index.php?c=venta&a=registrarAdelanto&id=<?= $venta['id'] ?>" 
-              onsubmit="return validarAdelanto(<?= $monto_restante ?>)">
-            <div style="display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: end;">
-                <div>
-                    <label for="monto_adelanto">Monto del Adelanto:</label>
-                    <input type="number" 
-                           id="monto_adelanto" 
-                           name="monto_adelanto" 
-                           step="0.01" 
-                           min="0.01" 
-                           max="<?= $monto_restante ?>"
-                           placeholder="Ingrese el monto"
-                           required
-                           style="width: 100%; padding: 10px; font-size: 16px;">
-                    <small style="color: #666;">Máximo: <?= FormatHelper::precio($monto_restante) ?></small>
-                </div>
-                <button type="submit" class="btn btn-success" style="height: fit-content;">
+            onsubmit="return validarAdelanto(<?= $monto_restante ?>)">
+            <div style="margin-bottom: 15px;">
+                <label for="monto_adelanto">Monto del Adelanto:</label>
+                <input type="number" 
+                    id="monto_adelanto" 
+                    name="monto_adelanto" 
+                    step="0.01" 
+                    min="0.01" 
+                    max="<?= $monto_restante ?>"
+                    placeholder="Ingrese el monto"
+                    required
+                    style="width: 100%; padding: 10px; font-size: 16px;">
+                <small style="color: #666;">Máximo: <?= FormatHelper::precio($monto_restante) ?></small>
+            </div>
+            <div style="text-align: center;">
+                <button type="submit" class="btn btn-success">
                     ➕ Registrar Adelanto
                 </button>
             </div>

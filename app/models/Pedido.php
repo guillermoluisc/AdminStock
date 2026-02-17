@@ -164,11 +164,13 @@ class Pedido {
 
         //una vez que tengo los detalles del pedido, recorro cada uno para actualizar el stock
         //actualizo la tabla egresos ¿y movimientos_venta?
+
+
         foreach ($pedidos as $detalle) {
-            $stmt = $this->db->prepare(
-                "INSERT INTO egresos (fecha, monto, descripcion, categoria, fecha_creacion) VALUES (?, ?, 'pedido_realizado', 'pedido-compra', ?)"
-            );
-            $stmt->execute([date('Y-m-d H:i:s'), $detalle['precio_estimado'], date('Y-m-d H:i:s')]);
+            // $stmt = $this->db->prepare(
+            //     "INSERT INTO egresos (fecha, monto, descripcion, categoria, fecha_creacion) VALUES (?, ?, 'pedido_realizado', 'pedido-compra', ?)"
+            // );
+            // $stmt->execute([date('Y-m-d H:i:s'), $detalle['precio_estimado'], date('Y-m-d H:i:s')]);
             
             $stmt = $this->db->prepare(
                 "INSERT INTO movimientos_caja (tipo, referencia_id, monto_costo, monto_venta, descripcion, fecha) VALUES (?, ?, ?, ?, 'Compra realizada por pedido', ?)"

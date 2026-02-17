@@ -100,6 +100,9 @@ class VentaController {
         ]);
     }
     
+// MODIFICAR LA FUNCIÓN nueva() en el controlador VentaController
+// Ubicación aproximada: línea 1942
+
 public function nueva() {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Decodificar JSON
@@ -145,6 +148,17 @@ public function nueva() {
         }
         
         $metodo_pago = $productos_venta[0]['metodo_pago'] ?? 'efectivo';
+        
+        // ✅ NUEVO: Aplicar descuento por tarjeta
+        $descuento_porcentaje = 0;
+        if ($metodo_pago === 'tarjeta' && isset($_POST['descuento_tarjeta'])) {
+            $descuento_porcentaje = floatval($_POST['descuento_tarjeta']);
+            if ($descuento_porcentaje > 0 && $descuento_porcentaje <= 100) {
+                $monto_descuento = $total * ($descuento_porcentaje / 100);
+                $total = $total - $monto_descuento;
+                $descuento_total = $monto_descuento;
+            }
+        }
         
         $venta_id = $this->ventaModel->crear($total, $metodo_pago, $descuento_total, $detalles, $nombre_cliente, $es_preventa);
         

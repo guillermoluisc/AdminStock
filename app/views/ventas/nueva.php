@@ -106,13 +106,35 @@
     <input type="hidden" name="productos_json" id="productos_json">
     <input type="hidden" name="es_preventa" id="es_preventa" value="0">
     
-    <!-- NUEVO: Campo opcional para nombre del cliente -->
+    <!-- Campo opcional para nombre del cliente -->
     <div class="card" style="background: #e3f2fd; margin-bottom: 20px;">
         <h3 style="margin-bottom: 15px;">👤 Información del Cliente (Opcional)</h3>
         <div class="form-group">
             <label for="nombre_cliente">Nombre del Cliente</label>
             <input type="text" id="nombre_cliente" name="nombre_cliente" placeholder="Dejar vacío para venta anónima" style="width: 100%; padding: 10px;">
             <small style="color: #666;">Útil para pre-ventas o ventas a crédito</small>
+        </div>
+    </div>
+    
+    <!-- ✅ NUEVO: Campo de descuento para ventas con tarjeta -->
+    <div class="card" style="background: #fff3cd; margin-bottom: 20px; display: none;" id="card_descuento_tarjeta">
+        <h3 style="margin-bottom: 15px;">💳 Descuento por Tarjeta</h3>
+        <div class="form-group">
+            <label for="descuento_tarjeta">Porcentaje de Descuento (0-100%)</label>
+            <input type="number" 
+                   id="descuento_tarjeta" 
+                   name="descuento_tarjeta" 
+                   min="0" 
+                   max="100" 
+                   step="0.1"
+                   value="0" 
+                   placeholder="Ej: 20 para 20% de descuento"
+                   style="width: 100%; padding: 10px;"
+                   oninput="actualizarTotalConDescuento()">
+            <small style="color: #666;">
+                Se aplicará al total de la venta. 
+                <span id="descuento_preview" style="font-weight: bold; color: #e67e22;"></span>
+            </small>
         </div>
     </div>
     
@@ -125,14 +147,6 @@
         </button>
         <a href="index.php?c=venta&a=index" class="btn btn-secondary">Cancelar</a>
     </div>
-    
-    <!-- <div style="margin-top: 15px; padding: 15px; background: #fff3cd; border-radius: 4px; border-left: 4px solid #f39c12;">
-        <strong>💡 Diferencia entre Venta y Pre-venta:</strong>
-        <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
-            <li><strong>Venta Completa:</strong> Se registra inmediatamente el ingreso y descuenta stock definitivamente.</li>
-            <li><strong>Pre-venta:</strong> Reserva el stock pero no registra el ingreso hasta que se formalice. Útil para apartados o ventas a crédito.</li>
-        </ul>
-    </div> -->
 </form>
 
 <script>
@@ -195,12 +209,11 @@ function agregarProducto() {
     const nombre = option.dataset.nombre;
     const stock = parseInt(option.dataset.stock);
     const unidadesPorPack = parseInt(option.dataset.unidadesPack) || 3;
+    let cantidad = parseInt(document.getElementById('cantidad_venta').value) || 1;
     const tipoVenta = document.getElementById('tipo_venta').value;
     const metodoPago = document.getElementById('metodo_pago_item').value;
-    
-    let cantidad = parseInt(document.getElementById('cantidad_venta').value) || 1;
-    let precioUnitario = 0;
     let tipoVentaTexto = '';
+    let precioUnitario = 0;
     
     if (tipoVenta === 'pack') {
         cantidad = unidadesPorPack;
@@ -244,11 +257,19 @@ function agregarProducto() {
     select.selectedIndex = 0;
     document.getElementById('cantidad_venta').value = 1;
     document.getElementById('info_precio').style.display = 'none';
+    
+    // ✅ NUEVO: Actualizar visibilidad del descuento
+    toggleDescuentoTarjeta();
+    actualizarTotalConDescuento();
 }
 
 function eliminarProducto(index) {
     productosVenta.splice(index, 1);
     actualizarTablaVenta();
+    
+    // ✅ NUEVO: Actualizar visibilidad del descuento
+    toggleDescuentoTarjeta();
+    actualizarTotalConDescuento();
 }
 
 function actualizarTablaVenta() {
@@ -300,6 +321,46 @@ function actualizarTablaVenta() {
     document.getElementById('total_general').textContent = formatPesos(totalGeneral);
 }
 
+// ✅ NUEVO: Función para calcular y retornar el total
+function calcularTotal() {
+    let total = 0;
+    productosVenta.forEach(p => total += p.subtotal);
+    return total;
+}
+
+// ✅ NUEVO: Función para actualizar el total con descuento
+function actualizarTotalConDescuento() {
+    const total = calcularTotal();
+    const descuento = parseFloat(document.getElementById('descuento_tarjeta').value) || 0;
+    
+    if (descuento > 0 && descuento <= 100) {
+        const montoDescuento = total * (descuento / 100);
+        const totalConDescuento = total - montoDescuento;
+        
+        document.getElementById('descuento_preview').textContent = 
+            `Descuento: ${formatPesos(montoDescuento)} | Total final: ${formatPesos(totalConDescuento)}`;
+    } else {
+        document.getElementById('descuento_preview').textContent = '';
+    }
+}
+
+// ✅ NUEVO: Función para verificar si hay productos con tarjeta
+function hayProductosConTarjeta() {
+    return productosVenta.some(p => p.metodo_pago === 'tarjeta');
+}
+
+// ✅ NUEVO: Función para mostrar/ocultar el campo de descuento
+function toggleDescuentoTarjeta() {
+    const cardDescuento = document.getElementById('card_descuento_tarjeta');
+    if (hayProductosConTarjeta()) {
+        cardDescuento.style.display = 'block';
+    } else {
+        cardDescuento.style.display = 'none';
+        document.getElementById('descuento_tarjeta').value = '0';
+        actualizarTotalConDescuento();
+    }
+}
+
 function finalizarVenta(esPreventa) {
     if (productosVenta.length === 0) {
         alert('Debe agregar al menos un producto a la venta');
@@ -333,6 +394,7 @@ function formatPesos(valor) {
         minimumFractionDigits: 2
     }).format(valor);
 }
+
 // Funcionalidad de búsqueda de productos
 document.getElementById('search_producto').addEventListener('input', function(e) {
     const searchTerm = e.target.value.toLowerCase();

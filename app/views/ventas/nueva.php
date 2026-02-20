@@ -117,7 +117,7 @@
     </div>
     
     <!-- ✅ NUEVO: Campo de descuento para ventas con tarjeta -->
-    <div class="card" style="background: #fff3cd; margin-bottom: 20px; display: none;" id="card_descuento_tarjeta">
+    <div class="card" style="background: #fff3cd; margin-bottom: 20px; display: block;" id="card_descuento_tarjeta">
         <h3 style="margin-bottom: 15px;">💳 Descuento por Tarjeta</h3>
         <div class="form-group">
             <label for="descuento_tarjeta">Porcentaje de Descuento (0-100%)</label>
@@ -259,7 +259,6 @@ function agregarProducto() {
     document.getElementById('info_precio').style.display = 'none';
     
     // ✅ NUEVO: Actualizar visibilidad del descuento
-    toggleDescuentoTarjeta();
     actualizarTotalConDescuento();
 }
 
@@ -268,7 +267,6 @@ function eliminarProducto(index) {
     actualizarTablaVenta();
     
     // ✅ NUEVO: Actualizar visibilidad del descuento
-    toggleDescuentoTarjeta();
     actualizarTotalConDescuento();
 }
 
@@ -349,17 +347,7 @@ function hayProductosConTarjeta() {
     return productosVenta.some(p => p.metodo_pago === 'tarjeta');
 }
 
-// ✅ NUEVO: Función para mostrar/ocultar el campo de descuento
-function toggleDescuentoTarjeta() {
-    const cardDescuento = document.getElementById('card_descuento_tarjeta');
-    if (hayProductosConTarjeta()) {
-        cardDescuento.style.display = 'block';
-    } else {
-        cardDescuento.style.display = 'none';
-        document.getElementById('descuento_tarjeta').value = '0';
-        actualizarTotalConDescuento();
-    }
-}
+
 
 function finalizarVenta(esPreventa) {
     if (productosVenta.length === 0) {

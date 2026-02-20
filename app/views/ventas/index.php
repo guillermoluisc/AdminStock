@@ -65,20 +65,20 @@
     </div>
 </div>
 
-<div class="card" style="background: <?= $estadisticas['total_vendido'] - $total_egresos >= 0 ? '#e8f5e9' : '#ffebee' ?>; margin-bottom: 20px; border: 2px solid <?= $estadisticas['total_vendido'] - $total_egresos >= 0 ? '#27ae60' : '#c62828' ?>;">
+<div class="card" style="background: <?= $estadisticas['total_vendido'] - $total_egresos + $total_caja_mes >= 0 ? '#e8f5e9' : '#ffebee' ?>; margin-bottom: 20px; border: 2px solid <?= $estadisticas['total_vendido'] - $total_egresos + $total_caja_mes >= 0 ? '#27ae60' : '#c62828' ?>;">
     <div style="display: flex; justify-content: space-between; align-items: center;">
         <div>
-            <h3 style="margin-bottom: 5px; color: <?= $estadisticas['total_vendido'] - $total_egresos >= 0 ? '#27ae60' : '#c62828' ?>;">
-                <?= $estadisticas['total_vendido'] - $total_egresos >= 0 ? '📈' : '📉' ?> Caja total del Período
+            <h3 style="margin-bottom: 5px; color: <?= $estadisticas['total_vendido'] - $total_egresos + $total_caja_mes >= 0 ? '#27ae60' : '#c62828' ?>;">
+                <?= $estadisticas['total_vendido'] - $total_egresos + $total_caja_mes >= 0 ? '📈' : '📉' ?> Caja total del Período
             </h3>
-            <small style="color: #666;">Total Vendido - Egresos</small>
+            <small style="color: #666;">Total Vendido + Caja - Egresos</small>
         </div>
         <div style="text-align: right;">
-            <div style="font-size: 32px; font-weight: bold; color: <?= $estadisticas['total_vendido'] - $total_egresos >= 0 ? '#27ae60' : '#c62828' ?>;">
-                <?= FormatHelper::precio($estadisticas['total_vendido'] - $total_egresos) ?>
+            <div style="font-size: 32px; font-weight: bold; color: <?= $estadisticas['total_vendido'] - $total_egresos + $total_caja_mes >= 0 ? '#27ae60' : '#c62828' ?>;">
+                <?= FormatHelper::precio($estadisticas['total_vendido'] - $total_egresos + $total_caja_mes) ?>
             </div>
             <small style="color: #666;">
-                <?php if ($estadisticas['total_vendido'] - $total_egresos >= 0): ?>
+                <?php if ($estadisticas['total_vendido'] - $total_egresos + $total_caja_mes >= 0): ?>
                     ✅ Resultado positivo
                 <?php else: ?>
                     ⚠️ Resultado negativo
@@ -95,14 +95,23 @@
         <input type="hidden" name="a" value="index">
         
         <div class="form-group">
-            <label for="fecha_desde">Fecha Desde</label>
-            <input type="date" id="fecha_desde" name="fecha_desde" value="<?= $filtros['fecha_desde'] ?? '' ?>">
-        </div>
-        
-        <div class="form-group">
-            <label for="fecha_hasta">Fecha Hasta</label>
-            <input type="date" id="fecha_hasta" name="fecha_hasta" value="<?= $filtros['fecha_hasta'] ?? '' ?>">
-        </div>
+        <label for="mes">Mes</label>
+        <?php
+        setlocale(LC_TIME, 'es_ES.UTF-8', 'es_ES', 'Spanish_Spain.1252');
+
+        ?>
+        <select id="mes" name="mes">
+            <?php
+            for ($m = 1; $m <= 12; $m++) {
+                $val = date('Y') . '-' . str_pad($m, 2, '0', STR_PAD_LEFT);
+                $label = strftime('%B', mktime(0,0,0,$m,1)) . ' ' . date('Y');
+                $selected = ($filtros['mes'] ?? date('Y-m')) == $val ? 'selected' : '';
+                echo "<option value=\"$val\" $selected>" . ucfirst($label) . "</option>";
+            }
+
+                    ?>
+                </select>
+            </div>
         
         <div class="form-group">
             <label for="metodo_pago">Método de Pago</label>
@@ -204,8 +213,8 @@
                 $total_paginas = $paginacion['total_paginas'];
                 
                 $url_base = 'index.php?c=venta&a=index';
-                if (!empty($filtros['fecha_desde'])) $url_base .= '&fecha_desde=' . $filtros['fecha_desde'];
-                if (!empty($filtros['fecha_hasta'])) $url_base .= '&fecha_hasta=' . $filtros['fecha_hasta'];
+                if (!empty($filtros['fecha_desde'])) $url_base .= '&mes=' . $filtros['fecha_desde'];
+                if (!empty($filtros['fecha_hasta'])) $url_base .= '&mes=' . $filtros['fecha_hasta'];
                 if (!empty($filtros['metodo_pago'])) $url_base .= '&metodo_pago=' . $filtros['metodo_pago'];
                 if (!empty($filtros['estado'])) $url_base .= '&estado=' . $filtros['estado'];
                 if (!empty($_GET['por_pagina'])) $url_base .= '&por_pagina=' . $_GET['por_pagina'];

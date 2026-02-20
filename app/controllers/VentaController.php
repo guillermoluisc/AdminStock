@@ -19,23 +19,10 @@ class VentaController {
         // Obtener filtros con valores por defecto del mes actual
         $filtros = [];
         
-        if (empty($_GET['fecha_desde']) && empty($_GET['fecha_hasta']) && empty($_GET['metodo_pago']) && empty($_GET['estado'])) {
-            $filtros['fecha_desde'] = date('Y-m-01');
-            $filtros['fecha_hasta'] = date('Y-m-t');
-        } else {
-            if (!empty($_GET['fecha_desde'])) {
-                $filtros['fecha_desde'] = $_GET['fecha_desde'];
-            }
-            if (!empty($_GET['fecha_hasta'])) {
-                $filtros['fecha_hasta'] = $_GET['fecha_hasta'];
-            }
-            if (!empty($_GET['metodo_pago'])) {
-                $filtros['metodo_pago'] = $_GET['metodo_pago'];
-            }
-            if (!empty($_GET['estado'])) {
-                $filtros['estado'] = $_GET['estado'];
-            }
-        }
+        $mes = $_GET['mes'] ?? date('Y-m');
+        $filtros['fecha_desde'] = $mes . '-01';
+        $filtros['fecha_hasta'] = date('Y-m-t', strtotime($mes . '-01'));
+        $filtros['mes'] = $mes;
         
         // Configuración de paginación
         $pagina_actual = isset($_GET['pagina']) ? max(1, intval($_GET['pagina'])) : 1;
@@ -75,6 +62,21 @@ class VentaController {
         // Calcular total de egresos en el mismo período
         $egresoModel = new Egreso();
         $total_egresos = $egresoModel->getTotalEgresos($filtros_caja);
+        // DESPUÉS — busca en ventas con estado='caja'
+        $db = Database::getInstance()->getConnection();
+        $sql_caja = "SELECT COALESCE(SUM(total),0) as total FROM ventas WHERE estado='caja'";
+        $params_caja2 = [];
+        if (!empty($filtros_caja['fecha_desde'])) {
+            $sql_caja .= " AND DATE(fecha) >= ?";
+            $params_caja2[] = $filtros_caja['fecha_desde'];
+        }
+        if (!empty($filtros_caja['fecha_hasta'])) {
+            $sql_caja .= " AND DATE(fecha) <= ?";
+            $params_caja2[] = $filtros_caja['fecha_hasta'];
+        }
+        $stmt_caja = $db->prepare($sql_caja);
+        $stmt_caja->execute($params_caja2);
+        $total_caja_mes = $stmt_caja->fetch()['total'];
         
         // Calcular balance (ganancia - egresos)
         $balance = $ganancia_periodo - $total_egresos;
@@ -96,7 +98,8 @@ class VentaController {
             'total_egresos' => $total_egresos,
             'balance' => $balance,
             'filtros' => $filtros,
-            'paginacion' => $paginacion
+            'paginacion' => $paginacion,
+            'total_caja_mes' => $total_caja_mes,
         ]);
     }
     
@@ -151,7 +154,8 @@ public function nueva() {
         
         // ✅ NUEVO: Aplicar descuento por tarjeta
         $descuento_porcentaje = 0;
-        if ($metodo_pago === 'tarjeta' && isset($_POST['descuento_tarjeta'])) {
+
+        if (isset($_POST['descuento_tarjeta'])) {
             $descuento_porcentaje = floatval($_POST['descuento_tarjeta']);
             if ($descuento_porcentaje > 0 && $descuento_porcentaje <= 100) {
                 $monto_descuento = $total * ($descuento_porcentaje / 100);

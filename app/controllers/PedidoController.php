@@ -13,7 +13,7 @@ class PedidoController {
         // Obtener filtros con valores por defecto del mes actual
         $filtros = [];
         
-        if (empty($_GET['fecha_desde']) && empty($_GET['fecha_hasta']) && empty($_GET['estado'])) {
+if (empty($_GET['fecha_desde']) && empty($_GET['fecha_hasta']) && empty($_GET['estado']) && empty($_GET['buscar'])) {
             $filtros['fecha_desde'] = date('Y-m-01');
             $filtros['fecha_hasta'] = date('Y-m-t');
         } else {
@@ -25,6 +25,9 @@ class PedidoController {
             }
             if (!empty($_GET['estado'])) {
                 $filtros['estado'] = $_GET['estado'];
+            }
+            if (!empty($_GET['buscar'])) {
+                $filtros['buscar'] = $_GET['buscar'];
             }
         }
         

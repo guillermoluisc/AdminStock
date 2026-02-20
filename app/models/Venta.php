@@ -40,6 +40,7 @@ public function getAll($filtros = [], $limit = null, $offset = null) {
         $sql .= " AND estado != 'cancelada'";
     }
     
+    $sql .= " AND estado != 'caja'";
     $sql .= " ORDER BY fecha DESC";
     
     // Preparar el statement
@@ -101,6 +102,8 @@ public function countAll($filtros = []) {
         // Por defecto no mostrar canceladas
         $sql .= " AND estado != 'cancelada'";
     }
+
+    $sql .= " AND estado != 'caja'";
     
     $stmt = $this->db->prepare($sql);
     $stmt->execute($params);
@@ -373,7 +376,7 @@ public function getEstadisticas($fecha_desde = null, $fecha_hasta = null) {
             SUM(CASE WHEN metodo_pago = 'efectivo' THEN total ELSE 0 END) as total_efectivo,
             SUM(CASE WHEN metodo_pago = 'tarjeta' THEN total ELSE 0 END) as total_tarjeta,
             SUM(CASE WHEN metodo_pago = 'transferencia' THEN total ELSE 0 END) as total_transferencia
-            FROM ventas WHERE estado = 'completada'";
+            FROM ventas WHERE estado = 'completada' AND estado != 'caja'";
     
     $params = [];
     

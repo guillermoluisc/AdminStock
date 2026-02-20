@@ -3,20 +3,48 @@
 
 <?php if (!empty($variedades_stock_bajo)): ?>
 <div class="card" style="margin-bottom: 20px; background: #fff3cd; border: 1px solid #ffc107;">
-    <h3 style="margin-bottom: 15px; color: #856404;">⚠️ Productos con Stock Bajo</h3>
-    <p style="margin-bottom: 10px;">Los siguientes productos tienen stock por debajo del mínimo:</p>
-    <div style="display: grid; gap: 10px;">
-        <?php foreach ($variedades_stock_bajo as $var): ?>
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: white; border-radius: 4px;">
-                <div>
-                    <strong><?= htmlspecialchars($var['producto_padre_nombre']) ?> - <?= htmlspecialchars($var['nombre']) ?></strong><br>
-                    <small style="color: #666;">Stock actual: <span style="color: #e74c3c; font-weight: bold;"><?= $var['stock'] ?></span> | Mínimo: <?= $var['stock_minimo'] ?></small>
-                </div>
-                <button type="button" class="btn btn-warning" style="padding: 5px 10px;" onclick="agregarProductoRapido(<?= $var['id'] ?>, '<?= htmlspecialchars($var['producto_padre_nombre'] . ' - ' . $var['nombre']) ?>', <?= $var['stock_minimo'] - $var['stock'] + 10 ?>)">
-                    + Agregar al Pedido
-                </button>
-            </div>
-        <?php endforeach; ?>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h3 style="color: #856404;">⚠️ Productos con Stock Bajo (<?= count($variedades_stock_bajo) ?>)</h3>
+        <button type="button" class="btn btn-warning" onclick="agregarTodosFaltantes()" style="padding: 7px 15px;">
+            ➕ Agregar Todos al Pedido
+        </button>
+    </div>
+
+    <!-- Filtro -->
+    <div style="margin-bottom: 10px;">
+        <input type="text" id="filtro_faltantes" placeholder="🔍 Filtrar por nombre..." 
+               oninput="filtrarFaltantes()"
+               style="width: 100%; padding: 8px; border: 1px solid #ffc107; border-radius: 4px; font-size: 14px;">
+    </div>
+
+    <!-- Tabla con scroll -->
+    <div style="max-height: 300px; overflow-y: auto; border: 1px solid #ffc107; border-radius: 4px;">
+        <table style="margin-top: 0;">
+            <thead style="position: sticky; top: 0; background: #55345e; z-index: 1;">
+                <tr>
+                    <th>Producto</th>
+                    <th style="text-align:center;">Stock Actual</th>
+                    <th style="text-align:center;">Mínimo</th>
+                    <th style="text-align:center;">Acción</th>
+                </tr>
+            </thead>
+            <tbody id="tabla_faltantes_body">
+                <?php foreach ($variedades_stock_bajo as $var): ?>
+                    <tr class="fila-faltante" data-nombre="<?= strtolower(htmlspecialchars($var['producto_padre_nombre'] . ' ' . $var['nombre'])) ?>">
+                        <td><strong><?= htmlspecialchars($var['producto_padre_nombre']) ?> — <?= htmlspecialchars($var['nombre']) ?></strong></td>
+                        <td style="text-align:center;"><span style="color: #e74c3c; font-weight: bold;"><?= $var['stock'] ?></span></td>
+                        <td style="text-align:center;"><?= $var['stock_minimo'] ?></td>
+
+                        <td style="text-align:center;">
+                            <button type="button" class="btn btn-warning" style="padding: 4px 10px; font-size: 13px;"
+                                onclick="agregarProductoRapido(<?= $var['id'] ?>, '<?= htmlspecialchars($var['producto_padre_nombre'] . ' - ' . $var['nombre']) ?>', <?= $var['stock_minimo'] - $var['stock'] + 10 ?>)">
+                                + Agregar
+                            </button>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
     </div>
 </div>
 <?php endif; ?>
@@ -218,5 +246,22 @@ function validarPedido() {
     
     document.getElementById('productos_json').value = JSON.stringify(productosPedido);
     return true;
+}
+function filtrarFaltantes() {
+    const termino = document.getElementById('filtro_faltantes').value.toLowerCase();
+    const filas = document.querySelectorAll('.fila-faltante');
+    filas.forEach(fila => {
+        const nombre = fila.dataset.nombre || '';
+        fila.style.display = nombre.includes(termino) ? '' : 'none';
+    });
+}
+
+function agregarTodosFaltantes() {
+    const filas = document.querySelectorAll('.fila-faltante');
+    filas.forEach(fila => {
+        if (fila.style.display === 'none') return; // respetar el filtro activo
+        const btn = fila.querySelector('button');
+        if (btn) btn.click();
+    });
 }
 </script>

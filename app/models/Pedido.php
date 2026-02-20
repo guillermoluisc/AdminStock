@@ -29,9 +29,16 @@ class Pedido {
         }
         
         // Filtro por estado
+        // Filtro por estado
         if (!empty($filtros['estado'])) {
             $sql .= " AND p.estado = ?";
             $params[] = $filtros['estado'];
+        }
+        
+        // Filtro por búsqueda (observaciones del pedido)
+        if (!empty($filtros['buscar'])) {
+            $sql .= " AND p.observaciones LIKE ?";
+            $params[] = '%' . $filtros['buscar'] . '%';
         }
         
         $sql .= " GROUP BY p.id ORDER BY p.fecha_creacion DESC";

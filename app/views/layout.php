@@ -121,6 +121,7 @@
                     <a href="index.php?c=pedido&a=index">📋 Pedidos</a>
                     <a href="index.php?c=pedido&a=nuevo">🛒 Nuevo Pedido</a>
                     <a href="index.php?c=egreso&a=index">💸 Egresos</a>
+                    <a href="index.php?c=caja&a=index">💰 Caja</a>
                 </div>
             </div>
         </div>

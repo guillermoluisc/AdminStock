@@ -1,4 +1,4 @@
 /app/database/database.db
 /servidor/servidor.log
-/datos/*
-/servidor/*
+/datos/
+/servidor/

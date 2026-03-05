@@ -11,6 +11,9 @@ class MovimientoCaja {
      * Obtener el total actual en caja (a precio de costo)
      */
     public function getTotalCaja() {
+        // $sql = "SELECT SUM(precio_costo_unitario * stock) AS total_caja 
+        //         FROM variedades 
+        //         WHERE activo = 1 AND stock > 0";
         $sql = "SELECT total_caja FROM vista_total_caja";
         $stmt = $this->db->query($sql);
         $result = $stmt->fetch();

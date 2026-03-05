@@ -293,9 +293,10 @@ public function formalizarPreventa($id, $montoRestante) {
         $stmtDelete->execute([':referencia_id' => $id]);
 
         $query = "UPDATE ventas 
-                  SET estado = 'completada', 
-                      fecha_formalizacion = CURRENT_TIMESTAMP
-                  WHERE id = :id";
+                SET estado = 'completada', 
+                    fecha = CURRENT_TIMESTAMP,
+                    fecha_formalizacion = CURRENT_TIMESTAMP
+          WHERE id = :id";
         $stmt = $db->prepare($query);
         $stmt->execute([':id' => $id]);
         

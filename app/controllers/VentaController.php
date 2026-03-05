@@ -23,6 +23,9 @@ class VentaController {
         $filtros['fecha_desde'] = $mes . '-01';
         $filtros['fecha_hasta'] = date('Y-m-t', strtotime($mes . '-01'));
         $filtros['mes'] = $mes;
+
+        if (!empty($_GET['metodo_pago'])) $filtros['metodo_pago'] = $_GET['metodo_pago'];
+        if (!empty($_GET['estado']))      $filtros['estado']      = $_GET['estado'];
         
         // Configuración de paginación
         $pagina_actual = isset($_GET['pagina']) ? max(1, intval($_GET['pagina'])) : 1;

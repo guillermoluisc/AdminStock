@@ -213,11 +213,9 @@
                 $total_paginas = $paginacion['total_paginas'];
                 
                 $url_base = 'index.php?c=venta&a=index';
-                if (!empty($filtros['fecha_desde'])) $url_base .= '&mes=' . $filtros['fecha_desde'];
-                if (!empty($filtros['fecha_hasta'])) $url_base .= '&mes=' . $filtros['fecha_hasta'];
-                if (!empty($filtros['metodo_pago'])) $url_base .= '&metodo_pago=' . $filtros['metodo_pago'];
-                if (!empty($filtros['estado'])) $url_base .= '&estado=' . $filtros['estado'];
-                if (!empty($_GET['por_pagina'])) $url_base .= '&por_pagina=' . $_GET['por_pagina'];
+                if (!empty($filtros['mes']))         $url_base .= '&mes='          . $filtros['mes'];
+                if (!empty($filtros['metodo_pago'])) $url_base .= '&metodo_pago='  . $filtros['metodo_pago'];
+                if (!empty($filtros['estado']))      $url_base .= '&estado='       . $filtros['estado'];
                 ?>
                 
                 <?php if ($pagina_actual > 1): ?>
@@ -256,17 +254,14 @@
             <form method="GET" action="index.php" style="display: inline-flex; align-items: center; gap: 10px;">
                 <input type="hidden" name="c" value="venta">
                 <input type="hidden" name="a" value="index">
-                <?php if (!empty($filtros['fecha_desde'])): ?>
-                    <input type="hidden" name="fecha_desde" value="<?= $filtros['fecha_desde'] ?>">
-                <?php endif; ?>
-                <?php if (!empty($filtros['fecha_hasta'])): ?>
-                    <input type="hidden" name="fecha_hasta" value="<?= $filtros['fecha_hasta'] ?>">
-                <?php endif; ?>
                 <?php if (!empty($filtros['metodo_pago'])): ?>
                     <input type="hidden" name="metodo_pago" value="<?= $filtros['metodo_pago'] ?>">
                 <?php endif; ?>
                 <?php if (!empty($filtros['estado'])): ?>
                     <input type="hidden" name="estado" value="<?= $filtros['estado'] ?>">
+                <?php endif; ?>
+                <?php if (!empty($filtros['mes'])): ?>
+                    <input type="hidden" name="mes" value="<?= $filtros['mes'] ?>">
                 <?php endif; ?>
                 
                 <label for="por_pagina" style="font-size: 14px; color: #333; font-weight: 600;">Mostrar:</label>
